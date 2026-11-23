@@ -3091,7 +3091,7 @@ function EDI_getEntireLineVisualWidth(lineStart, lineEnd) {
     while (positionIndex < lineEnd) {
         let charLength = 1;
 
-        if (String.fromCharCode(EDI_textByteList_bytes[positionIndex]) === '\t') {
+        if (EDI_textByteList_bytes[positionIndex] === CONST_EDI_ASCII_TAB) {
             charLength = 4 - (visualColumns % 4);
         }
 
@@ -3113,7 +3113,7 @@ function EDI_set_indexColumn_and_visualColumn_relativeTo_storedVisualWidth(lineS
     while (positionIndex < lineEnd) {
         let charLength = 1;
 
-        if (String.fromCharCode(EDI_textByteList_bytes[positionIndex]) === '\t') {
+        if (EDI_textByteList_bytes[positionIndex] === CONST_EDI_ASCII_TAB) {
             charLength = 4 - (visualColumns % 4);
         }
 
@@ -3157,7 +3157,7 @@ function EDI_ret_getIndexFromColumn_sameLine_newRxIsLarger(targetColumn, lineSta
     while (positionIndex < lineEnd) {
         let charLength = 1;
 
-        if (String.fromCharCode(EDI_textByteList_bytes[positionIndex]) === '\t') {
+        if (EDI_textByteList_bytes[positionIndex] === CONST_EDI_ASCII_TAB) {
             charLength = 4 - (visualColumns % 4);
         }
 
@@ -3196,19 +3196,13 @@ function EDI_ret_getIndexFromColumn_RESET(targetColumn, lineStart, lineEnd) {
     let indexColumn = 0;
     let visualColumns = 0;
     let positionIndex = lineStart;
-    let charWidth = EDI_characterWidth;
 
     while (positionIndex < lineEnd) {
         let charLength = 1;
 
-        if (String.fromCharCode(EDI_textByteList_bytes[positionIndex]) === '\t') {
+        if (EDI_textByteList_bytes[positionIndex] === CONST_EDI_ASCII_TAB) {
             charLength = 4 - (visualColumns % 4);
         }
-
-        // Calculate pixel boundaries for the current character
-        const charLeftX = visualColumns * charWidth;
-        const charRightX = (visualColumns + charLength) * charWidth;
-        const charMidpointX = charLeftX + (charRightX - charLeftX) / 2;
 
         // If the click is before the midpoint of this character/tab, target this index
         if (targetColumn === indexColumn) {
@@ -3245,7 +3239,7 @@ export function EDI_ret_getIndexFromX_RESET(rx, lineStart, lineEnd) {
     while (positionIndex < lineEnd) {
         let charLength = 1;
 
-        if (String.fromCharCode(EDI_textByteList_bytes[positionIndex]) === '\t') {
+        if (EDI_textByteList_bytes[positionIndex] === CONST_EDI_ASCII_TAB) {
             charLength = 4 - (visualColumns % 4);
         }
 
@@ -3516,11 +3510,6 @@ function EDI_getCharacterKind(character) {
     }
 }
 
-function EDI_measureBaseElement() {
-    editor.lastReadNumber_offsetWidth = Math.floor(editor.baseElement.offsetWidth);
-    editor.lastReadNumber_offsetHeight = Math.floor(editor.baseElement.offsetHeight);
-}
-
 /**
  * TODO: repeated duplications of the same extremely large selection might benefit from temporary caching of this functions result.
  * 
@@ -3557,12 +3546,6 @@ function EDI_startEdit(editKind, editPosition, editLength) {
     editor.cursor_editIndexLine = editor.cursor_indexLine;
     editor.cursor_editIndexColumn = editor.cursor_indexColumn;
     editor.cursor_editLength_characters = editLength;
-
-    //switch (editKind) {
-    //    case EditKind.InsertLtr:
-    //        EDI_insertGapBufferSpan();
-    //        break;
-    //}
 }
 //#endregion
 
@@ -3944,25 +3927,16 @@ function EDI_registerHandlers() {
     // TODO: text area to capture all the languages
     editor.baseElement.addEventListener('keydown', EDI_onKeyDown);
 
-
-
-
-    ////editor.baseElement.addEventListener('keydown', EDI_onKeyDown);
     editor.baseElement.addEventListener('mousedown', EDI_onMouseDown);
 
     //editor.baseElement.addEventListener('contextmenu', EDI_onContextMenu);
     window.addEventListener('resize', EDI_onResize);
 
-    // Attach a single listener to your text container (Event Delegation)
     //editor.baseElement.addEventListener('mouseover', EDI_mouseOver);
     //editor.baseElement.addEventListener('mouseleave', EDI_mouseLeave);
 
     editor.baseElement.addEventListener('focus', EDI_onfocus);
     editor.baseElement.addEventListener('blur', EDI_onblur);
-
-    ////EDI_scroll_viewport.addEventListener('scroll', EDI_scrollViewport_scroll, { passive: true });
-
-    //editor.gutter.addEventListener('wheel', EDI_onWheelGutter, { passive: false /* 'e.preventDefault();' is used*/ });
 }
 //#endregion
 
