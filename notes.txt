@@ -6,8 +6,11 @@ What you need to do is:
 
 you haven't done your exercises yet today so you're gonna go do them right now.
 
+====
 
-
+"something is wrong my git history isn't updating"
+panic panic panic
+thoughts
 
 
 
