@@ -1,4 +1,7 @@
 
+TypeScript does most of what I'm gonna mention and more.
+I want to learn about compilers though so I'm more interested in the journey than the destination which TypeScript provides.
+
 I think I want to write the JavaScript transpiler:
 - [ ] The code should be `npm run start` -able as is
 - [ ] But I additionally want a C# program that transpiles it such that:
