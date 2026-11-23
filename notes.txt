@@ -1,10 +1,8 @@
-I did a and b of the workout note to myself for where to pick back up but...
 
-I am concerned.
-I'm thinking maybe I need to take time off from the code.
-But at the same time now I'm not going in until Friday so why would I do that?
-Maybe I start the break on Thursday?
-I don't know
-I just need to keep my stress levels at a minimum while I transition into the routine
-
-I gotta get back to the lifting though
+I think I want to write the JavaScript transpiler:
+- [ ] The code should be `npm run start` -able as is
+- [ ] But I additionally want a C# program that transpiles it such that:
+    - [ ] All const ints are inlined with the declaration removed.
+    - [ ] All enums are inlined with the declaration removed.
+    - [ ] I'm not gonna lose sleep over some Smis, I'd never do that.
+        - [ ] The Princess and the Smi
