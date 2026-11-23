@@ -1,0 +1,731 @@
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+    sans-serif;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  background-color: var(--primary-background-color);
+  color: var(--primary-foreground-color);
+  color-scheme: var(--color-scheme);
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE 10+ and Edge */
+  user-select: none;
+  /* Standard syntax */
+}
+
+#HEADER {
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border-bottom: 1px solid var(--primary-border-color);
+  height: 25px;
+  contain: layout paint style;
+}
+
+#BODY {
+  display: flex;
+  /* -1 for header border bottom */
+  height: calc(100% - 25px - 1px);
+}
+
+#EXPLORER {
+  width: 200px;
+  height: 100%;
+  contain: layout paint style;
+}
+
+.treeView_node {
+  white-space: nowrap;
+}
+
+#MENU {
+  position: fixed;
+  min-width: 25px;
+  min-height: 25px;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border: 1px solid var(--primary-border-color);
+  padding-left: 4px;
+  padding-right: 4px;
+  /* the padding-top needs to be accounted for in the js code anywhere calculation of which option was clicked is done, as well any other scenarios that might follow the pattern */
+  padding-top: 4px;
+  padding-bottom: 1px;
+}
+
+#MENU:focus #MENU_cursor {
+  background-color: var(--primary-active-with-focus-background-color);
+}
+
+#MENU_cursor {
+  background-color: var(--primary-active-no-focus-background-color);
+  position: absolute;
+  /* -8px is the sum of the padding left and padding right of the menu */
+  width: calc(100% - 8px);
+}
+
+#MENU_optionList {
+  cursor: default;
+  display: contents;
+}
+
+.menuOption {
+  white-space: nowrap;
+  position: relative;
+}
+
+#TOOLTIP {
+  position: fixed;
+  min-width: 25px;
+  min-height: 25px;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border: 1px solid var(--primary-border-color);
+  padding-left: 4px;
+  padding-right: 4px;
+  /* the padding-top needs to be accounted for in the js code anywhere calculation of which option was clicked is done, as well any other scenarios that might follow the pattern */
+  padding-top: 4px;
+  padding-bottom: 1px;
+}
+
+.LIST_scroll_viewport {
+  position: absolute;
+  inset: 0;
+  overflow: scroll;
+  z-index: 3;
+}
+
+.LIST_visual_canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.LIST_text {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  left: 0px;
+  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
+  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
+}
+
+.LIST {
+  overflow: hidden;
+  position: relative;
+  contain: strict;
+}
+
+.LIST:focus .LIST_cursor {
+  background-color: var(--primary-active-with-focus-background-color);
+}
+
+.LIST_virtualization {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+}
+
+.LIST_cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--primary-active-no-focus-background-color);
+  position: absolute;
+  width: 100%;
+}
+
+.LIST_itemList {
+  display: contents;
+}
+
+#AUTOCOMPLETE_scroll_viewport {
+  position: absolute;
+  inset: 0;
+  overflow: scroll;
+  z-index: 3;
+}
+
+#AUTOCOMPLETE_visual_canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#AUTOCOMPLETE_text {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  left: 0px;
+  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
+  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
+}
+
+#AUTOCOMPLETE {
+  position: fixed;
+  width: 200px;
+  height: 100px;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border: 1px solid var(--primary-border-color);
+  padding-left: 4px;
+  padding-right: 4px;
+  /* the padding-top needs to be accounted for in the js code anywhere calculation of which option was clicked is done, as well any other scenarios that might follow the pattern */
+  padding-top: 4px;
+  padding-bottom: 1px;
+  overflow: hidden;
+  contain: strict;
+}
+
+#AUTOCOMPLETE:focus #AUTOCOMPLETE_cursor {
+  background-color: var(--primary-active-with-focus-background-color);
+}
+
+#AUTOCOMPLETE_virtualization {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+}
+
+#AUTOCOMPLETE_cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--primary-active-no-focus-background-color);
+  position: absolute;
+  width: 100%;
+}
+
+#AUTOCOMPLETE_itemList {
+  display: contents;
+}
+
+#EXPLORER_scroll_viewport {
+  position: absolute;
+  inset: 0;
+  overflow: scroll;
+  z-index: 3;
+}
+
+#EXPLORER_visual_canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#EXPLORER_text {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  left: 0px;
+}
+
+/*
+TODO: 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
+...but the folder explorer is always on screen and I'm trying to get the
+composite layers correct.
+
+TODO: maybe don't nearly-duplicate these classes.
+*/
+.TREEVIEWexplorer {
+  position: relative;
+  outline: none;
+  font-family: monospace;
+  width: 200px;
+  height: 100%;
+  /* will-change: transform;
+  background-color: var(--primary-background-color); */
+
+  overflow: hidden;
+  contain: strict;
+}
+
+/*
+  TODO: (this specific block of CSS is an ancillary reference to the original comment) 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
+  ...but the folder explorer is always on screen and I'm trying to get the
+  composite layers correct.
+
+  TODO: (this specific block of CSS is an ancillary reference to the original comment) maybe don't nearly-duplicate these classes.
+  */
+.TREEVIEWexplorer:focus > #EXPLORER_visual_canvas > #EXPLORER_text > .TREEVIEW_cursor {
+  background-color: var(--primary-active-with-focus-background-color);
+}
+
+/*
+TODO: 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
+...but the folder explorer is always on screen and I'm trying to get the
+composite layers correct.
+
+TODO: maybe don't nearly-duplicate these classes.
+*/
+.TREEVIEW {
+  position: relative;
+  overflow: hidden;
+  outline: none;
+  font-family: monospace;
+  width: 100%;
+  height: 100%;
+  contain: strict;
+}
+
+.TREEVIEW:focus>.TREEVIEW_cursor {
+  background-color: var(--primary-active-with-focus-background-color);
+}
+
+.TREEVIEW_scroll_viewport {
+  position: absolute;
+  inset: 0;
+  overflow: scroll;
+  z-index: 3;
+}
+
+.TREEVIEW_visual_canvas {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.TREEVIEW_text {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 100%;
+  left: 0px;
+  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
+  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
+}
+
+.TREEVIEW_virtualization {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+}
+
+.TREEVIEW_cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: var(--primary-active-no-focus-background-color);
+  position: absolute;
+  width: 100%;
+}
+
+.TREEVIEW_itemList {
+  display: contents;
+}
+
+/* .tvn => TreeViewNode...SEE 'tvnN' (this is super hacky I need to mark a node for change...) */
+.tvn {
+  white-space: pre;
+  position: absolute;
+  left: 0;
+  top: 0;
+  contain: strict;
+}
+
+/* .tvnN => TreeViewNode (but NOT "syntax highlighted") (this is super hacky I need to mark a node for change...)*/
+.tvnN {
+  white-space: nowrap;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.unselectable {
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE 10+ and Edge */
+  user-select: none;
+  /* Standard syntax */
+}
+
+#WIDGET {
+  position: fixed;
+  left: 0;
+  top: 0;
+  background-color: var(--primary-active-no-focus-background-color);
+  padding: 10px;
+  border: 1px solid var(--primary-border-color);
+}
+
+#EDI_hack {
+  width: calc(100% - 200px);
+  position: relative;
+  contain: layout paint style;
+}
+
+#EDI_debug {
+  /* 1. Pulls it completely out of the shared document flow */
+  position: absolute; 
+  bottom: 0;
+  left: 0;
+
+  /* 2. CRITICAL: Explicit, static dimensions so contain: size validates */
+  width: 100%;
+  height: 1.5em;      /* Explicitly locks down the height container */
+  
+  font-family: monospace;
+  overflow: hidden;
+
+  contain: strict; 
+
+  will-change: transform;
+}
+
+#EDITOR_anchor {
+  height: calc(100% - 1.5em);
+  position: relative; /* Acts as the absolute coordinate root for the child */
+  display: flex;
+  flex: 1;
+  /* NO containment rules here; let flexbox dynamically calculate the size */
+}
+
+#EDITOR_inner_container {
+  outline: none;
+  position: absolute;
+  inset: 0;             /* Locks width and height to 100% of the resolved anchor size */
+  overflow: hidden;
+  font-family: monospace;
+  cursor: text;
+  
+  /* CRITICAL: Now that geometry is mathematically precise, the browser blocks 
+     any inner layouts or paints from escaping this bounding box. */
+  contain: strict;
+}
+
+/* .eN (i.e.: Editor Not_yet_syntax_highlighted) */
+.eN {
+  color: var(--editor-syntax-operatorAssignment-color);
+}
+
+#EDI_virtualization_horizontal {
+  height: 1px;
+  position: absolute;
+}
+
+#EDI_findOverlay {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  padding: 5px;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border: 1px solid var(--primary-border-color);
+}
+
+#EDI_gutter {
+  
+}
+
+#EDI_gutter_container {
+  position: sticky;
+  left: 0;
+  height: 100%;
+  /* Or let it naturally occupy the full height */
+  z-index: 2;
+  /* Keeps it layered above the text layers sliding beneath it */
+  background-color: var(--gutter-background-color);
+
+  text-align: end;
+
+  cursor: default;
+
+  /* will-change: transform; */
+  /* Layer 1: The Gutter GPU Layer */
+  /*background-color: #1e1e1e; */
+  /* Gives the GPU a solid texture target */
+}
+
+/* .EDI_gutterLine is being renamed to .eG (i.e.: Editor Gutter line) */
+.eG {
+  
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  overflow: hidden;
+  contain: strict;
+}
+
+/* .EDI_line is being renamed to .eT (i.e.: Editor Text line) */
+.eT {
+  width: 100%;
+  position: absolute;
+
+  white-space: pre !important;
+
+  top: 0;
+  left: 0;
+
+  overflow: hidden;
+
+  /* Strictly forbids the browser from adjusting spacing between characters */
+  letter-spacing: 0px !important;
+  word-spacing: 0px !important;
+  font-kerning: none !important;
+  font-variant-ligatures: none !important;
+
+  /* Locks down standard font sizing characteristics */
+  font-weight: normal !important;
+  font-style: normal !important;
+
+  tab-size: 4;
+
+  contain: strict;
+  /* will-change: transform; */
+}
+
+#EDI_gutter_scroll_mover {
+  will-change: transform;
+}
+
+#EDI_text {
+  cursor: text;
+  height: 100%;
+  /* display: contents; */
+
+  /*will-change: transform; */
+  /* Layer 1: The Gutter GPU Layer */
+  /*background-color: #1e1e1e; */
+  /* Gives the GPU a solid texture target */
+  flex: 1;
+  will-change: transform;
+}
+
+#EDI_canvas {
+  width: 100%;
+  height: 100%;
+}
+
+#EDI_selection {
+  display: contents;
+}
+
+.EDI_caretRow {
+  width: 100%;
+  outline: 1px solid var(--light-border-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  contain: strict;
+  will-change: transform;
+}
+
+.EDI_cursor {
+  width: 2.5px;
+  background-color: var(--primary-foreground-color);
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform/*, opacity*/;
+  contain: strict;
+  /* Use step-end to natively handle discrete on/off states */
+  /* animation: blink-animation 1s step-end infinite; */
+}
+
+/*@keyframes blink-animation {
+
+  0%,
+  49.9% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}*/
+
+/*@keyframes blink-animation {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}*/
+
+.EDI_selection {
+  width: 100%;
+  position: absolute;
+  background-color: var(--primary-active-with-focus-background-color);
+  left: 0;
+  top: 0;
+}
+
+::highlight(js-keywords) {
+  color: var(--editor-syntax-keyword-color);
+}
+
+::highlight(js-keywords-control) {
+  color: var(--editor-syntax-keywordControl-color);
+}
+
+::highlight(js-type) {
+  color: var(--editor-syntax-type-color);
+}
+
+::highlight(js-member) {
+  color: var(--editor-syntax-member-color);
+}
+
+::highlight(js-function) {
+  color: var(--editor-syntax-function-color);
+}
+
+::highlight(js-identifier) {
+  color: var(--editor-syntax-identifier-color);
+}
+
+::highlight(js-comment) {
+  color: var(--editor-syntax-comment-color);
+}
+
+::highlight(js-string) {
+  color: var(--editor-syntax-string-color);
+}
+
+#DIALOG {
+  position: fixed;
+  width: 60vw;
+  height: 60vh;
+  left: 20vw;
+  top: 20vh;
+  background-color: var(--secondary-background-color);
+  color: var(--secondary-foreground-color);
+  border: 1px solid var(--primary-border-color);
+}
+
+#DIALOG_toolbar {
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--primary-border-color);
+  background-color: var(--secondary-background-color);
+  position: relative;
+}
+
+#DIALOG_body {
+  background-color: var(--secondary-background-color);
+  position: relative;
+}
+
+#DIALOG_resize {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: calc(100% + 16px);
+  height: calc(100% + 16px);
+}
+
+.APP_MEASURE_ELEMENT {
+  width: fit-content;
+  white-space: pre; /* CRITICAL: Guarantees the 396 characters stay on 1 line */
+  position: absolute;
+  visibility: hidden;
+  padding: 0;
+  border: none;
+  left: 0;
+  top: 0;
+}
+
+.APP_MEASURE_ELEMENT_WRAPPER {
+  position: fixed; /* Removes it from the normal page layout flow */
+  top: '0';
+  left: '0';
+  width: '0';        /* Forces a tiny container footprint */
+  height: '0';       /* Forces a tiny container footprint */
+  overflow: 'hidden'; /* Prevents any layout leaking out or causing scrollbars */
+  visibility: 'hidden'; /* Keeps it completely invisible to the user */
+}
+
+button:focus {
+  /*
+	When programmatically focusing a button with javascript,
+	the outline does not necessarily appear due to user-agent heuristics that determine whether the outline should appear.
+	
+	But, setting an outline yourself causes the outline to always appear regardless of the heuristics.
+	
+	This is important because some keyboard input moves focus to another "section" of app,
+	and leverages "known to exist" button elements as places to put the user's focus to.
+	
+	But without this, the user doesn't have any feedback for where their focus went (given my user-agent's heuristics, this was my experience).
+	*/
+  outline: 3px solid var(--primary-focus-outline);
+}
+
+input:focus {
+  outline: 3px solid var(--primary-focus-outline);
+}
+
+select:focus {
+  outline: 3px solid var(--primary-focus-outline);
+}
+
+.dark-theme {
+  --primary-background-color: rgb(30, 30, 30);
+  --primary-foreground-color: rgb(212, 212, 212);
+  --secondary-background-color: rgb(38, 38, 40);
+  --secondary-foreground-color: rgb(212, 212, 212);
+  --primary-border-color: rgb(212, 212, 212);
+  --light-border-color: rgb(126, 126, 126);
+  --color-scheme: dark;
+  --primary-active-with-focus-background-color: rgb(22, 71, 104);
+  --primary-active-no-focus-background-color: rgb(65, 65, 65);
+  --primary-focus-outline: rgb(185, 185, 185);
+  --gap-buffer-span-color: rgb(244, 135, 0);
+  --gutter-background-color: rgb(30, 45, 45);
+  --editor-syntax-comment-color: #6A9955;
+  --editor-syntax-string-color: #CE9178;
+  --editor-syntax-keyword-color: #569CD6;
+  --editor-syntax-keywordControl-color: #C586C0;
+  --editor-syntax-identifier-color: #9CDCFE;
+  --editor-syntax-function-color: #CECE84;
+  --editor-syntax-number-color: #B5CEA8;
+  --editor-syntax-type-color: #4EC9B0;
+  --editor-syntax-member-color: #4FC1FF;
+  --editor-cursor-color-focused: rgb(6, 138, 255);
+  --my-debug-color: red;
+}
+
+.light-theme {
+  --primary-background-color: white;
+  --primary-foreground-color: black;
+  --secondary-background-color: rgb(255, 246, 220);
+  --secondary-foreground-color: black;
+  --primary-border-color: black;
+  --light-border-color: rgb(126, 126, 126);
+  --color-scheme: light;
+  --primary-active-with-focus-background-color: #98d6f1;
+  --primary-active-no-focus-background-color: rgb(220, 220, 220);
+  --primary-focus-outline: black;
+  --gap-buffer-span-color: rgb(242, 92, 0);
+  --gutter-background-color: rgb(255, 246, 220);
+  --editor-syntax-comment-color: #008000;
+  --editor-syntax-string-color: #A31515;
+  --editor-syntax-keyword-color: #0000FF;
+  --editor-syntax-keywordControl-color: #AF00DB;
+  --editor-syntax-identifier-color: #001080;
+  --editor-syntax-function-color: #cd8900;
+  --editor-syntax-number-color: #098658;
+  --editor-syntax-type-color: #267f99;
+  --editor-syntax-member-color: #0070C1;
+  --editor-cursor-color-focused: rgb(0, 0, 255);
+  --my-debug-color: red;
+}
