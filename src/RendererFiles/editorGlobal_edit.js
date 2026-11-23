@@ -6301,7 +6301,6 @@ function EDI_render_do_EnterKey() {
             else {
                 currentLineSpans.push({ text: spanText, color: EDI_tokenColors[0] });
             }
-            //EDI_shiftLinesOfText_ToALarger_IndexLine_byOne(ringBufferIndex_last, ringBufferIndex_current);
             //EDI_lineWasInsertedValidateGutter(editor.lineEndPositionList_count + editor.cursor_editLineFeedCount);
         }
         else {
@@ -7055,20 +7054,6 @@ function EDI_render_do_RemoveSelection() {
 
     // Remove middle line(s)
     if (linesRemovedCount > 0) {
-
-        //// See comment "Awkward explicit inlining of 'EDI_indexLineTo_ringBufferIndex'" for more information.
-        //let ringBufferIndex_current = (smallLineAndColumnIndices_indexLine + 1) - editor.virtualIndexLine;
-        //if (ringBufferIndex_current >= editor.ArrayFrom_textElement_children_length || ringBufferIndex_current < 0) ringBufferIndex_current = -1;
-        //else ringBufferIndex_current = (ringBufferIndex_current + editor.ringBuffer_indexZero) % editor.virtualCount;
-//
-        //// See comment "Awkward explicit inlining of 'EDI_indexLineTo_ringBufferIndex'" for more information.
-        //let ringBufferIndex_last = (editor.virtualIndexLine + editor.virtualCount - 1) - editor.virtualIndexLine;
-        //if (ringBufferIndex_last >= editor.ArrayFrom_textElement_children_length || ringBufferIndex_last < 0) ringBufferIndex_last = -1;
-        //else ringBufferIndex_last = (ringBufferIndex_last + editor.ringBuffer_indexZero) % editor.virtualCount;
-
-        //// TODO: This will be wrong because you'd need to explicitly redraw the large selection line index.
-        //EDI_shiftLinesOfText_ToASmaller_IndexLine_byDistance(ringBufferIndex_last, ringBufferIndex_current, linesRemovedCount);
-
         if (EDI_drawGutter_Width(editor.lineEndPositionList_count - linesRemovedCount)) {
             // If true then you need to also draw the dependent UI
             EDI_render_request(RenderKind.Cursor_n);
@@ -7626,87 +7611,6 @@ function EDI_render_force_fullscreen_redraw() {
     editor.virtualIndexLine = (EDI_lastReadNumber_scrollTop / editor.lineHeight) | 0; // By bit operator or'ing with 0 you "cast" the number to a signed 32-bit integer (Int32).
     editor.ONSCROLLvirtualIndexLine = editor.virtualIndexLine + editor.virtualCount;
     EDI_render_do_Scroll();
-}
-
-/**
- * TODO: implement this but by an arbitrary distance
- * 
- * TODO: Try these functions at the limits i.e.: I think you got _last and then ... the ... should be _last or like the one before it or something or both try both.
- */
-function EDI_shiftLinesOfText_ToALarger_IndexLine_byOne(ringBufferIndex_last, inclusiveSmallestRingBufferIndexToShift) {
-    // TODO: This remove logic for the last line wasn't written with the correct understanding...
-    // ...
-    // It appears that this logic for 99% of cases is NOT needed.
-    // But that if you:
-    // - "Were at ringBuffer index zero" (I'm not sure what I'm thinking by this I need to focus on my task at hand but this edge case is being slightly-considered in my mind while typing this)
-    //     - I think the correct wording is if you were at 'PREVIOUS(ringBuffer_indexZero)' then you'd be the last line
-    //     - i.e.: if 'ringBufferIndex_last === inclusiveSmallestRingBufferIndexToShift'
-    // - for some reason only had a virtualization count of '1',
-    // you might need to run this logic otherwise an enter key at column index 0 of a line wouldn't show any changes.
-    // 
-    const local_ArrayFrom_textElement_children_length = editor.ArrayFrom_textElement_children_length;
-
-    const lastDivTextNode = EDI_ringBuffer_text[ringBufferIndex_last].firstChild;
-    lastDivTextNode.deleteData(0, lastDivTextNode.length);
-
-    // TODO: I could swear I just saw this run where 'destinationDivTextNode' was 'sourceDivTextSpan' and both i values were 'inclusiveSmallestRingBufferIndexToShift'?
-    for (let i = ringBufferIndex_last; i !== inclusiveSmallestRingBufferIndexToShift;) {
-        const destinationDivTextNode = EDI_ringBuffer_text[i].firstChild;
-        i = (i - 1 + local_ArrayFrom_textElement_children_length) % local_ArrayFrom_textElement_children_length;
-        const sourceDivTextSpan = EDI_ringBuffer_text[i].firstChild;
-        destinationDivTextNode.replaceData(0, destinationDivTextNode.length, sourceDivTextSpan.data);
-        sourceDivTextSpan.deleteData(0, sourceDivTextSpan.length);
-    }
-}
-
-/**
- * 'smallestRingBufferIndexToReceive' somewhat 'exclusive' in that it doesn't get shifted. It is the smallest line that receives the shift of the next line, and thus all content on this line is lost in the process.
- * 
- * TODO: an idea that you might be able to short circuit if you start shifting 'out of bounds lines of text' into 'out of bounds lines of text'?
- * 
- * TODO: Try these functions at the limits i.e.: I think you got _last and then ... the ... should be _last or like the one before it or something or both try both.
- */
-function EDI_shiftLinesOfText_ToASmaller_IndexLine_byDistance(ringBufferIndex_last, smallestRingBufferIndexToReceive, distance, local_virtualIndexLine, local_virtualCount) {
-
-    // TODO: Does 'coalesce assignment' exist, and is it equivalent?
-    if (!local_virtualIndexLine) local_virtualIndexLine = editor.virtualIndexLine;
-    if (!local_virtualCount) local_virtualCount = editor.virtualCount;
-
-    // TODO: if smallestRingBufferIndexToReceive < 0 throw an error?
-
-    const local_ArrayFrom_textElement_children_length = editor.ArrayFrom_textElement_children_length;
-
-    let breakingPoint = ringBufferIndex_last;
-    for (let i = 1 /*starts at one*/; i < distance; i++) {
-        breakingPoint = (breakingPoint - 1 + local_ArrayFrom_textElement_children_length) % local_ArrayFrom_textElement_children_length;
-    }
-
-    for (let destinationIndex = smallestRingBufferIndexToReceive; destinationIndex !== breakingPoint;) {
-        const destinationDivTextNode = EDI_ringBuffer_text[destinationIndex].firstChild;
-        let sourceIndex = destinationIndex;
-        for (let i = 0; i < distance; i++) {
-            sourceIndex = (sourceIndex + 1) % local_ArrayFrom_textElement_children_length;
-        }
-        destinationDivTextNode.replaceData(0, destinationDivTextNode.length, EDI_ringBuffer_text[sourceIndex].textContent);
-        // You don't need to clear 'EDI_ringBuffer_text[sourceIndex].textContent', that's done in the final step of this function
-        // when invoking 'EDI_drawLine'.
-        if (editor.gutter_scroll_mover.children[sourceIndex].textContent === '~') {
-            const destination_textNode_gutter = editor.gutter_scroll_mover.children[destinationIndex].firstChild;
-            destination_textNode_gutter.replaceData(0, destination_textNode_gutter.length, '~');
-        }
-        destinationIndex = (destinationIndex + 1) % local_ArrayFrom_textElement_children_length;
-    }
-
-    let ringBufferIndex = ringBufferIndex_last;
-    for (let i = 0; ; i++) {
-        EDI_drawLine(
-            (local_virtualIndexLine + local_virtualCount - 1 - i) + distance,
-            editor.gutter_scroll_mover.children[ringBufferIndex],
-            EDI_ringBuffer_text[ringBufferIndex],
-            (local_virtualIndexLine + local_virtualCount - 1 - i));
-        if (ringBufferIndex === breakingPoint) break; // awkward positioning of this break, it seems somewhat necessary but need to take time to read the code further and try to have it moved somewhere more sensible.
-        ringBufferIndex = (ringBufferIndex - 1 + local_ArrayFrom_textElement_children_length) % local_ArrayFrom_textElement_children_length;
-    }
 }
 
 /**
