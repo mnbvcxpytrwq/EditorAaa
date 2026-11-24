@@ -10,6 +10,10 @@ export function set_shouldUseCSharpToSaveFileWhenPossible(value) {
     shouldUseCSharpToSaveFileWhenPossible = value;
 }
 
+/**
+ * TODO: I'm worried that there will exist a variable named 'App' or 'app' etc... and that this class will overwrite it. That's why I prefixed this with 'Aaa'...
+ * ...maybe with modules this isn't even possible. I'm not thinking about my own variable I'm thinking about someone elses.
+ */
 class AaaApp {
     constructor() {
         this.isDark = true;
