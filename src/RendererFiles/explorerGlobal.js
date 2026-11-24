@@ -1,4 +1,3 @@
-import * as f from "./fieldBuffer.js" // TODO: remove this unused import
 import {
     TreeViewComponent,
     treeViewComponent_staticRunner,

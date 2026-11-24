@@ -1,5 +1,3 @@
-import * as f from './fieldBuffer.js' // TODO: remove this unused import
-
 export const fTreeView_poolret_pooledNode_key = 28;
 export const fTreeView_poolret_pooledNode_depth = 29;
 

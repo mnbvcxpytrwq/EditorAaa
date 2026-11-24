@@ -1,5 +1,3 @@
-import * as f from "./fieldBuffer.js" // TODO: remove this unused import
-import {explorer, set_EXPLORER_firstSpanWidth} from './explorerGlobal.js'
 import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, EDI_styleBuffer, set_EDI_styleBuffer, EDI_render_request, RenderKind, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
 import {DIALOG_show, DialogKind} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
