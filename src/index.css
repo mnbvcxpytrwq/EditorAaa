@@ -38,10 +38,6 @@ body {
   contain: layout paint style;
 }
 
-.treeView_node {
-  white-space: nowrap;
-}
-
 #MENU {
   position: fixed;
   width: 200px;
@@ -85,56 +81,10 @@ body {
   z-index: 1;
 }
 
-.LIST_text {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  height: 100%;
-  left: 0px;
-  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
-  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
-}
-
 .LIST {
   overflow: hidden;
   position: relative;
   contain: strict;
-}
-
-.LIST_virtualization {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-}
-
-.LIST_itemList {
-  display: contents;
-}
-
-#AUTOCOMPLETE_scroll_viewport {
-  position: absolute;
-  inset: 0;
-  overflow: scroll;
-  z-index: 3;
-}
-
-#AUTOCOMPLETE_visual_canvas {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-
-#AUTOCOMPLETE_text {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  height: 100%;
-  left: 0px;
-  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
-  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
 }
 
 #AUTOCOMPLETE {
@@ -151,30 +101,6 @@ body {
   padding-bottom: 1px;
   overflow: hidden;
   contain: strict;
-}
-
-#AUTOCOMPLETE:focus #AUTOCOMPLETE_cursor {
-  background-color: var(--primary-active-with-focus-background-color);
-}
-
-#AUTOCOMPLETE_virtualization {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-}
-
-#AUTOCOMPLETE_cursor {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: var(--primary-active-no-focus-background-color);
-  position: absolute;
-  width: 100%;
-}
-
-#AUTOCOMPLETE_itemList {
-  display: contents;
 }
 
 #EXPLORER_scroll_viewport {
@@ -200,13 +126,6 @@ body {
   left: 0px;
 }
 
-/*
-TODO: 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
-...but the folder explorer is always on screen and I'm trying to get the
-composite layers correct.
-
-TODO: maybe don't nearly-duplicate these classes.
-*/
 .TREEVIEW {
   position: relative;
   overflow: hidden;
@@ -297,11 +216,6 @@ TODO: maybe don't nearly-duplicate these classes.
   contain: strict;
 }
 
-/* .eN (i.e.: Editor Not_yet_syntax_highlighted) */
-.eN {
-  color: var(--editor-syntax-operatorAssignment-color);
-}
-
 #EDI_findOverlay {
   position: absolute;
   right: 20px;
@@ -336,64 +250,6 @@ TODO: maybe don't nearly-duplicate these classes.
   /* Gives the GPU a solid texture target */
   flex: 1;
   will-change: transform;
-}
-
-/*@keyframes blink-animation {
-
-  0%,
-  49.9% {
-    opacity: 1;
-  }
-
-  50%,
-  100% {
-    opacity: 0;
-  }
-}*/
-
-/*@keyframes blink-animation {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}*/
-
-.EDI_selection {
-  width: 100%;
-  position: absolute;
-  background-color: var(--primary-active-with-focus-background-color);
-  left: 0;
-  top: 0;
-}
-
-::highlight(js-keywords) {
-  color: var(--editor-syntax-keyword-color);
-}
-
-::highlight(js-keywords-control) {
-  color: var(--editor-syntax-keywordControl-color);
-}
-
-::highlight(js-type) {
-  color: var(--editor-syntax-type-color);
-}
-
-::highlight(js-member) {
-  color: var(--editor-syntax-member-color);
-}
-
-::highlight(js-function) {
-  color: var(--editor-syntax-function-color);
-}
-
-::highlight(js-identifier) {
-  color: var(--editor-syntax-identifier-color);
-}
-
-::highlight(js-comment) {
-  color: var(--editor-syntax-comment-color);
-}
-
-::highlight(js-string) {
-  color: var(--editor-syntax-string-color);
 }
 
 #DIALOG {
