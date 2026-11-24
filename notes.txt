@@ -298,6 +298,40 @@ Are you thinking about adding unused import removal to your C# transpiler (for e
 
 
 
+>
+what happens to comments that are in my code when I run the app?
+
+
+
+
+<
+V8’s lexer completely skips comments during tokenization, so they produce zero bytecode and have no runtime cost once a function is parsed.
+
+Here is what happens under the hood at each stage:
+• 1. Lexical Analysis (Scanner): When V8 reads your JavaScript file, the scanner immediately discards // single-line and /* ... */ multi-line comments as whitespace before tokens are ever
+     passed to the parser. They never make it into the AST or Ignition bytecode.
+• 2. Memory (Function.prototype.toString()): V8 keeps the original source string (or lazy source position offsets into the script buffer) in memory so fn.toString()
+     and DevTools stack traces still show your exact source code, including comments.
+• 3. Tiny Parse-Time Cost: The only real overhead is I/O (reading those extra bytes from disk) and the scanner advancing its character pointer past the comment characters—which runs
+     at gigabytes per second and is completely negligible in a desktop Electron app.
+
+
+One Niche Edge Case
+
+The only time comments affect runtime behavior is if you rely on fn.toString() at runtime to inspect function source length
+(which used to affect V8's old AST-size-based inlining heuristics years ago, though modern V8 uses bytecode size instead, which ignores comments completely).
+
+Relevance to Your C# Transpiler
+
+When your C# transpiler strips const declarations and inlines enums:
+• Comment spans: If a const declaration has a trailing inline comment (const MAX = 10; // max items),
+  your span-removal pass can either leave the comment behind or extend the deletion span to the end of the line (\n) so you don't leave orphaned comments floating in the output.
+• No need to minify: Unless you want smaller output files on disk, you don't need to strip comments for runtime speed.
+
+Are you planning to have your C# transpiler preserve line numbers (by replacing removed declarations with blank lines so DevTools stack traces match your original source),
+or collapse removed lines cleanly?
+
+
 
 
 
