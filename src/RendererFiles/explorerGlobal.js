@@ -11,6 +11,7 @@ import {
 import {set_shouldUseCSharpToSaveFileWhenPossible, sendTransaction_MessageKind_textDocument_didOpen} from './applicationRendererRoot.js'
 import {EDI_state_setText_byteArray, EDI_toExtensionKind, EDI_onResize} from './editorGlobal_edit.js'
 import {WidgetKind, WIDGET_show} from './widgetGlobal.js'
+import { APP_colors } from "./fieldBuffer.js"
 
 /**
  * TODO: Only use a single menuOptionCut_object that is located in "MENU_" to reduce the chance of memory leaks due to a 'cut' that never gets
@@ -191,7 +192,7 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
         }
     }
 
-    ctx.fillStyle = '#d4d4d4';
+    ctx.fillStyle = APP_colors.standardText;
 
     let previousDepthString = '';
     let previousDepthStringDepth = 0;

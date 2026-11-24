@@ -5,6 +5,8 @@ import {CommandKind} from './menuGlobal.js'
 import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
 
+const EDI_tokenColors = f.EDI_tokenColors;
+
 /**
  * If you have an extension listed here, it is expected that the "function to invoke" exists.
  * As of right now any patterns to naming the function that gets invoked are tentative.
@@ -88,8 +90,6 @@ export const CONST_EDI_ASCII_TAB = 9;
 export const CONST_EDI_ASCII_SPACE = 32;
 
 export const CONST_EDI_cursor_htmlId = "EDI_cursor-1";
-
-
 
 /**
  * I'm not sure how large I want this, what matters is that I just have a size of anything for the time being, then can change this constant later.
@@ -497,20 +497,6 @@ export let EDI_styleBuffer = new Uint8Array(0);
 export function set_EDI_styleBuffer(value) {
     EDI_styleBuffer = value;
 }
-
-// Quick index token to color assignment map
-export const EDI_tokenColors = [
-    '#d4d4d4', // Token 0: standardText
-    '#CE9178', // Token 1: string
-    '#6A9955', // Token 2: comment
-    '#569CD6', // Token 3: keyword
-    '#C586C0', // Token 4: keywordControl
-    '#9CDCFE', // Token 5: identifier
-    '#4EC9B0', // Token 6: type
-    '#4FC1FF', // Token 7: member
-    '#CECE84', // Token 8: function
-    // 9 is hardcoded throughout the app to force write if you add another you need to start using 10 instead of 9 or etc...
-];
 
 /** decimal */
 export let EDI_lastReadNumber_scrollLeft = 0;

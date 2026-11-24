@@ -1,3 +1,25 @@
+
+// Quick index token to color assignment map
+export const EDI_tokenColors = [
+    '#d4d4d4', // Token 0: standardText
+    '#CE9178', // Token 1: string
+    '#6A9955', // Token 2: comment
+    '#569CD6', // Token 3: keyword
+    '#C586C0', // Token 4: keywordControl
+    '#9CDCFE', // Token 5: identifier
+    '#4EC9B0', // Token 6: type
+    '#4FC1FF', // Token 7: member
+    '#CECE84', // Token 8: function
+    // 9 is hardcoded throughout the app to force write if you add another you need to start using 10 instead of 9 or etc...
+];
+
+export const APP_colors = {
+    standardText: '#d4d4d4',
+    cursor_hasFocus_backgroundColor: '#528bff',
+};
+
+
+
 export const BUFFER_SIZE = 32;
 export const BUFFER_MASK = 31;
 

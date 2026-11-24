@@ -2,6 +2,7 @@ import {aaaApp} from "./applicationRendererRoot.js"
 import {TreeViewComponent, TreeViewNodeKind, treeViewComponent_staticRunner} from "./treeViewComponent.js"
 import {editor, CONST_EDI_ASCII_TAB, CONST_EDI_ASCII_SPACE, EDI_textSourceIdentifier, EDI_moveCursor_position} from './editorGlobal_edit.js'
 import {EXPLORER_openInEditor} from './explorerGlobal.js'
+import { APP_colors } from "./fieldBuffer.js"
 
 /**
  * @type {TreeViewComponent}
@@ -98,7 +99,7 @@ function FindAll_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, de
         ctx.fillRect(0, cursorY, FindAll_treeViewComponent.canvas.width, FindAll_treeViewComponent.itemHeightNumber);
     }
 
-    ctx.fillStyle = '#d4d4d4';
+    ctx.fillStyle = APP_colors.standardText;
 
     let previousDepthString = '';
     let previousDepthStringDepth = 0;
@@ -195,7 +196,7 @@ function FindAll_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, de
         if (cacheEntry.count !== null) {
             ctx.fillStyle = '#CE9178';
             ctx.fillText(cacheEntry.count, (cacheEntry.displayName.length + 1) * FindAll_treeViewComponent.characterWidth, vertical);
-            ctx.fillStyle = '#d4d4d4';
+            ctx.fillStyle = APP_colors.standardText;
         }
         vertical += ITEM_HEIGHT_NUMBER;
 
