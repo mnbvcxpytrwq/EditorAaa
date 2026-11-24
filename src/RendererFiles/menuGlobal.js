@@ -1,5 +1,4 @@
 import * as f from './fieldBuffer.js'
-import {aaaApp} from "./applicationRendererRoot.js"
 import {listComponent_staticRunner, ListComponent} from './listComponent.js'
 
 export const CommandKind = Object.freeze({
@@ -248,7 +247,7 @@ function MENU_render_do_Set() {
 
     MENU_request.recentBoundingClientRectTop = finalTop;
 
-    MENU_listComponent.cursorIndex = MENU_request.index;
+    MENU_listComponent.cursorIndex = MENU_listComponent.state_cursor_validateIndex(MENU_request.index);
     MENU_listComponent.initialize(menuElement);
 
     MENU_listComponent.rootElement.focus();

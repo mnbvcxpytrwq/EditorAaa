@@ -123,10 +123,10 @@ export class ListComponent {
      * @param {number} initialCapacity 
      * @param {ListComponent_staticRunner} listComponent_staticRunner 
      */
-    constructor(initialCapacity, listComponent_staticRunner, renderLines, dblClick_or_space_or_enter, oncontextmenu, onMeasure, onBlur) {
+    constructor(initialCapacity, listComponent_staticRunner, renderLines, click_or_space_or_enter, oncontextmenu, onMeasure, onBlur) {
 
         this.renderLines = renderLines;
-        this.dblClick_or_space_or_enter = dblClick_or_space_or_enter;
+        this.click_or_space_or_enter = click_or_space_or_enter;
         this.oncontextmenu = oncontextmenu;
         this.onMeasure = onMeasure;
         this.onBlur = onBlur;
@@ -187,7 +187,7 @@ export class ListComponent {
         // Bind once in constructor so ... doesn't allocate a closure per ...
         this.eventScroll = this.event_scroll.bind(this);
         this.eventClick = this.event_click.bind(this);
-        this.eventDblClick = this.event_dblclick.bind(this);
+        this.eventMouseMove = this.event_mousemove.bind(this);
         this.eventKeydown = this.event_keydown.bind(this);
         this.eventContextmenu = this.event_contextmenu.bind(this);
         this.eventBlur = this.event_blur.bind(this);
@@ -214,7 +214,7 @@ export class ListComponent {
         this.scrollViewport.addEventListener('scroll', this.eventScroll, { passive: true });
         
         this.rootElement.addEventListener('click', this.eventClick);
-        this.rootElement.addEventListener('dblclick', this.eventDblClick);
+        this.rootElement.addEventListener('mousemove', this.eventMouseMove);
         this.rootElement.addEventListener('keydown', this.eventKeydown);
         this.rootElement.addEventListener('contextmenu', this.eventContextmenu);
         this.rootElement.addEventListener('blur', this.eventBlur);
@@ -231,7 +231,7 @@ export class ListComponent {
         this.scrollViewport.removeEventListener('scroll', this.eventScroll, { passive: true }); // TODO: You don't pass '{ passive: true }' when removing an event that was added with it but this doesn't error and it makes me feel less anxious.
 
         this.rootElement.removeEventListener('click', this.eventClick);
-        this.rootElement.removeEventListener('dblclick', this.eventDblClick);
+        this.rootElement.removeEventListener('mousemove', this.eventMouseMove);
         this.rootElement.removeEventListener('keydown', this.eventKeydown);
         this.rootElement.removeEventListener('contextmenu', this.eventContextmenu);
         this.rootElement.removeEventListener('blur', this.eventBlur);
@@ -342,9 +342,10 @@ export class ListComponent {
 
         this.cursorIndex = indexItem;
         this.renderCursor_ScrollIntoView_Or_RenderCursor();
+        this.click_or_space_or_enter(undefined /*key*/, this.cursorIndex, ringBufferIndexItem);
     }
-
-    event_dblclick(event) {
+    
+    event_mousemove(event) {
         const event_clientY = event.clientY;
         event = null;
 
@@ -352,13 +353,10 @@ export class ListComponent {
         let indexItem = Math.floor(rY / this.itemHeightNumber);
         indexItem = this.state_cursor_validateIndex(indexItem);
 
-        let ringBufferIndexItem = this.toRingBufferIndex(indexItem);
-        if (ringBufferIndexItem < 0) return;
+        if (this.cursorIndex === indexItem) { return; }
 
-        // TODO: if not clicked "chevron"
         this.cursorIndex = indexItem;
         this.renderCursor_ScrollIntoView_Or_RenderCursor();
-        this.dblClick_or_space_or_enter(undefined /*key*/, this.cursorIndex, ringBufferIndexItem);
     }
 
     event_contextmenu(event) {
@@ -518,7 +516,7 @@ export class ListComponent {
         let ringBufferIndexItem = this.toRingBufferIndex(this.cursorIndex);
         if (ringBufferIndexItem < 0) return;
 
-        this.dblClick_or_space_or_enter(key, this.cursorIndex, ringBufferIndexItem);
+        this.click_or_space_or_enter(key, this.cursorIndex, ringBufferIndexItem);
     }
 
     /**
