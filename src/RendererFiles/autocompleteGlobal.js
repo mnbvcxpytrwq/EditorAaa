@@ -69,7 +69,12 @@ function AUTOCOMPLETE_listComponent_renderLines(lineIndexLower, lineIndexUpper, 
         if (i >= decodingBoundLower && i < decodingBoundUpper) {
             if (i < COUNT) {
                 const key = AUTOCOMPLETE_listComponent.data[i];
-                LINE_CACHE[ringBufferIndex] = '' + key;
+                if (key < autocomplete.data.length) {
+                    LINE_CACHE[ringBufferIndex] = autocomplete.data;
+                }
+                else {
+                    LINE_CACHE[ringBufferIndex] = '' + key;
+                }
             }
             else {
                 LINE_CACHE[ringBufferIndex] = '~';
@@ -169,7 +174,7 @@ export function AUTOCOMPLETE_setData(data) {
     autocomplete.data = data;
     AUTOCOMPLETE_listComponent.clear();
     for (let i = 0; i < autocomplete.data.length; i++) {
-        AUTOCOMPLETE_listComponent.insert(AUTOCOMPLETE_listComponent.count, autocomplete.data[i]);
+        AUTOCOMPLETE_listComponent.insert(AUTOCOMPLETE_listComponent.count, i);
     }
     AUTOCOMPLETE_listComponent.drawScrollbarHeight();
     AUTOCOMPLETE_listComponent.forceFullscreen_renderScroll();
