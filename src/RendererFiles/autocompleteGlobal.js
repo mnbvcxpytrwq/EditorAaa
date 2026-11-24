@@ -5,15 +5,6 @@ const CONST_AUTOCOMPLETE_topPadding = 4;
 
 export const WIDTH_NODE_DRAWN_NUMBER_IN_CH_UNITS_NO_PADDING = 2;
 
-const AUTOCOMPLETErenderKind = Object.freeze({
-    None: 0,
-    Show: 1,
-    Hide: 2,
-    CursorSet: 3,
-    CreateLines: 4,
-    Scroll: 5,
-});
-
 class Autocomplete {
     constructor() {
         this.exists = false;
@@ -97,19 +88,19 @@ function AUTOCOMPLETE_render_do() {
         autocomplete.queueHead++; 
 
         switch (renderKind) {
-            case AUTOCOMPLETErenderKind.Show:
+            case 1 /*AUTOCOMPLETErenderKind.Show: 1*/:
                 AUTOCOMPLETE_render_do_show();
                 break;
-            case AUTOCOMPLETErenderKind.Hide:
+            case 2 /*AUTOCOMPLETErenderKind.Hide: 2*/:
                 AUTOCOMPLETE_render_do_hide();
                 break;
-            case AUTOCOMPLETErenderKind.CursorSet:
+            case 3 /*AUTOCOMPLETErenderKind.CursorSet: 3*/:
                 AUTOCOMPLETE_cursor_render_set();
                 break;
-            case AUTOCOMPLETErenderKind.CreateLines:
+            case 4 /*AUTOCOMPLETErenderKind.CreateLines: 4*/:
                 AUTOCOMPLETE_render_create_lines();
                 break;
-            case AUTOCOMPLETErenderKind.Scroll:
+            case 5 /*AUTOCOMPLETErenderKind.Scroll: 5*/:
                 AUTOCOMPLETE_events_scroll_render();
                 break;
         }
@@ -316,7 +307,7 @@ function AUTOCOMPLETE_render_do_show() {
 
 function AUTOCOMPLETE_show(lspResult) {
     AUTOCOMPLETE_pending_lspResult = lspResult;
-    AUTOCOMPLETE_render_request(AUTOCOMPLETErenderKind.Show);
+    AUTOCOMPLETE_render_request(1 /*AUTOCOMPLETErenderKind.Show: 1*/);
 }
 
 function AUTOCOMPLETE_slice(lspResult) {
@@ -407,7 +398,7 @@ function AUTOCOMPLETE_render_do_hide() {
 
 function AUTOCOMPLETE_hide() {
     AUTOCOMPLETE_pending_lspResult = null;
-    AUTOCOMPLETE_render_request(AUTOCOMPLETErenderKind.Hide);
+    AUTOCOMPLETE_render_request(2 /*AUTOCOMPLETErenderKind.Hide: 2*/);
 }
 
 function AUTOCOMPLETE_cursor_render_set() {
@@ -441,7 +432,7 @@ function AUTOCOMPLETE_cursor_render_set() {
 
 function AUTOCOMPLETE_cursor_do_set(cursorIndex) {
     autocomplete.cursorIndex = cursorIndex;
-    AUTOCOMPLETE_render_request(AUTOCOMPLETErenderKind.CursorSet);
+    AUTOCOMPLETE_render_request(3 /*AUTOCOMPLETErenderKind.CursorSet: 3*/);
 }
 
 function AUTOCOMPLETE_cursor_validate(cursorIndex) {
@@ -493,7 +484,7 @@ function AUTOCOMPLETE_events_scroll_receive(event) {
     // 
     autocomplete.scrollTop = AUTOCOMPLETE_scroll_viewport.scrollTop;
     autocomplete.scrollLeft = AUTOCOMPLETE_scroll_viewport.scrollLeft;
-    AUTOCOMPLETE_render_request(AUTOCOMPLETErenderKind.Scroll);
+    AUTOCOMPLETE_render_request(5 /*AUTOCOMPLETErenderKind.Scroll: 5*/);
 }
 
 function AUTOCOMPLETE_events_scroll_render() {
@@ -619,3 +610,14 @@ function AUTOCOMPLETE_events_onkeydown(event) {
             break;
     }
 }
+
+/*
+const AUTOCOMPLETErenderKind = Object.freeze({
+    None: 0,
+    Show: 1,
+    Hide: 2,
+    CursorSet: 3,
+    CreateLines: 4,
+    Scroll: 5,
+});
+*/
