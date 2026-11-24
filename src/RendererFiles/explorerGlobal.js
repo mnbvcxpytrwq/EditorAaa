@@ -456,20 +456,6 @@ function EXPLORER_addSpecificMenuOptionsForTarget(optionList, target) {
     }
 }
 
-/*
-TODO: The TreeView after you resize it, you can continually scroll down and it keeps replacing more and more '~' lines
-        even if you've scrolled through everything already.
-        This is probably some kind of rounding error?
-        It porbably happens regardless of whether you resized
-        and more-so that you just happen to have hit the perfect height for it to happen?
-*/
-
-/** 8px by default or the measured value with px */
-export let EXPLORER_firstSpanWidth = '8px';
-export function set_EXPLORER_firstSpanWidth(value) {
-    EXPLORER_firstSpanWidth = value;
-}
-
 // function EXPLORER_init
 // V8 can optimize away these initialization statements that exist at the module scope but not an "initialization function"
 const EXPLORER_pickFolderOrWorkspaceButton = document.getElementById('EXPLORER_folderOrWorkspaceButtons');

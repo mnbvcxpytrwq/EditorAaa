@@ -42,7 +42,7 @@ class Menu {
 
 export const menu = new Menu();
 
-export const OFFSET_MENU = 96; // Slots 96 to 127 // Define the unique byte offset where each UI's memory space begins
+const OFFSET_MENU = 96; // Slots 96 to 127 // Define the unique byte offset where each UI's memory space begins
 
 /**
  * @callback MENU_OnCompleteAction

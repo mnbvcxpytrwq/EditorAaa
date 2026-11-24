@@ -43,7 +43,7 @@ class Widget {
 
 export const widget = new Widget();
 
-export const OFFSET_WIDGET = 64; // Slots 64 to 95 // Define the unique byte offset where each UI's memory space begins
+const OFFSET_WIDGET = 64; // Slots 64 to 95 // Define the unique byte offset where each UI's memory space begins
 
 /**
  * @callback WIDGET_Callback
