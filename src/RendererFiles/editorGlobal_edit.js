@@ -3,6 +3,7 @@ import {UInt32List} from './listTypes.js'
 import * as f from './fieldBuffer.js'
 import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
+import {autocomplete, AUTOCOMPLETE_show, AUTOCOMPLETE_hide} from './autocompleteGlobal.js'
 
 const EDI_gutterPaddingLeft = 3;
 const EDI_gutterPaddingRight = 6;
@@ -3688,10 +3689,11 @@ function EDI_read_duplication() {
 
 function EDI_requestLspComplete() {
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
-        EDI_finalizeEdit();
-    }
+    //if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
+    //    EDI_finalizeEdit();
+    //}
     //window.myAPI.editorCompletionRequest(editor.cursor_indexLine, editor.cursor_indexColumn);
+    AUTOCOMPLETE_show();
 }
 
 /**
@@ -7934,6 +7936,10 @@ export function EDI_onMouseDown(event) {
     if (tooltip.exists) {
         TOOLTIP_hide();
     }
+    
+    if (autocomplete.exists) {
+        AUTOCOMPLETE_hide();
+    }
 
     if (editor.recentBoundingClientRect_isNull) {
         let boundingClientRect = editor.baseElement.getBoundingClientRect();
@@ -8648,7 +8654,7 @@ export function EDI_onKeyDown(event) {
             break;
         case 'Escape':
             EDI_finalizeEdit();
-            AUTOCOMPLETE_hide();
+            if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
             break;
         case 'Tab':
             event.preventDefault();
@@ -8687,6 +8693,8 @@ function EDI_onKeyDown_ArrowLeft(event) {
     if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
+
+    if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
 
     if (EDI_cursor_hasSelection() && !event.shiftKey) {
         let small;
@@ -8779,6 +8787,7 @@ function EDI_onKeyDown_ArrowDown(event) {
         if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
             EDI_finalizeEdit();
         }
+        if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
         EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
         if (editor.cursor_indexLine < editor.lineEndPositionList_count - 1) {
             editor.cursor_indexLine++;
@@ -8805,6 +8814,7 @@ function EDI_onKeyDown_ArrowUp(event) {
         if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
             EDI_finalizeEdit();
         }
+        if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
         EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
         if (editor.cursor_indexLine > 0) {
             editor.cursor_indexLine--;
@@ -8825,6 +8835,8 @@ function EDI_onKeyDown_ArrowRight(event) {
     if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
+
+    if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
 
     if (EDI_cursor_hasSelection() && !event.shiftKey) {
         let large;
@@ -8908,6 +8920,7 @@ function EDI_onKeyDown_Home(event) {
     if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
+    if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
     EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
     if (event.ctrlKey) {
         editor.cursor_indexLine = 0;
@@ -8940,6 +8953,7 @@ function EDI_onKeyDown_End(event) {
     if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
+    if (autocomplete.exists) { AUTOCOMPLETE_hide(); }
     EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
 
     const originalLine = editor.cursor_indexLine;
@@ -9085,7 +9099,7 @@ async function EDI_onKeyDown_keyLengthEqualsOne_ctrlKey(event) {
         case 'r':
 
             if (autocomplete.exists) {
-                AUTOCOMPLETE_events_scroll_render_trailingEdgeDo(EDI_autocomplete_get_filter());
+                //AUTOCOMPLETE_events_scroll_render_trailingEdgeDo(EDI_autocomplete_get_filter());
             }
 
             event.preventDefault();

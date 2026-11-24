@@ -168,10 +168,6 @@ export class TreeViewComponent {
         
         this.ringBufferIndexZero = 0;
 
-        this.WIDTH_NODE_DRAWN_NUMBER_IN_CH_UNITS_NO_PADDING = 2;
-
-        this.LARGEST_DEPTH_SEEN_NOT_THE_CSS_JUST_THE_DEPTH = 0;
-
         this.offsetWidth = 0;
         this.offsetHeight = 0;
 

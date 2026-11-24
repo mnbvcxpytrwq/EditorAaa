@@ -101,6 +101,8 @@ body {
   padding-bottom: 1px;
   overflow: hidden;
   contain: strict;
+  top: 0;
+  left: 0;
 }
 
 .TREEVIEW {
