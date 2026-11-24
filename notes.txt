@@ -404,25 +404,55 @@ Here are top web results for exploring this topic:
 Womp womp
 I'll try to ask it a different way
 
+=====
 
 
 
 
+>
+So the transpiler can wrap the expression it is replacing in a multiline comment
+and that this would cause negligible overhead because the "overhead" is just a matter of the lexer skipping the comment.
+(and if I wanted to get pedantic this might actually lex faster because it is less state changes (you just lex a number then a comment rather than an identifier then a period then an identifier))
 
 
 
 
+<
+Yes, that works cleanly, and your intuition about the lexer is spot on. Wrapping replaced expressions in /* ... */ preserves readability in DevTools without adding runtime overhead—and in
+many cases, it actually reduces lexer and parser work.
 
+Why Your Lexer Intuition is Right
+• Fewer Tokens Emitted: RenderKind.Scroll forces V8's scanner to build three distinct tokens (Identifier, Period, Identifier),
+  run keyword/identifier hash lookups on two strings, and allocate two AST nodes (MemberExpression + Identifier + PropertyName).
+• Single Tight Scan Loop: 1 /*RenderKind.Scroll*/ emits a single Smi token (1), and then V8's SkipMultiLineComment() enters a tight SIMD-accelerated memchr search straight for */
+  without allocating a single token or AST node.
 
+Two Subtle Edge Cases to Watch Out For
 
+If your transpiler generates value /*original_expression*/, keep two JS syntax rules in mind so you never emit broken code:
+1. Nested */ Inside the Original Expression:
+   If the replaced expression ever contains a regex literal or string with */ (unlikely for integer constants and enums, though possible in general expressions), wrapping it in
+   /* ... */ prematurely closes the comment and causes a SyntaxError. Escaping */ to * / (or restricting this to verified identifier/member-access nodes) completely avoids this.
+2. Automatic Semicolon Insertion (ASI) Across Newlines:
+   If a multi-line comment contains a newline (\n), JavaScript's parser treats the entire comment as a line terminator for ASI rules:
 
+```js
+// Safe (single line):
+return 1 /*RenderKind.Scroll*/;
 
+// Broken if a newline sneaks inside the comment after `return`:
+return /* RenderKind
+.Scroll */ 1; // JS inserts a semicolon right after `return`!
+```
 
+Since you place the constant before the comment (1 /*RenderKind.Scroll*/) and keep single-line member accesses on one line, you naturally sidestep this trap.
 
+Bonus: The Same Trick for Removed Declarations
 
+You can apply the exact same "non-destructive" philosophy when removing the enum or const declaration at the top of the file—commenting it out (/* const MAX = 10; */)
+instead of deleting it keeps every single byte and line number aligned for debugging while completely erasing it from V8's AST.
 
-
-
+Are you planning to emit inline comments like 1 /*RenderKind.Scroll*/ across your entire codebase, or only in debug/dev transpilation builds?
 
 
 
