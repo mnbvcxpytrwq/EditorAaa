@@ -1,6 +1,4 @@
-
-// Quick index token to color assignment map
-export const EDI_tokenColors = [
+export const EDI_tokenColors_dark = Object.freeze([
     '#d4d4d4', // Token 0: standardText
     '#CE9178', // Token 1: string
     '#6A9955', // Token 2: comment
@@ -11,14 +9,36 @@ export const EDI_tokenColors = [
     '#4FC1FF', // Token 7: member
     '#CECE84', // Token 8: function
     // 9 is hardcoded throughout the app to force write if you add another you need to start using 10 instead of 9 or etc...
-];
+]);
 
-export const APP_colors = {
+// Quick index token to color assignment map
+export const EDI_tokenColors_light = Object.freeze([
+    'red', // Token 0: standardText
+    'red', // Token 1: string
+    'red', // Token 2: comment
+    'red', // Token 3: keyword
+    'red', // Token 4: keywordControl
+    'red', // Token 5: identifier
+    'red', // Token 6: type
+    'red', // Token 7: member
+    'red', // Token 8: function
+    // 9 is hardcoded throughout the app to force write if you add another you need to start using 10 instead of 9 or etc...
+]);
+
+// Quick index token to color assignment map
+export let EDI_tokenColors = EDI_tokenColors_dark;
+
+export const APP_colors_dark = {
     standardText: '#d4d4d4',
     cursor_hasFocus_backgroundColor: '#528bff',
 };
 
+export const APP_colors_light = Object.freeze({
+    standardText: 'red',
+    cursor_hasFocus_backgroundColor: 'red',
+});
 
+export let APP_colors = APP_colors_dark;
 
 export const BUFFER_SIZE = 32;
 export const BUFFER_MASK = 31;
