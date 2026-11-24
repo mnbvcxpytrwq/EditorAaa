@@ -72,6 +72,8 @@ class Explorer {
         this.isCheckingTrailingEdge = false;
         this.scrollIsFetchingData = false;
         this.boundingClientRect_isValid = false;
+
+        this.visualWidth_ofLongestLine_inChUnits = 0;
     }
 }
 
@@ -120,6 +122,10 @@ function EXPLORER_setChosenDirectory(chosenDirectoryAbsolutePath, chosenDirector
 
     EXPLORER_treeViewComponent.insert(EXPLORER_treeViewComponent.countAbstract, 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/, chosenDirectoryAbsolutePathId, 0);
     EXPLORER_pathIdToDisplayNameMap.set(chosenDirectoryAbsolutePathId, chosenDirectoryBasename);
+    if (chosenDirectoryBasename.length > explorer.visualWidth_ofLongestLine_inChUnits) {
+        explorer.visualWidth_ofLongestLine_inChUnits = chosenDirectoryBasename.length;
+        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelValue(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+    }
 }
 
 function EXPLORER_setChosenWorkspace(chooseWorkspaceResult) {
@@ -139,6 +145,10 @@ function EXPLORER_setChosenWorkspace(chooseWorkspaceResult) {
         const directory = chooseWorkspaceResult.directories[i];
         EXPLORER_treeViewComponent.insert(EXPLORER_treeViewComponent.countAbstract, 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/, directory.id, 0);
         EXPLORER_pathIdToDisplayNameMap.set(directory.id, directory.basename);
+        if (directory.basename.length > explorer.visualWidth_ofLongestLine_inChUnits) {
+            explorer.visualWidth_ofLongestLine_inChUnits = directory.basename.length;
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelValue(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+        }
     }
 }
 
@@ -252,6 +262,12 @@ async function EXPLORER_expandCollapseIconWasClicked(indexItem, ringBufferIndexI
         const insertionCount = childFilesystemEntries.length;
         if (insertionCount === 0) { EXPLORER_treeViewComponent.forceFullscreen_renderScroll(); return; }
 
+        // Assuming the longestLine's depth was equal to that of the incoming children,
+        // what would the length of the name shown on screen have been equal to?
+        //
+        let length_estimated_threshold = explorer.visualWidth_ofLongestLine_inChUnits - depth;
+        let longestLine = explorer.visualWidth_ofLongestLine_inChUnits;
+
         for (let i = 0; i < insertionCount; i++) {
             const entry = childFilesystemEntries[i];
             const nodeKind = entry.isDirectory
@@ -260,6 +276,15 @@ async function EXPLORER_expandCollapseIconWasClicked(indexItem, ringBufferIndexI
             // TODO: Insert range, or at the least 'pre-emptively' resize the list so that it fits each insertion without resizing per insertion.
             EXPLORER_treeViewComponent.insert(indexItem + 1 + i, nodeKind, entry.id, depth + 1);
             EXPLORER_pathIdToDisplayNameMap.set(entry.id, entry.basename);
+            if (entry.basename.length > length_estimated_threshold) {
+                length_estimated_threshold = entry.basename.length;
+                longestLine = entry.basename.length + depth;
+            }
+        }
+
+        if (longestLine > explorer.visualWidth_ofLongestLine_inChUnits) {
+            explorer.visualWidth_ofLongestLine_inChUnits = longestLine;
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelValue(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
         }
 
         if (EXPLORER_menuOptionPaste_object !== null && EXPLORER_menuOptionPaste_object !== undefined) {
@@ -845,6 +870,10 @@ async function NewFile_Directory_WIDGET_InputText_callback(widgetResult) {
 
         EXPLORER_treeViewComponent.insert(someIndex, nodeKind, newFileResult.pathId, target.depth + 1);
         EXPLORER_pathIdToDisplayNameMap.set(newFileResult.pathId, widgetResult.resultData);
+        if (widgetResult.resultData.length > explorer.visualWidth_ofLongestLine_inChUnits) {
+            explorer.visualWidth_ofLongestLine_inChUnits = widgetResult.resultData.length;
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelValue(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+        }
         EXPLORER_treeViewComponent.drawScrollbarHeight();
         EXPLORER_treeViewComponent.forceFullscreen_renderScroll();
     }
@@ -905,6 +934,10 @@ async function NewFile_File_WIDGET_InputText_callback(widgetResult) {
 
     EXPLORER_treeViewComponent.insert(someIndex, nodeKind, newFileResult.pathId, target.depth + 1);
     EXPLORER_pathIdToDisplayNameMap.set(newFileResult.pathId, widgetResult.resultData);
+    if (widgetResult.resultData.length > explorer.visualWidth_ofLongestLine_inChUnits) {
+        explorer.visualWidth_ofLongestLine_inChUnits = widgetResult.resultData.length;
+        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelValue(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+    }
     EXPLORER_treeViewComponent.drawScrollbarHeight();
     EXPLORER_treeViewComponent.forceFullscreen_renderScroll();
 }
