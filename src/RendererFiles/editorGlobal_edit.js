@@ -419,7 +419,7 @@ let EDI_lastReadNumber_scrollLeft = 0;
 /** decimal */
 let EDI_lastReadNumber_scrollTop = 0;
 
-let EDI_characterWidth = 8;
+export let EDI_characterWidth = 8;
 
 let EDI_cursor_cursorTranslateXValue = 0;
 

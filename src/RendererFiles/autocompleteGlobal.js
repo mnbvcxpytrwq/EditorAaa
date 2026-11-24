@@ -1,6 +1,6 @@
 import * as f from './fieldBuffer.js';
 import { ListComponent, listComponent_staticRunner } from "./listComponent.js";
-import {editor} from "./editorGlobal_edit.js";
+import {editor, EDI_characterWidth} from "./editorGlobal_edit.js";
 
 class Autocomplete {
     constructor() {
@@ -136,6 +136,9 @@ function AUTOCOMPLETE_render_do_show() {
         autocomplete.rootElement.id = 'AUTOCOMPLETE';
         autocomplete.rootElement.style.left = (editor.recentBoundingClientRect_left + 60/*the currently hardcoded gutter width*/) + 'px';
         autocomplete.rootElement.style.top = editor.recentBoundingClientRect_top + 'px';
+        const newY = (editor.cursor_indexLine + 1) * editor.lineHeight;
+        const newX = editor.cursorVisualColumnIndex * EDI_characterWidth;
+        autocomplete.rootElement.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
         document.body.appendChild(autocomplete.rootElement);
         autocomplete.exists = true;
         AUTOCOMPLETE_listComponent.initialize(autocomplete.rootElement);
