@@ -1,4 +1,4 @@
-export const EDI_tokenColors_dark = Object.freeze([
+const EDI_tokenColors_dark = Object.freeze([
     '#d4d4d4', // Token 0: standardText
     '#CE9178', // Token 1: string
     '#6A9955', // Token 2: comment
@@ -12,7 +12,7 @@ export const EDI_tokenColors_dark = Object.freeze([
 ]);
 
 // Quick index token to color assignment map
-export const EDI_tokenColors_light = Object.freeze([
+const EDI_tokenColors_light = Object.freeze([
     'black', // Token 0: standardText
     '#A31515', // Token 1: string
     '#008000', // Token 2: comment
@@ -28,17 +28,19 @@ export const EDI_tokenColors_light = Object.freeze([
 // Quick index token to color assignment map
 export let EDI_tokenColors = EDI_tokenColors_dark;
 
-export const APP_colors_dark = {
+const APP_colors_dark = {
     standardText: '#d4d4d4',
+    commentText: '#6A9955',
     cursor_hasFocus_backgroundColor: '#528bff',
     gutterBackgroundColor: 'rgb(30, 45, 45)',
     gutterForegroundColor: '#858585',
 };
 
-export const APP_colors_light = Object.freeze({
-    standardText: 'red',
-    cursor_hasFocus_backgroundColor: 'red',
-    gutterBackgroundColor: 'silver',
+const APP_colors_light = Object.freeze({
+    standardText: 'black',
+    commentText: '#008000',
+    cursor_hasFocus_backgroundColor: '#98d6f1',
+    gutterBackgroundColor: 'rgb(255, 246, 220)',
     gutterForegroundColor: 'black',
 });
 

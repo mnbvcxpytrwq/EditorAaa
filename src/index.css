@@ -318,18 +318,6 @@ select:focus {
   --primary-active-with-focus-background-color: rgb(22, 71, 104);
   --primary-active-no-focus-background-color: rgb(65, 65, 65);
   --primary-focus-outline: rgb(185, 185, 185);
-  --gap-buffer-span-color: rgb(244, 135, 0);
-  --gutter-background-color: rgb(30, 45, 45);
-  --editor-syntax-comment-color: #6A9955;
-  --editor-syntax-string-color: #CE9178;
-  --editor-syntax-keyword-color: #569CD6;
-  --editor-syntax-keywordControl-color: #C586C0;
-  --editor-syntax-identifier-color: #9CDCFE;
-  --editor-syntax-function-color: #CECE84;
-  --editor-syntax-number-color: #B5CEA8;
-  --editor-syntax-type-color: #4EC9B0;
-  --editor-syntax-member-color: #4FC1FF;
-  --editor-cursor-color-focused: rgb(6, 138, 255);
   --my-debug-color: red;
 }
 
@@ -344,17 +332,5 @@ select:focus {
   --primary-active-with-focus-background-color: #98d6f1;
   --primary-active-no-focus-background-color: rgb(220, 220, 220);
   --primary-focus-outline: black;
-  --gap-buffer-span-color: rgb(242, 92, 0);
-  --gutter-background-color: rgb(255, 246, 220);
-  --editor-syntax-comment-color: #008000;
-  --editor-syntax-string-color: #A31515;
-  --editor-syntax-keyword-color: #0000FF;
-  --editor-syntax-keywordControl-color: #AF00DB;
-  --editor-syntax-identifier-color: #001080;
-  --editor-syntax-function-color: #cd8900;
-  --editor-syntax-number-color: #098658;
-  --editor-syntax-type-color: #267f99;
-  --editor-syntax-member-color: #0070C1;
-  --editor-cursor-color-focused: rgb(0, 0, 255);
   --my-debug-color: red;
 }
