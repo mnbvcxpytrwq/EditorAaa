@@ -1,15 +1,3 @@
-const LISTrenderKind = Object.freeze({
-    None: 0,
-    Cursor: 1,
-    Create: 2,
-    Batch: 3,
-    Scroll: 4,
-    SetItems: 5,
-    FullReset: 6,
-    Scroll_PullDataDrawResult: 7,
-    Resize: 8,
-});
-
 /**
  * TODO: maybe combine the staticRunner instances into one?
  */
@@ -70,13 +58,13 @@ class ListComponent_staticRunner {
             if (!component) continue; // Component was removed before frame fired
 
             switch (renderKind) {
-                case LISTrenderKind.Scroll:
+                case 4 /*LISTrenderKind.Scroll: 4*/:
                     component.renderScroll();
                     break;
-                case LISTrenderKind.Cursor:
+                case 1 /*LISTrenderKind.Cursor: 1*/:
                     component.List_render_do_Cursor();
                     break;
-                case LISTrenderKind.Resize:
+                case 8 /*LISTrenderKind.Resize: 8*/:
                     component.renderResize();
                     break;
                 // ... remaining cases
@@ -595,13 +583,13 @@ export class ListComponent {
      * TODO: intra-app resizes or movements will also invoke this; i.e.: if a list is shown in a dialog and the dialog is resized or moved.
      */
     event_windowResize() {
-        this.listComponent_staticRunner.List_render_request(LISTrenderKind.Resize, this.runnerId);
+        this.listComponent_staticRunner.List_render_request(8 /*LISTrenderKind.Resize: 8*/, this.runnerId);
     }
 
     event_scroll() {
         this.scrollLeft = this.scrollViewport.scrollLeft;
         this.scrollTop = this.scrollViewport.scrollTop;
-        this.listComponent_staticRunner.List_render_request(LISTrenderKind.Scroll, this.runnerId);
+        this.listComponent_staticRunner.List_render_request(4 /*LISTrenderKind.Scroll: 4*/, this.runnerId);
     }
 
     // tvnl_
@@ -704,3 +692,17 @@ export class ListComponent {
         }
     }
 }
+
+/*
+const LISTrenderKind = Object.freeze({
+    None: 0,
+    Cursor: 1,
+    Create: 2,
+    Batch: 3,
+    Scroll: 4,
+    SetItems: 5,
+    FullReset: 6,
+    Scroll_PullDataDrawResult: 7,
+    Resize: 8,
+});
+*/
