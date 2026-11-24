@@ -352,8 +352,8 @@ function EXPLORER_oncontextmenu(indexItem, event_button, event_clientX, event_cl
     }
 
     let optionList = [
-        MENU_MenuOption_factory(CommandKind.Copy, 'Copy'),
-        MENU_MenuOption_factory(CommandKind.CopyAbsolutePath, 'Copy Absolute Path'),
+        MENU_MenuOption_factory(2 /*CommandKind.Copy: 2*/, 'Copy'),
+        MENU_MenuOption_factory(3 /*CommandKind.CopyAbsolutePath: 3*/, 'Copy Absolute Path'),
     ];
 
     // TODO: !!!! You might need to be careful with async and the TreeView_pooledNode; I'm not certain whether you do or don't have to be careful, and I don't feel like looking into it at the moment.
@@ -441,18 +441,18 @@ function EXPLORER_addSpecificMenuOptionsForTarget(optionList, target) {
         target.nodeKind === TreeViewNodeKind.isExpandable_NOTisExpanded) {
         
         // Directory
-        optionList.push(MENU_MenuOption_factory(CommandKind.NewFile_File, 'NewFile'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.NewFile_Directory, 'NewDirectory'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.DeleteFile_Directory, 'Delete'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.RenameFile_Directory, 'Rename'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.Paste, 'Paste'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.Cut, 'Cut'));
+        optionList.push(MENU_MenuOption_factory(7 /*CommandKind.NewFile_File: 7*/, 'NewFile'));
+        optionList.push(MENU_MenuOption_factory(6 /*CommandKind.NewFile_Directory: 6*/, 'NewDirectory'));
+        optionList.push(MENU_MenuOption_factory(8 /*CommandKind.DeleteFile_Directory: 8*/, 'Delete'));
+        optionList.push(MENU_MenuOption_factory(10 /*CommandKind.RenameFile_Directory: 10*/, 'Rename'));
+        optionList.push(MENU_MenuOption_factory(5 /*CommandKind.Paste: 5*/, 'Paste'));
+        optionList.push(MENU_MenuOption_factory(4 /*CommandKind.Cut: 4*/, 'Cut'));
     }
     else {
         // File
-        optionList.push(MENU_MenuOption_factory(CommandKind.DeleteFile_File, 'Delete'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.RenameFile_File, 'Rename'));
-        optionList.push(MENU_MenuOption_factory(CommandKind.Cut, 'Cut'));
+        optionList.push(MENU_MenuOption_factory(9 /*CommandKind.DeleteFile_File: 9*/, 'Delete'));
+        optionList.push(MENU_MenuOption_factory(11 /*CommandKind.RenameFile_File: 11*/, 'Rename'));
+        optionList.push(MENU_MenuOption_factory(4 /*CommandKind.Cut: 4*/, 'Cut'));
     }
 }
 
@@ -477,8 +477,8 @@ function toggleShowExplorerButton_onClick() {
 async function EXPLORER_pickFolderOrWorkspaceButton_onClick() {
     const EXPLORER_pickFolderOrWorkspaceButton = document.getElementById('EXPLORER_folderOrWorkspaceButtons');
     let optionList = [
-        MENU_MenuOption_factory(CommandKind.SelectFolder, 'Folder'),
-        MENU_MenuOption_factory(CommandKind.SelectWorkspace, 'Workspace'),
+        MENU_MenuOption_factory(13 /*CommandKind.SelectFolder: 13*/, 'Folder'),
+        MENU_MenuOption_factory(14 /*CommandKind.SelectWorkspace: 14*/, 'Workspace'),
     ];
     let boundingClientRect = EXPLORER_pickFolderOrWorkspaceButton.getBoundingClientRect();
     menuSet(optionList, boundingClientRect.left, boundingClientRect.top + boundingClientRect.height, EXPLORER_pickFolderOrWorkspaceButton_MenuOnClick, /*target*/ null, /*elementToFocusOnCompleted*/ null, /*disableFocusOnCompleted*/ false, /*index*/ 0);
@@ -561,7 +561,7 @@ async function EXPLORER_pickFolderOrWorkspaceButton_MenuOnClick(isCancelled, men
     if (!commandKind) { return; }
 
     switch (commandKind) {
-        case CommandKind.SelectFolder:
+        case 13 /*CommandKind.SelectFolder: 13*/:
             {
                 const EXPLORER_Element = document.getElementById('EXPLORER');
                 if (!EXPLORER_Element) return;
@@ -581,7 +581,7 @@ async function EXPLORER_pickFolderOrWorkspaceButton_MenuOnClick(isCancelled, men
                 EXPLORER_treeViewComponent.resetTheUi();
             }
             break;
-        case CommandKind.SelectWorkspace:
+        case 14 /*CommandKind.SelectWorkspace: 14*/:
             {
                 const EXPLORER_Element = document.getElementById('EXPLORER');
                 if (!EXPLORER_Element) return;
@@ -608,7 +608,7 @@ async function EXPLORER_MenuOnClick(isCancelled, menuOption, menuRequest) {
     const commandKind = menuOption.commandKind;
     if (!commandKind) { return; }
 
-    if (commandKind !== CommandKind.Copy && commandKind !== CommandKind.Cut && commandKind !== CommandKind.Paste) {
+    if (commandKind !== 2 /*CommandKind.Copy: 2*/ && commandKind !== 4 /*CommandKind.Cut: 4*/ && commandKind !== 5 /*CommandKind.Paste: 5*/) {
         EXPLORER_menuOptionPaste_object = null;
     }
 
@@ -618,7 +618,7 @@ async function EXPLORER_MenuOnClick(isCancelled, menuOption, menuRequest) {
     if (!entry) return;
 
     switch (commandKind) {
-        case CommandKind.Copy:
+        case 2 /*CommandKind.Copy: 2*/:
             EXPLORER_menuOptionPaste_object = {
                 id: null, // This id is only used when doing a cut->paste in order to determine whether the source file matches and should be deleted. If id is null then it was a copy->paste
                 basename: entry.basename,
@@ -630,7 +630,7 @@ async function EXPLORER_MenuOnClick(isCancelled, menuOption, menuRequest) {
             };
             await window.myAPI.setClipboard('file:///' + entry.absolutePath);
             break;
-        case CommandKind.Cut:
+        case 4 /*CommandKind.Cut: 4*/:
             let parentPathId = null;
             let parentItemIndex = EXPLORER_treeViewComponent.getParentItemIndex(menuRequest.target.indexItem);
             if (parentItemIndex !== -1) {
@@ -650,28 +650,28 @@ async function EXPLORER_MenuOnClick(isCancelled, menuOption, menuRequest) {
             EXPLORER_treeViewComponent.forceFullscreen_renderScroll();
             await window.myAPI.setClipboard(text);
             break;
-        case CommandKind.CopyAbsolutePath:
+        case 3 /*CommandKind.CopyAbsolutePath: 3*/:
             await window.myAPI.setClipboard(entry.absolutePath);
             break;
-        case CommandKind.Paste:
+        case 5 /*CommandKind.Paste: 5*/:
             await CommandKind_Paste_MenuOnClick_Paste(entry, menuRequest);
             break;
-        case CommandKind.NewFile_Directory:
+        case 6 /*CommandKind.NewFile_Directory: 6*/:
             await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_Directory_WIDGET_InputText_callback);
             break;
-        case CommandKind.NewFile_File:
+        case 7 /*CommandKind.NewFile_File: 7*/:
             await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_File_WIDGET_InputText_callback);
             break;
-        case CommandKind.DeleteFile_Directory:
+        case 8 /*CommandKind.DeleteFile_Directory: 8*/:
             await WIDGET_show(WidgetKind.YesCancel, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_Directory_YesCancel_callback);
             break;
-        case CommandKind.DeleteFile_File:
+        case 9 /*CommandKind.DeleteFile_File: 9*/:
             await WIDGET_show(WidgetKind.YesCancel, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_File_YesCancel_callback);
             break;
-        case CommandKind.RenameFile_Directory:
+        case 10 /*CommandKind.RenameFile_Directory: 10*/:
             await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target:menuRequest.target, entry:entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_Directory_InputText_callback);
             break;
-        case CommandKind.RenameFile_File:
+        case 11 /*CommandKind.RenameFile_File: 11*/:
             // TODO: Maybe the only difference between the _Directory and _File cases for each ..._... is the bool for isDirectory but I'm exhausted and I cannot reduce the code duplication here because my head doesn't function.
             await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target: menuRequest.target, entry: entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_File_InputText_callback);
             break;

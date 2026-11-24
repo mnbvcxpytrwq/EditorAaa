@@ -1,24 +1,6 @@
 import * as f from './fieldBuffer.js'
 import {listComponent_staticRunner, ListComponent} from './listComponent.js'
 
-export const CommandKind = Object.freeze({
-    None: 0,
-    Submenu: 1,
-    Copy: 2,
-    CopyAbsolutePath: 3,
-    Cut: 4,
-    Paste: 5,
-    NewFile_Directory: 6,
-    NewFile_File: 7,
-    DeleteFile_Directory: 8,
-    DeleteFile_File: 9,
-    RenameFile_Directory: 10,
-    RenameFile_File: 11,
-    Find: 12,
-    SelectFolder: 13,
-    SelectWorkspace: 14,
-});
-
 const MENUrenderKind = Object.freeze({
     None: 0,
     Cursor: 1,
@@ -345,3 +327,23 @@ export function MENU_MenuOption_factory(commandKind, text) {
         text: text
     };
 }
+
+/*
+export const CommandKind = Object.freeze({
+    None: 0,
+    Submenu: 1,
+    Copy: 2,
+    CopyAbsolutePath: 3,
+    Cut: 4,
+    Paste: 5,
+    NewFile_Directory: 6,
+    NewFile_File: 7,
+    DeleteFile_Directory: 8,
+    DeleteFile_File: 9,
+    RenameFile_Directory: 10,
+    RenameFile_File: 11,
+    Find: 12,
+    SelectFolder: 13,
+    SelectWorkspace: 14,
+});
+*/

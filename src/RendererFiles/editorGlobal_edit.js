@@ -3582,22 +3582,22 @@ async function EDI_MenuOnClick(isCancelled, menuOption, request) {
     if (!commandKind) { return; }
 
     switch (commandKind) {
-        case CommandKind.Cut:
+        case 4 /*CommandKind.Cut: 4*/:
             EDI_finalizeEdit();
             await EDI_copySelection();
             EDI_removeSelection();
             EDI_render_request(18 /*RenderKind.Cursor_n: 18*/);
             return;
-        case CommandKind.Copy:
+        case 2 /*CommandKind.Copy: 2*/:
             EDI_finalizeEdit();
             return EDI_copySelection();
-        case CommandKind.Paste:
+        case 5 /*CommandKind.Paste: 5*/:
             EDI_finalizeEdit();
             await EDI_read_clipboard();
             EDI_paste();
             EDI_render_request(18 /*RenderKind.Cursor_n: 18*/);
             return;
-        case CommandKind.Find:
+        case 12 /*CommandKind.Find: 12*/:
             EDI_findOverlay_showSetter(!editor.findOverlay_show);
             return;
     }
