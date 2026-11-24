@@ -2,7 +2,7 @@ import {aaaApp} from "./applicationRendererRoot.js"
 import {TreeViewComponent, TreeViewNodeKind, treeViewComponent_staticRunner} from "./treeViewComponent.js"
 import {editor, CONST_EDI_ASCII_TAB, CONST_EDI_ASCII_SPACE, EDI_textSourceIdentifier, EDI_moveCursor_position} from './editorGlobal_edit.js'
 import {EXPLORER_openInEditor} from './explorerGlobal.js'
-import { APP_colors } from "./fieldBuffer.js"
+import { APP_colors, set_colors_to_dark, set_colors_to_light } from "./fieldBuffer.js"
 
 /**
  * @type {TreeViewComponent}
@@ -470,11 +470,13 @@ export function DIALOG_Settings_Delete() {
 function DIALOG_buttonTheme_onclick() {
     if (aaaApp.isDark) {
         aaaApp.isDark = false;
+        set_colors_to_light();
         document.body.classList.remove('dark-theme');
         document.body.classList.add('light-theme');
     }
     else {
         aaaApp.isDark = true;
+        set_colors_to_dark();
         document.body.classList.remove('light-theme');
         document.body.classList.add('dark-theme');
     }

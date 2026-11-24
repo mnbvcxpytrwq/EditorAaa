@@ -40,6 +40,16 @@ export const APP_colors_light = Object.freeze({
 
 export let APP_colors = APP_colors_dark;
 
+export function set_colors_to_dark() {
+    APP_colors = APP_colors_dark;
+    EDI_tokenColors = EDI_tokenColors_dark;
+}
+
+export function set_colors_to_light() {
+    APP_colors = APP_colors_light;
+    EDI_tokenColors = EDI_tokenColors_light;
+}
+
 export const BUFFER_SIZE = 32;
 export const BUFFER_MASK = 31;
 
