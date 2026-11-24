@@ -611,6 +611,7 @@ export class TreeViewComponent {
         this.scrollbarSpaceGenerator.style.height = this.itemHeightTotal + 'px';
     }
 
+    /** TODO: move 'paddingPixelNumber' to the constructor as a field, I just cannot even right now */
     drawScrollBarWidthToThisPixelNumber(pixelNumber, paddingPixelNumber) {
         this.scrollbarSpaceGenerator.style.width = (pixelNumber + paddingPixelNumber) + 'px';
     }
