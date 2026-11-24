@@ -1,18 +1,6 @@
 export const fTreeView_poolret_pooledNode_key = 28;
 export const fTreeView_poolret_pooledNode_depth = 29;
 
-const TREEVIEWrenderKind = Object.freeze({
-    None: 0,
-    Cursor: 1,
-    Create: 2,
-    Batch: 3,
-    Scroll: 4,
-    SetItems: 5,
-    FullReset: 6,
-    Scroll_PullDataDrawResult: 7,
-    Resize: 8,
-});
-
 export const TreeViewNodeKind = Object.freeze({
     None: 0,
     isExpandable_isExpanded: 1,
@@ -84,13 +72,13 @@ class TreeViewComponent_staticRunner {
             if (!component) continue; // Component was removed before frame fired
 
             switch (renderKind) {
-                case TREEVIEWrenderKind.Scroll:
+                case 4 /*TREEVIEWrenderKind.Scroll: 4*/:
                     component.renderScroll();
                     break;
-                case TREEVIEWrenderKind.Cursor:
+                case 1 /*TREEVIEWrenderKind.Cursor: 1*/:
                     component.TreeViewComponent_render_do_Cursor();
                     break;
-                case TREEVIEWrenderKind.Resize:
+                case 8 /*TREEVIEWrenderKind.Resize: 8*/:
                     component.renderResize();
                     break;
                 // ... remaining cases
@@ -684,13 +672,13 @@ export class TreeViewComponent {
      * TODO: intra-app resizes or movements will also invoke this; i.e.: if a list is shown in a dialog and the dialog is resized or moved.
      */
     event_windowResize() {
-        this.treeViewComponent_staticRunner.TreeViewComponent_render_request(TREEVIEWrenderKind.Resize, this.runnerId);
+        this.treeViewComponent_staticRunner.TreeViewComponent_render_request(8 /*TREEVIEWrenderKind.Resize: 8*/, this.runnerId);
     }
 
     event_scroll() {
         this.scrollLeft = this.scrollViewport.scrollLeft;
         this.scrollTop = this.scrollViewport.scrollTop;
-        this.treeViewComponent_staticRunner.TreeViewComponent_render_request(TREEVIEWrenderKind.Scroll, this.runnerId);
+        this.treeViewComponent_staticRunner.TreeViewComponent_render_request(4 /*TREEVIEWrenderKind.Scroll: 4*/, this.runnerId);
     }
 
     // tvnl_
@@ -891,3 +879,17 @@ export class TreeViewComponent {
         }
     }
 }
+
+/*
+const TREEVIEWrenderKind = Object.freeze({
+    None: 0,
+    Cursor: 1,
+    Create: 2,
+    Batch: 3,
+    Scroll: 4,
+    SetItems: 5,
+    FullReset: 6,
+    Scroll_PullDataDrawResult: 7,
+    Resize: 8,
+});
+*/
