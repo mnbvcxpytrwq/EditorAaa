@@ -7488,6 +7488,12 @@ function EDI_render_SelectionAndCursor() {
         EDI_cursor_cursorTranslateXValue = cursorX;
         ctx.fillRect(cursorX, cursorY, 2, local_lineHeight);
     }
+
+    if (autocomplete.exists) {
+        const newY = (editor.cursor_indexLine + 1) * editor.lineHeight;
+        const newX = editor.cursorVisualColumnIndex * EDI_characterWidth;
+        autocomplete.rootElement.style.transform = `translate3d(${newX}px, ${newY}px, 0)`;
+    }
 }
 
 function EDI_createStyleForSelection(ctx, viewportY, local_lineHeight, firstVirtualIndexLine) {
@@ -7742,9 +7748,6 @@ function EDI_createStyleForSelection(ctx, viewportY, local_lineHeight, firstVirt
  * @param {boolean} NOTscrollCursorIntoView 
  */
 function EDI_drawCursor(NOTscrollCursorIntoView) {
-    const newY = editor.cursor_indexLine * editor.lineHeight;
-    const newX = editor.cursorVisualColumnIndex * EDI_characterWidth;
-
     if (!NOTscrollCursorIntoView) {
         EDI_scrollCursorIntoView();
     }
