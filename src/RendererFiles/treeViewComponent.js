@@ -611,8 +611,8 @@ export class TreeViewComponent {
         this.scrollbarSpaceGenerator.style.height = this.itemHeightTotal + 'px';
     }
 
-    drawScrollBarWidthToThisPixelNumber(pixelNumber) {
-        this.scrollbarSpaceGenerator.style.width = pixelNumber + 'px';
+    drawScrollBarWidthToThisPixelNumber(pixelNumber, paddingPixelNumber) {
+        this.scrollbarSpaceGenerator.style.width = (pixelNumber + paddingPixelNumber) + 'px';
     }
 
     measure() {

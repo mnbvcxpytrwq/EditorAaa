@@ -124,7 +124,7 @@ function EXPLORER_setChosenDirectory(chosenDirectoryAbsolutePath, chosenDirector
     EXPLORER_pathIdToDisplayNameMap.set(chosenDirectoryAbsolutePathId, chosenDirectoryBasename);
     if (chosenDirectoryBasename.length > explorer.visualWidth_ofLongestLine_inChUnits) {
         explorer.visualWidth_ofLongestLine_inChUnits = chosenDirectoryBasename.length;
-        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth, 20);
     }
 }
 
@@ -147,7 +147,7 @@ function EXPLORER_setChosenWorkspace(chooseWorkspaceResult) {
         EXPLORER_pathIdToDisplayNameMap.set(directory.id, directory.basename);
         if (directory.basename.length > explorer.visualWidth_ofLongestLine_inChUnits) {
             explorer.visualWidth_ofLongestLine_inChUnits = directory.basename.length;
-            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth, 20);
         }
     }
 }
@@ -198,6 +198,8 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
     let previousDepthString = '';
     let previousDepthStringDepth = 0;
 
+    let currentX = -EXPLORER_treeViewComponent.scrollLeft;
+
     for (let i = lineIndexLower; i < LINE_INDEX_UPPER; i++) {
         ringBufferIndex++;
         if (ringBufferIndex >= VIRTUAL_COUNT) {
@@ -244,7 +246,7 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
             }
         }
 
-        ctx.fillText(LINE_CACHE[ringBufferIndex], 0, vertical); // There's a max width argument in the fillText?
+        ctx.fillText(LINE_CACHE[ringBufferIndex], currentX, vertical); // There's a max width argument in the fillText?
         vertical += ITEM_HEIGHT_NUMBER;
     }
 }
@@ -284,7 +286,7 @@ async function EXPLORER_expandCollapseIconWasClicked(indexItem, ringBufferIndexI
 
         if (longestLine > explorer.visualWidth_ofLongestLine_inChUnits) {
             explorer.visualWidth_ofLongestLine_inChUnits = longestLine;
-            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth, 20);
         }
 
         if (EXPLORER_menuOptionPaste_object !== null && EXPLORER_menuOptionPaste_object !== undefined) {
@@ -872,7 +874,7 @@ async function NewFile_Directory_WIDGET_InputText_callback(widgetResult) {
         EXPLORER_pathIdToDisplayNameMap.set(newFileResult.pathId, widgetResult.resultData);
         if (widgetResult.resultData.length > explorer.visualWidth_ofLongestLine_inChUnits) {
             explorer.visualWidth_ofLongestLine_inChUnits = widgetResult.resultData.length;
-            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+            EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth, 20);
         }
         EXPLORER_treeViewComponent.drawScrollbarHeight();
         EXPLORER_treeViewComponent.forceFullscreen_renderScroll();
@@ -936,7 +938,7 @@ async function NewFile_File_WIDGET_InputText_callback(widgetResult) {
     EXPLORER_pathIdToDisplayNameMap.set(newFileResult.pathId, widgetResult.resultData);
     if (widgetResult.resultData.length > explorer.visualWidth_ofLongestLine_inChUnits) {
         explorer.visualWidth_ofLongestLine_inChUnits = widgetResult.resultData.length;
-        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth);
+        EXPLORER_treeViewComponent.drawScrollBarWidthToThisPixelNumber(explorer.visualWidth_ofLongestLine_inChUnits * EXPLORER_treeViewComponent.characterWidth, 20);
     }
     EXPLORER_treeViewComponent.drawScrollbarHeight();
     EXPLORER_treeViewComponent.forceFullscreen_renderScroll();
