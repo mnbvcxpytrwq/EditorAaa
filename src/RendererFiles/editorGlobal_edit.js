@@ -36,10 +36,10 @@ const EditKind = Object.freeze({
 });
 */
 
-/**
- * TODO: Long term this likely should be removed and all enter key logic reduced into an insertion but this will help in the time being.
- * TODO: There's tons of '0' checks rather than using 'EnterKeyEventKind_None' that I'm seeing throughout the code...
- */
+/*
+// TODO: Long term this likely should be removed and all enter key logic reduced into an insertion but this will help in the time being.
+// TODO: There's tons of '0' checks rather than using 'EnterKeyEventKind_None' that I'm seeing throughout the code...
+// 
 const EnterKeyEventKind = Object.freeze({
     None: 0,
     StartOfLine: 1,
@@ -47,6 +47,7 @@ const EnterKeyEventKind = Object.freeze({
     EndOfLine: 4,
     EndOfFile: 6,
 });
+*/
 
 /**
  * Do not change the order/values of these, they are used in equality comparisons, the larger the number says when double clicking between a character and a punctuation
@@ -1306,7 +1307,7 @@ function EDI_EnterKey(ctrlKey, originalIndexLine, originalIndexColumn) {
     const lastValidIndexColumn = EDI_getLastValidIndexColumn_raw(editor.cursor_indexLine);
 
     if (editor.cursor_edit_eventCount_occurred === 0) {
-        editor.cursor_enterKeyEventKind = EnterKeyEventKind.None;
+        editor.cursor_enterKeyEventKind = 0 /*EnterKeyEventKind.None: 0*/;
         editor.cursor_editPosition = EDI_getPositionIndex_cursor_raw();
         editor.cursor_editIndexLine = editor.cursor_indexLine;
         editor.cursor_editIndexColumn = editor.cursor_indexColumn;
@@ -1314,19 +1315,19 @@ function EDI_EnterKey(ctrlKey, originalIndexLine, originalIndexColumn) {
 
     if (editor.cursor_enterKeyEventKind === 0) {
         if (editor.cursor_indexColumn === 0 && lastValidIndexColumn !== 0) {
-            editor.cursor_enterKeyEventKind = EnterKeyEventKind.StartOfLine;
+            editor.cursor_enterKeyEventKind = 1 /*EnterKeyEventKind.StartOfLine: 1*/;
         }
         else {
             if (lastValidIndexColumn === editor.cursor_indexColumn) {
                 if (editor.cursor_editPosition === editor.textByteList_count) {
-                    editor.cursor_enterKeyEventKind = EnterKeyEventKind.EndOfFile;
+                    editor.cursor_enterKeyEventKind = 6 /*EnterKeyEventKind.EndOfFile: 6*/;
                 }
                 else {
-                    editor.cursor_enterKeyEventKind = EnterKeyEventKind.EndOfLine;
+                    editor.cursor_enterKeyEventKind = 4 /*EnterKeyEventKind.EndOfLine: 4*/;
                 }
             }
             else {
-                editor.cursor_enterKeyEventKind = EnterKeyEventKind.AmongALine;
+                editor.cursor_enterKeyEventKind = 3 /*EnterKeyEventKind.AmongALine: 3*/;
             }
         }
     }
@@ -1916,7 +1917,7 @@ function EDI_NOTcanBatch_insert() {
  * @returns 
  */
 function EDI_NOTcanBatch_enter() {
-    return editor.cursor_enterKeyEventKind === EnterKeyEventKind.None ||
+    return editor.cursor_enterKeyEventKind === 0 /*EnterKeyEventKind.None: 0*/ ||
         editor.cursor_editKind !== 8 /*EditKind.Enter: 8*/ ||
         editor.cursor_indexLine !== editor.cursor_END_editIndexLine ||
         editor.cursor_indexColumn !== editor.cursor_END_editIndexColumn ||
@@ -2178,7 +2179,7 @@ function EDI_finalizeEdit_Enter(indexLine_editOccurredOn) {
     }
 
     // throws an exception if 'EnterKeyEventKind.None' (...or falsey).
-    if (!editor.cursor_enterKeyEventKind || editor.cursor_enterKeyEventKind === EnterKeyEventKind.None) { EDI_finalizeEdit_ClearEditState(); throw new Error('if (!enterKeyEventKind...)'); }
+    if (!editor.cursor_enterKeyEventKind || editor.cursor_enterKeyEventKind === 0 /*EnterKeyEventKind.None: 0*/) { EDI_finalizeEdit_ClearEditState(); throw new Error('if (!enterKeyEventKind...)'); }
 
     const per_edit_insertionCount = EDI_cursor_enterKey_newLinePlusIndentation_byteList.length;
 
@@ -2190,24 +2191,24 @@ function EDI_finalizeEdit_Enter(indexLine_editOccurredOn) {
     let specialCase_number = 0;
     let specialCase_firstLineIndexInserted = 0; // TODO: This is probably the lineIndex you end up on after the loop minus some number, maybe 'editor.cursor_editLineFeedCount'.
 
-    if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.EndOfLine) {
+    if (editor.cursor_enterKeyEventKind === 4 /*EnterKeyEventKind.EndOfLine: 4*/) {
         actualEditPosition++; // Move past the current line's '\n'
         actualLineFeedPosition = actualEditPosition;
         actualLineFeedPosition += per_edit_insertionCount - 1;
         actualIndexLine++;
     }
-    else if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.EndOfFile) {
+    else if (editor.cursor_enterKeyEventKind === 6 /*EnterKeyEventKind.EndOfFile: 6*/) {
         specialCase_firstLineIndexInserted = actualIndexLine;
         const lastLineIndex = editor.lineEndPositionList_count - 1;
         specialCase_number = EDI_trackingUint32MaxHeap.getLength(lastLineIndex);
         EDI_trackingUint32MaxHeap.updateLength(lastLineIndex, actualNewLineVisualWidth);
     }
-    else if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.StartOfLine) {
+    else if (editor.cursor_enterKeyEventKind === 1 /*EnterKeyEventKind.StartOfLine: 1*/) {
         // Contrary to 'EnterKeyEventKind.EndOfLine' this case actually does NOT have to move past the "current line's '\n'"
         // NOTE: Ctrl + Enter keybind is a known case for why this line of code is needed, perhaps there are more that will come later I have no idea.
         actualLineFeedPosition += per_edit_insertionCount - 1;
     }
-    else if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.AmongALine) {
+    else if (editor.cursor_enterKeyEventKind === 3 /*EnterKeyEventKind.AmongALine: 3*/) {
         EDI_ret_getLineBoundaryPositions_raw(editor.cursor_editIndexLine);
         const lineStart = editor.ret_getLineBoundaryPositions_start;
         const lineEnd = editor.ret_getLineBoundaryPositions_end;
@@ -2262,7 +2263,7 @@ function EDI_finalizeEdit_Enter(indexLine_editOccurredOn) {
         actualLineFeedPosition += per_edit_insertionCount;
     }
 
-    if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.EndOfFile) {
+    if (editor.cursor_enterKeyEventKind === 6 /*EnterKeyEventKind.EndOfFile: 6*/) {
         EDI_trackingUint32MaxHeap.updateLength(specialCase_firstLineIndexInserted, specialCase_number);
         if (EDI_trackingUint32MaxHeap.tryPooledPeek() &&
             (editor.longestLine_length !== EDI_trackingUint32MaxHeap.unpack_pool_length || editor.longestLine_indexLine !== EDI_trackingUint32MaxHeap.unpack_pool_lineIndex)) {
@@ -2284,7 +2285,7 @@ function EDI_finalizeEdit_Enter(indexLine_editOccurredOn) {
             requestAnimationFrame(EDI_drawHorizontalScrollbar);
         }
     }
-    else if (editor.cursor_enterKeyEventKind === EnterKeyEventKind.AmongALine) {
+    else if (editor.cursor_enterKeyEventKind === 3 /*EnterKeyEventKind.AmongALine: 3*/) {
         EDI_trackingUint32MaxHeap.updateLength(specialCase_firstLineIndexInserted, specialCase_number);
         if (EDI_trackingUint32MaxHeap.tryPooledPeek() &&
             (editor.longestLine_length !== EDI_trackingUint32MaxHeap.unpack_pool_length || editor.longestLine_indexLine !== EDI_trackingUint32MaxHeap.unpack_pool_lineIndex)) {
@@ -2865,7 +2866,7 @@ function EDI_finalizeEdit_ClearEditState() {
     EDI_lineEndPositionList_PENDING.clear();
 
     // TODO: You do indeed have to clear this because of ctrl or shift cases of enter.
-    editor.cursor_enterKeyEventKind = EnterKeyEventKind.None;
+    editor.cursor_enterKeyEventKind = 0 /*EnterKeyEventKind.None: 0*/;
 
     // TODO: I want to put these in the paste case directly and above the 'EDI_finalizeEdit_ClearEditState' invocation...
     // ...but 'EDI_cursor_clear' needs to "clear an unfinalized edit" (I think that would be the sensible behavior at least)...
@@ -3611,7 +3612,7 @@ function EDI_cursor_clear() {
 
     EDI_cursor_enterKey_newLinePlusIndentation_byteList = null;
     EDI_cursor_cached_indentation_string = null;
-    editor.cursor_enterKeyEventKind = EnterKeyEventKind.None;
+    editor.cursor_enterKeyEventKind = 0 /*EnterKeyEventKind.None: 0*/;
 
     editor.cursor_editLineFeedCount = 0;
     editor.cursor_edit_flagLineChanged = 0;
@@ -8619,13 +8620,13 @@ function EDI_cacheIndentation(originalIndexLine, originalIndexColumn, lastValidI
     let setOffset = 1;
 
     switch (editor.cursor_enterKeyEventKind) {
-        case EnterKeyEventKind.StartOfLine:
-        case EnterKeyEventKind.EndOfLine:
+        case 1 /*EnterKeyEventKind.StartOfLine: 1*/:
+        case 4 /*EnterKeyEventKind.EndOfLine: 4*/:
             setOffset = 0;
             EDI_cursor_enterKey_newLinePlusIndentation_byteList[uint8Array_length - 1] = CONST_EDI_ASCII_LINE_FEED;
             break;
-        case EnterKeyEventKind.AmongALine:
-        case EnterKeyEventKind.EndOfFile:
+        case 3 /*EnterKeyEventKind.AmongALine: 3*/:
+        case 6 /*EnterKeyEventKind.EndOfFile: 6*/:
             EDI_cursor_enterKey_newLinePlusIndentation_byteList[0] = CONST_EDI_ASCII_LINE_FEED;
             break;
         default:
