@@ -1,4 +1,4 @@
-import {APP_lineHeightStringWithPx} from "./applicationRendererRoot.js"
+import {aaaApp} from "./applicationRendererRoot.js"
 import {explorer} from './explorerGlobal.js'
 
 export const CONST_AUTOCOMPLETE_topPadding = 4;
@@ -125,14 +125,14 @@ function AUTOCOMPLETE_render_create_lines(AUTOCOMPLETE_itemList) {
     }
 
     // TODO: minus CONST_AUTOCOMPLETE_topPadding
-    autocomplete.virtualCount = Math.floor(autocomplete.rectHeight / editorAaaApp.lineHeight);
+    autocomplete.virtualCount = Math.floor(autocomplete.rectHeight / aaaApp.lineHeight);
     autocomplete.virtualIndex = 0;
     autocomplete.ringBufferIndexZero = 0;
     autocomplete.scrollTop = 0;
 
     autocomplete.cursorIndex = 0;
 
-    let appHeightCssAttributeValue = `${editorAaaApp.lineHeight}px`;
+    let appHeightCssAttributeValue = `${aaaApp.lineHeight}px`;
 
     AUTOCOMPLETE_itemList.innerHTML = '';
 
@@ -159,7 +159,7 @@ function AUTOCOMPLETE_render_create_lines(AUTOCOMPLETE_itemList) {
         AUTOCOMPLETE_itemList.append(div);
 
         div.style.top = `${verticalOffset}px`;
-        verticalOffset += editorAaaApp.lineHeight;
+        verticalOffset += aaaApp.lineHeight;
     }
 
     AUTOCOMPLETE_ringBuffer = Array.from(AUTOCOMPLETE_itemList.children);
@@ -175,7 +175,7 @@ function AUTOCOMPLETE_render_RESET_lines(AUTOCOMPLETE_itemList) {
     AUTOCOMPLETE_ensure_boundingClientRect();
 
     // TODO: minus CONST_AUTOCOMPLETE_topPadding
-    autocomplete.virtualCount = Math.floor(autocomplete.rectHeight / editorAaaApp.lineHeight);
+    autocomplete.virtualCount = Math.floor(autocomplete.rectHeight / aaaApp.lineHeight);
     autocomplete.virtualIndex = 0;
     autocomplete.ringBufferIndexZero = 0;
     autocomplete.scrollTop = 0;
@@ -198,7 +198,7 @@ function AUTOCOMPLETE_render_RESET_lines(AUTOCOMPLETE_itemList) {
         // for the nodes, it needs to even if 0 so the browser receives explicit instructions rather than trying to static place and it "happens" to end up at 0,0.
 
         div.style.top = `${verticalOffset}px`;
-        verticalOffset += editorAaaApp.lineHeight;
+        verticalOffset += aaaApp.lineHeight;
     }
 }
 
@@ -268,8 +268,8 @@ function AUTOCOMPLETE_render_do_show() {
 
         let AUTOCOMPLETE_cursor = document.createElement('div');
         AUTOCOMPLETE_cursor.id = 'AUTOCOMPLETE_cursor';
-        AUTOCOMPLETE_cursor.style.height = APP_lineHeightStringWithPx;
-        AUTOCOMPLETE_cursor.style.lineHeight = APP_lineHeightStringWithPx;
+        AUTOCOMPLETE_cursor.style.height = aaaApp.lineHeightWithPx;
+        AUTOCOMPLETE_cursor.style.lineHeight = aaaApp.lineHeightWithPx;
         AUTOCOMPLETE_text.appendChild(AUTOCOMPLETE_cursor);
 
         AUTOCOMPLETE_itemList = document.createElement('div');
@@ -300,7 +300,7 @@ function AUTOCOMPLETE_render_do_show() {
     autocomplete.WIDTH_NODE_DRAWN_NUMBER_IN_CH_UNITS_NO_PADDING = 0;
 
     // TODO: This doesn't need mail.ceil but perhaps add it to ensure things?
-    let itemHeightTotalNumber = autocomplete.items_totalLength * editorAaaApp.lineHeight + CONST_AUTOCOMPLETE_topPadding;
+    let itemHeightTotalNumber = autocomplete.items_totalLength * aaaApp.lineHeight + CONST_AUTOCOMPLETE_topPadding;
     AUTOCOMPLETE_scrollbar_space_generator.style.height = itemHeightTotalNumber + 'px';
 
     autocomplete.exists = 1;
@@ -384,7 +384,7 @@ function AUTOCOMPLETE_slice(lspResult) {
     if (AUTOCOMPLETE_lastSeen_totalLength_SLICE !== lspResult.totalLength) {
         AUTOCOMPLETE_lastSeen_totalLength_SLICE = lspResult.totalLength;
         // TODO: This doesn't need mail.ceil but perhaps add it to ensure things?
-        let itemHeightTotalNumber = AUTOCOMPLETE_lastSeen_totalLength_SLICE * editorAaaApp.lineHeight + CONST_AUTOCOMPLETE_topPadding;
+        let itemHeightTotalNumber = AUTOCOMPLETE_lastSeen_totalLength_SLICE * aaaApp.lineHeight + CONST_AUTOCOMPLETE_topPadding;
         AUTOCOMPLETE_scrollbar_space_generator.style.height = itemHeightTotalNumber + 'px';
     }
 }
@@ -416,7 +416,7 @@ function AUTOCOMPLETE_cursor_render_set() {
     let cursorElement = document.getElementById('AUTOCOMPLETE_cursor');
 
     // Determine the number without modifying styles so you can use this variable to determine the need to scroll into view without synchronous layout.
-    let cursorTranslateYNumber = CONST_AUTOCOMPLETE_topPadding + (editorAaaApp.lineHeight * autocomplete.cursorIndex);
+    let cursorTranslateYNumber = CONST_AUTOCOMPLETE_topPadding + (aaaApp.lineHeight * autocomplete.cursorIndex);
 
     // Preferably this hasn't changed thus the function immediately just returns.
     if (autocomplete.rect_isNull)
@@ -425,10 +425,10 @@ function AUTOCOMPLETE_cursor_render_set() {
     // If no UI modifications were made prior that are still pending this might avoid a synchronous layout.
     // TODO: If you touch the transform style first... I don't know what would happen it is a GPU related style... so I'm unsure.
     //
-    if (cursorTranslateYNumber + (2 * editorAaaApp.lineHeight) > autocomplete.scrollTop + autocomplete.rectHeight) {
+    if (cursorTranslateYNumber + (2 * aaaApp.lineHeight) > autocomplete.scrollTop + autocomplete.rectHeight) {
         let currentBottom = autocomplete.scrollTop + autocomplete.rectHeight;
         let changeToMakeBottomTouch = cursorTranslateYNumber - currentBottom;
-        let entireValueToScrollBy = changeToMakeBottomTouch + (2 * editorAaaApp.lineHeight);
+        let entireValueToScrollBy = changeToMakeBottomTouch + (2 * aaaApp.lineHeight);
         AUTOCOMPLETE_scroll_viewport.scrollBy(0, entireValueToScrollBy);
     }
     else if (cursorTranslateYNumber < autocomplete.scrollTop) {
@@ -506,7 +506,7 @@ function AUTOCOMPLETE_events_scroll_render() {
     AUTOCOMPLETE_text.style.transform = `translate3d(-${autocomplete.scrollLeft}px, -${autocomplete.scrollTop}px, 0)`;
 
     // TODO: minus CONST_AUTOCOMPLETE_topPadding
-    let currVli = Math.floor(autocomplete.scrollTop / editorAaaApp.lineHeight);
+    let currVli = Math.floor(autocomplete.scrollTop / aaaApp.lineHeight);
 
     autocomplete.virtualIndex = currVli;
 
@@ -548,7 +548,7 @@ function AUTOCOMPLETE_events_scroll_render() {
         ringBufferIndex = autocomplete.ringBufferIndexZero;
     }
 
-    let verticalOffset = CONST_AUTOCOMPLETE_topPadding + (lowerBound * editorAaaApp.lineHeight);
+    let verticalOffset = CONST_AUTOCOMPLETE_topPadding + (lowerBound * aaaApp.lineHeight);
 
     ringBufferIndex--; // The 0th loop will increment somewhat awkwardly. This decrement avoids that.
 
@@ -567,7 +567,7 @@ function AUTOCOMPLETE_events_scroll_render() {
         }
         
         div.style.top = `${verticalOffset}px`;
-        verticalOffset += editorAaaApp.lineHeight;
+        verticalOffset += aaaApp.lineHeight;
     }
 }
 

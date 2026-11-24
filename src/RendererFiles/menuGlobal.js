@@ -1,5 +1,5 @@
 import * as f from './fieldBuffer.js'
-import {APP_lineHeightStringWithPx, editorAaaApp} from "./applicationRendererRoot.js"
+import {aaaApp} from "./applicationRendererRoot.js"
 
 export const CommandKind = Object.freeze({
     None: 0,
@@ -132,8 +132,8 @@ function MENU_render_do_Set() {
 
     let cursor = document.createElement('div');
     cursor.id = "MENU_cursor";
-    cursor.style.height = APP_lineHeightStringWithPx;
-    cursor.style.lineHeight = APP_lineHeightStringWithPx;
+    cursor.style.height = aaaApp.lineHeightWithPx;
+    cursor.style.lineHeight = aaaApp.lineHeightWithPx;
     let optionListElement = document.createElement('div');
     optionListElement.id = "MENU_optionList";
     menuElement.appendChild(cursor);
@@ -143,8 +143,8 @@ function MENU_render_do_Set() {
         const entry = MENU_request.optionList[i];
         const optionElement = document.createElement('div');
         optionElement.className = 'menuOption';
-        optionElement.style.height = APP_lineHeightStringWithPx;
-        optionElement.style.lineHeight = APP_lineHeightStringWithPx;
+        optionElement.style.height = aaaApp.lineHeightWithPx;
+        optionElement.style.lineHeight = aaaApp.lineHeightWithPx;
         optionElement.textContent = entry.text;
 
         if (entry.submenu) {
@@ -284,7 +284,7 @@ function MENU_onMouseMove(event) {
     //}
 
     let relativeY = event.clientY - (MENU_request.recentBoundingClientRectTop + 4 /*paddingTop*/);
-    let index = Math.floor(relativeY / editorAaaApp.lineHeight);
+    let index = Math.floor(relativeY / aaaApp.lineHeight);
     if (MENU_request.index === index) {
         return;
     }
@@ -296,7 +296,7 @@ function MENU_onMouseMove(event) {
 function menuGetRelativeMouseEventData(event_clientY) {
     let paddingTop = 4;
     let relativeY = event_clientY - (MENU_request.recentBoundingClientRectTop + paddingTop);
-    return Math.floor(relativeY / editorAaaApp.lineHeight);
+    return Math.floor(relativeY / aaaApp.lineHeight);
 }
 
 function MENU_addEvents() {
@@ -333,7 +333,7 @@ function MENU_render_do_Cursor() {
     const cursorElement = document.getElementById('MENU_cursor');
     if (!cursorElement || MENU_request === null) return;
     // The menu 'padding-top: 4px'
-    cursorElement.style.top = 4 + (editorAaaApp.lineHeight * MENU_request.index) + 'px';
+    cursorElement.style.top = 4 + (aaaApp.lineHeight * MENU_request.index) + 'px';
 }
 
 function MENU_state_do_Cursor(index) {

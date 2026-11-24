@@ -136,7 +136,7 @@ function EXPLORER_setChosenWorkspace(chooseWorkspaceResult) {
     EXPLORER_treeViewComponent.clear();
     if (!chooseWorkspaceResult.workspaceFileAbsolutePath) return;
 
-    if (chooseWorkspaceResult.workspaceFileAbsolutePath === "C:\\Users\\hunte\\Repos\\New folder (7)\\Editor2.code-workspace") {
+    if (chooseWorkspaceResult.workspaceFileAbsolutePath === "C:\\Users\\hunte\\Repos\\New folder (8)\\EditorAaa.code-workspace") {
         // enable experimental behavior only if the path matches my own.
         // This is not 100% fool proof but for my temporary use case it is likely 100% secure
         // given the extremely small amount of people running the code i.e.: maybe I'm the only one that even runs this code I don't know.

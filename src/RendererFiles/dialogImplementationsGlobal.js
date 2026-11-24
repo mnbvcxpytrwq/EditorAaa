@@ -1,4 +1,4 @@
-import {APP_lineHeightStringWithPx, editorAaaApp} from "./applicationRendererRoot.js"
+import {aaaApp} from "./applicationRendererRoot.js"
 import {TreeViewComponent, TreeViewNodeKind, treeViewComponent_staticRunner} from "./treeViewComponent.js"
 import {editor, CONST_EDI_ASCII_TAB, CONST_EDI_ASCII_SPACE, EDI_textSourceIdentifier, EDI_moveCursor_position} from './editorGlobal_edit.js'
 import {EXPLORER_openInEditor} from './explorerGlobal.js'
@@ -315,15 +315,15 @@ export function DIALOG_FindAll_Create() {
     searchTextInput.id = 'DIALOG_FindAll_searchTextInput';
     searchTextInput.style.marginLeft = '5px';
     searchTextInput.style.marginTop = '5px';
-    searchTextInput.style.height = APP_lineHeightStringWithPx;
-    searchTextInput.style.lineHeight = APP_lineHeightStringWithPx;
+    searchTextInput.style.height = aaaApp.lineHeightWithPx;
+    searchTextInput.style.lineHeight = aaaApp.lineHeightWithPx;
     searchTextInput.addEventListener('keydown', DIALOG_FindAll_searchTextInput_onkeydown);
     dialogBody.appendChild(searchTextInput);
     searchTextInput.focus();
     
     let divOptions = document.createElement('div');
-    divOptions.style.height = APP_lineHeightStringWithPx;
-    divOptions.style.lineHeight = APP_lineHeightStringWithPx;
+    divOptions.style.height = aaaApp.lineHeightWithPx;
+    divOptions.style.lineHeight = aaaApp.lineHeightWithPx;
     divOptions.style.whiteSpace = 'nowrap';
     let checkboxMatchWord = document.createElement('input');
     checkboxMatchWord.type = 'checkbox';
@@ -347,7 +347,7 @@ export function DIALOG_FindAll_Create() {
     // TODO: Remove 'searchResultsDiv'? It is pointlessly wrapping.
     let searchResultsDiv = document.createElement('div');
     searchResultsDiv.id = 'DIALOG_FindAll_searchResultsDiv';
-    const searchResultsDivHeightString = `calc(100% - ${2 * editorAaaApp.lineHeight}px - 2px)`;
+    const searchResultsDivHeightString = `calc(100% - ${2 * aaaApp.lineHeight}px - 2px)`;
     searchResultsDiv.style.height = searchResultsDivHeightString;
     searchResultsDiv.style.lineHeight = searchResultsDivHeightString;
     dialogBody.appendChild(searchResultsDiv);
@@ -468,13 +468,13 @@ export function DIALOG_Settings_Delete() {
 }
 
 function DIALOG_buttonTheme_onclick() {
-    if (editorAaaApp.isDark) {
-        editorAaaApp.isDark = false;
+    if (aaaApp.isDark) {
+        aaaApp.isDark = false;
         document.body.classList.remove('dark-theme');
         document.body.classList.add('light-theme');
     }
     else {
-        editorAaaApp.isDark = true;
+        aaaApp.isDark = true;
         document.body.classList.remove('light-theme');
         document.body.classList.add('dark-theme');
     }
@@ -521,8 +521,8 @@ export function DIALOG_DocumentSymbol_Create() {
 
     //const beforeDiv = document.createElement('div');
     //beforeDiv.id = 'DocumentSymbol_debug_div';
-    //beforeDiv.style.marginTop = APP_lineHeightStringWithPx; // Dialog looks jank at the moment I'm gonna just do this so I can read the text
-    //beforeDiv.style.height = APP_lineHeightStringWithPx;
+    //beforeDiv.style.marginTop = aaaApp.lineHeightWithPx; // Dialog looks jank at the moment I'm gonna just do this so I can read the text
+    //beforeDiv.style.height = aaaApp.lineHeightWithPx;
     //beforeDiv.appendChild(document.createTextNode('DocumentSymbol_debug_div'));
 //
     //dialogBody.appendChild(beforeDiv);
@@ -540,18 +540,18 @@ export function DIALOG_Debug_Create() {
 
     const beforeDiv = document.createElement('div');
     beforeDiv.id = 'DEBUG_DIALOG_beforeDiv';
-    beforeDiv.style.marginTop = APP_lineHeightStringWithPx; // Dialog looks jank at the moment I'm gonna just do this so I can read the text
-    beforeDiv.style.height = APP_lineHeightStringWithPx;
+    beforeDiv.style.marginTop = aaaApp.lineHeightWithPx; // Dialog looks jank at the moment I'm gonna just do this so I can read the text
+    beforeDiv.style.height = aaaApp.lineHeightWithPx;
     beforeDiv.appendChild(document.createTextNode('LISTENING'));
 
     const amongDiv = document.createElement('div');
     amongDiv.id = 'DEBUG_DIALOG_amongDiv';
-    amongDiv.style.height = APP_lineHeightStringWithPx;
+    amongDiv.style.height = aaaApp.lineHeightWithPx;
     amongDiv.appendChild(document.createTextNode('LISTENING'));
 
     const afterDiv = document.createElement('div');
     afterDiv.id = 'DEBUG_DIALOG_afterDiv';
-    afterDiv.style.height = APP_lineHeightStringWithPx;
+    afterDiv.style.height = aaaApp.lineHeightWithPx;
     afterDiv.appendChild(document.createTextNode('LISTENING'));
 
     dialogBody.appendChild(beforeDiv);

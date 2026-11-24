@@ -5,14 +5,12 @@ import {DIALOG_show, DialogKind} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
 import {listComponent_debug_dialog_resized_or_moved} from './listComponent.js'
 
-export let APP_lineHeightStringWithPx = '';
-
 export let shouldUseCSharpToSaveFileWhenPossible = false;
 export function set_shouldUseCSharpToSaveFileWhenPossible(value) {
     shouldUseCSharpToSaveFileWhenPossible = value;
 }
 
-class EditorAaaApp {
+class AaaApp {
     constructor() {
         this.isDark = true;
         /**
@@ -22,10 +20,12 @@ class EditorAaaApp {
          * TODO: (speculation) I've never liked saying "line height" I believe that deals with the vertical alignment of text within some container is "line height" a good wording.
          * */
         this.lineHeight = 0;
+
+        this.lineHeightWithPx = '';
     }
 }
 
-export const editorAaaApp = new EditorAaaApp();
+export const aaaApp = new AaaApp();
 
 /**
  * Connect to the single threaded C# console app (custom language server)
@@ -428,36 +428,10 @@ function APP_render_init() {
 }
 
 function APP_measureLineHeightAndCharacterWidth() {
-    const measureElement = document.createElement('div');
-    measureElement.className = 'APP_MEASURE_ELEMENT';
-    const textNode = document.createTextNode('');
-    measureElement.appendChild(textNode);
-
-    // AI is saying "// The foolproof way to prevent ALL scrollbars during measurement" is this paragraph of code.
-    // The foolproof way to prevent ALL scrollbars during measurement
-    const wrapper = document.createElement('div');
-    wrapper.className = 'APP_MEASURE_ELEMENT_WRAPPER';
-
-    wrapper.appendChild(measureElement);
-    document.body.appendChild(wrapper);
-    
-    textNode.replaceData(0, textNode.length, "-"); // This permits me to in 'explorer.js' set the first span of every "tree-view-node" to be the same width, regardless of whether its content is '-', '+', or '' (an empty string). (1 of 2)
+    const measureElement = document.getElementById('EDI_debug');
     let rect = measureElement.getBoundingClientRect();
-    // line height is read here
-    editorAaaApp.lineHeight = Math.ceil(rect.height); // get line height too while I'm here.
-    const minusWidth = Math.ceil(rect.width);
-    
-    textNode.replaceData(0, textNode.length, "+"); // This permits me to in 'explorer.js' set the first span of every "tree-view-node" to be the same width, regardless of whether its content is '-', '+', or '' (an empty string). (2 of 2)
-    rect = measureElement.getBoundingClientRect();
-    const plusWidth = Math.ceil(rect.width);
-    const largerWidth = minusWidth > plusWidth ? minusWidth : plusWidth; // 11
-    explorer.firstSpanWidthValue = largerWidth;
-    set_EXPLORER_firstSpanWidth(explorer.firstSpanWidthValue + 'px');
-
-    wrapper.removeChild(measureElement);
-    document.body.removeChild(wrapper);
-
-    APP_lineHeightStringWithPx = editorAaaApp.lineHeight + 'px';
+    aaaApp.lineHeight = Math.ceil(rect.height);
+    aaaApp.lineHeightWithPx = aaaApp.lineHeight + 'px';
 }
 
 //async function window_myAPI_onMessage(data) {
