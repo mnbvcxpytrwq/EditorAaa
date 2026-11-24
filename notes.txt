@@ -460,9 +460,13 @@ Are you planning to emit inline comments like 1 /*RenderKind.Scroll*/ across you
 
 =========
 
-I gotta go exercise
+I want* to* go* exercise and* therefore* I* will* do* exactly* that*
+
+==========
 
 
+- [ ] autocomplete
+- [ ] longest width
 
 
 
