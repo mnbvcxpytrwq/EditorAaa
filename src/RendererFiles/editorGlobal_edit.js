@@ -4981,9 +4981,9 @@ function EDI_render_do_Scroll() {
 
     ctxGutter.clearRect(0, 0, editor.gutter_canvas.width, editor.gutter_canvas.height);
 
-    ctxGutter.fillStyle = 'rgb(30, 45, 45)';
+    ctxGutter.fillStyle = f.APP_colors.gutterBackgroundColor;
     ctxGutter.fillRect(0, 0, editor.gutter_canvas.width, editor.gutter_canvas.height); 
-    ctxGutter.fillStyle = '#858585';
+    ctxGutter.fillStyle = f.APP_colors.gutterForegroundColor;
 
     ctxText.clearRect(0, 0, editor.text_canvas.width, editor.text_canvas.height);
 
@@ -5114,7 +5114,7 @@ function EDI_render_do_Scroll() {
     const ctxGutter = editor.gutter_canvas.getContext('2d');
     ctxGutter.clearRect(0, 0, editor.gutter_canvas.width, editor.gutter_canvas.height);
 
-    ctxGutter.fillStyle = 'rgb(30, 45, 45)';
+    ctxGutter.fillStyle = f.APP_colors.gutterBackgroundColor;
     ctxGutter.fillRect(0, 0, editor.gutter_canvas.width, editor.gutter_canvas.height); 
     ctxGutter.fillStyle = '#858585';
 

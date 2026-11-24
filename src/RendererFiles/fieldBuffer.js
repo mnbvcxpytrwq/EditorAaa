@@ -31,11 +31,15 @@ export let EDI_tokenColors = EDI_tokenColors_dark;
 export const APP_colors_dark = {
     standardText: '#d4d4d4',
     cursor_hasFocus_backgroundColor: '#528bff',
+    gutterBackgroundColor: 'rgb(30, 45, 45)',
+    gutterForegroundColor: '#858585',
 };
 
 export const APP_colors_light = Object.freeze({
     standardText: 'red',
     cursor_hasFocus_backgroundColor: 'red',
+    gutterBackgroundColor: 'silver',
+    gutterForegroundColor: 'black',
 });
 
 export let APP_colors = APP_colors_dark;
