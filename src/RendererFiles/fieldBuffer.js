@@ -13,15 +13,15 @@ export const EDI_tokenColors_dark = Object.freeze([
 
 // Quick index token to color assignment map
 export const EDI_tokenColors_light = Object.freeze([
-    'red', // Token 0: standardText
-    'red', // Token 1: string
-    'red', // Token 2: comment
-    'red', // Token 3: keyword
-    'red', // Token 4: keywordControl
-    'red', // Token 5: identifier
-    'red', // Token 6: type
-    'red', // Token 7: member
-    'red', // Token 8: function
+    'black', // Token 0: standardText
+    '#A31515', // Token 1: string
+    '#008000', // Token 2: comment
+    '#0000FF', // Token 3: keyword
+    '#AF00DB', // Token 4: keywordControl
+    '#001080', // Token 5: identifier
+    '#267f99', // Token 6: type
+    '#0070C1', // Token 7: member
+    '#cd8900', // Token 8: function
     // 9 is hardcoded throughout the app to force write if you add another you need to start using 10 instead of 9 or etc...
 ]);
 
