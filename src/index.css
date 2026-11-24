@@ -44,8 +44,8 @@ body {
 
 #MENU {
   position: fixed;
-  min-width: 25px;
-  min-height: 25px;
+  width: 200px;
+  height: 200px;
   background-color: var(--secondary-background-color);
   color: var(--secondary-foreground-color);
   border: 1px solid var(--primary-border-color);

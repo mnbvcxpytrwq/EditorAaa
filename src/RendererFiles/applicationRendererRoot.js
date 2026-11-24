@@ -322,13 +322,13 @@ export function sendTransaction_MessageKind_custom_edit_Remove(positionIndex, le
 }
 
 // Goal is to use the same wording as LSP where possible for clarity of communication.
-const MessageKind_string = 1;
-const MessageKind_textDocument_didOpen = 2;
-const MessageKind_textDocument_definition = 3;
-const MessageKind_custom_editorGetNodesAdjacentToCursor = 4;
-const MessageKind_custom_saveFile = 5;
-const MessageKind_custom_edit_InsertLtr = 6;
-const MessageKind_custom_edit_Remove = 7;
+//const MessageKind_string = 1;
+//const MessageKind_textDocument_didOpen = 2;
+//const MessageKind_textDocument_definition = 3;
+//const MessageKind_custom_editorGetNodesAdjacentToCursor = 4;
+//const MessageKind_custom_saveFile = 5;
+//const MessageKind_custom_edit_InsertLtr = 6;
+//const MessageKind_custom_edit_Remove = 7;
 
 // The save can actually be done from the C# code.
 // (from whichever it is more sensible to do from I mean)
@@ -378,16 +378,6 @@ function cleanupSocket() {
         socket = null; // Now it is safely null for the rest of your app
     }
 }
-
-//function APP_socket_onerror(error) {
-//    // Gracefully handle the offline state
-//    //alert("Language server is offline. Running in standalone mode.");
-//    cleanupSocket();
-//}
-//
-//function APP_socket_onclose() {
-//    cleanupSocket();
-//}
 
 function APP_socket_onmessage(event) {
     let view;

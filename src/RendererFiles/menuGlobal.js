@@ -1,5 +1,6 @@
 import * as f from './fieldBuffer.js'
 import {aaaApp} from "./applicationRendererRoot.js"
+import {listComponent_staticRunner, ListComponent} from './listComponent.js'
 
 export const CommandKind = Object.freeze({
     None: 0,
@@ -76,6 +77,83 @@ export const OFFSET_MENU = 96; // Slots 96 to 127 // Define the unique byte offs
 /** @type {MenuRequest} */
 let MENU_request = null;
 
+let MENU_listComponent_ringBufferCache = [];
+
+function MENU_listComponent_onMeasure() {
+    if (MENU_listComponent_ringBufferCache === null || MENU_listComponent_ringBufferCache === undefined || MENU_listComponent_ringBufferCache.length !== MENU_listComponent.virtualCount) {
+        MENU_listComponent_ringBufferCache = new Array(MENU_listComponent.virtualCount);
+    }
+}
+
+export const MENU_listComponent = new ListComponent(
+    16, listComponent_staticRunner, MENU_listComponent_renderLines, MENU_listComponent_dblClick_or_space_or_enter, MENU_listComponent_oncontextmenu, MENU_listComponent_onMeasure);
+
+function MENU_listComponent_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, decodingBoundLower, decodingBoundUpper) {
+
+    const ctx = MENU_listComponent.canvasContext2d;
+    ctx.clearRect(0, 0, MENU_listComponent.canvas.width, MENU_listComponent.canvas.height);
+    
+    let vertical = 0;
+
+    // TODO: All of the below 'Optimization heuristic goal' suck. Cause you have no idea whether they're actually effective you're just hearing rumors and then throwing them all at a dart board and hoping everything works out.
+    // ^ I'm specifically referencing my blind application of them en masse like a fool without ever having confirmed that they are improvements let alone meaningful ones.
+    // ^ for absolute clarification I'm not saying the heuristics suck I'm saying I suck cause I never once validated their usefulness.
+    //
+    /** Optimization heuristic goal: assumedly reduce reference chasing by creating a const reference to fields that are frequently accessed via a member access on a reference variable. It is rumored that this permits loop optimization. */
+    /** Optimization heuristic goal: similarly^ assumedly improve caching by explicitly telling the code generator that the reference which 'foo' points to "will not change". In garbage collection, when defragmenting the heap every reference to an object that was repositioned needs to have its reference updated to point to the new location of the object, so I'm not quite sure how this works out idk. It is rumored that this permits loop optimization. */
+    const VIRTUAL_COUNT = MENU_listComponent.virtualCount;
+    const COUNT = MENU_listComponent.count;
+    const LINE_CACHE = MENU_listComponent_ringBufferCache;
+    const ITEM_HEIGHT_NUMBER = MENU_listComponent.itemHeightNumber;
+
+    /** Optimization heuristic goal: make the upper bound a constant, and do not modify 'i' within the loop, have not measured if this is truly impactful. It is rumored that this permits loop optimization. */
+    const LINE_INDEX_UPPER = lineIndexUpper;
+
+    // --- STEP 2: RENDER ACTIVE SOLID CURSOR LINE ---
+    ctx.fillStyle = '#3f7581'; // Solid cursor accent color
+    const cursorLine = MENU_listComponent.cursorIndex;
+    if (cursorLine >= lineIndexLower && cursorLine < lineIndexUpper) {
+        const cursorY = (cursorLine - lineIndexLower) * MENU_listComponent.itemHeightNumber;
+        ctx.fillRect(0, cursorY, MENU_listComponent.canvas.width, MENU_listComponent.itemHeightNumber);
+    }
+
+    ctx.fillStyle = '#d4d4d4';
+
+    for (let i = lineIndexLower; i < LINE_INDEX_UPPER; i++) {
+        ringBufferIndex++;
+        if (ringBufferIndex >= VIRTUAL_COUNT) {
+            ringBufferIndex -= VIRTUAL_COUNT;
+        }
+
+        if (i >= decodingBoundLower && i < decodingBoundUpper) {
+            if (i < COUNT) {
+                const key = MENU_listComponent.data[i];
+                LINE_CACHE[ringBufferIndex] = MENU_request.optionList[key].text;
+            }
+            else {
+                LINE_CACHE[ringBufferIndex] = '~';
+            }
+        }
+
+        ctx.fillText(LINE_CACHE[ringBufferIndex], 0, vertical); // There's a max width argument in the fillText?
+        vertical += ITEM_HEIGHT_NUMBER;
+    }
+}
+
+function MENU_listComponent_findCutTreeViewNodeAmongChildren(startIndex, insertionCount) {
+}
+
+function MENU_listComponent_dblClick_or_space_or_enter(eventKey, indexItem, ringBufferIndexItem) {
+    //MENU_ensure_boundingClientRect();
+    //let indexClicked = menuGetRelativeMouseEventData(event.clientY);
+    //MENU_setCursorIndex(indexClicked);
+    //MENU_validateCursor();
+    MENU_completeForm(false, true);
+}
+
+function MENU_listComponent_oncontextmenu(indexItem, event_button, event_clientX, event_clientY, relativeIndex) {
+}
+
 function MENU_render_request(renderKind) {
     if (menu.queueHead !== menu.queueTail) {
         const lastAbsoluteIndex = OFFSET_MENU + ((menu.queueTail - 1) & f.UI_SLOT_MASK);
@@ -127,38 +205,13 @@ function MENU_render_do_Set() {
 
     menuElement = document.createElement('div');
     menuElement.id = 'MENU';
-    menuElement.tabIndex = 0;
+    //menuElement.tabIndex = 0;
     document.body.appendChild(menuElement);
 
-    let cursor = document.createElement('div');
-    cursor.id = "MENU_cursor";
-    cursor.style.height = aaaApp.lineHeightWithPx;
-    cursor.style.lineHeight = aaaApp.lineHeightWithPx;
-    let optionListElement = document.createElement('div');
-    optionListElement.id = "MENU_optionList";
-    menuElement.appendChild(cursor);
-    menuElement.appendChild(optionListElement);
-    MENU_addEvents();
+    //MENU_addEvents();
     for (var i = 0; i < MENU_request.optionList.length; i++) {
-        const entry = MENU_request.optionList[i];
-        const optionElement = document.createElement('div');
-        optionElement.className = 'menuOption';
-        optionElement.style.height = aaaApp.lineHeightWithPx;
-        optionElement.style.lineHeight = aaaApp.lineHeightWithPx;
-        optionElement.textContent = entry.text;
-
-        if (entry.submenu) {
-            optionElement.setAttribute("data-command-kind", CommandKind.Submenu);
-            optionElement.textContent += '>';
-        }
-        else {
-            optionElement.setAttribute("data-command-kind", entry.commandKind);
-        }
-
-        optionListElement.appendChild(optionElement);
+        MENU_listComponent.insert(MENU_listComponent.count, i);
     }
-
-    MENU_request.ArrayFrom_menuOptionList_children = Array.from(optionListElement.children);
 
     if (!MENU_request.elementToFocusOnCompleted) {
         MENU_request.elementToFocusOnCompleted = document.activeElement;
@@ -195,10 +248,10 @@ function MENU_render_do_Set() {
 
     MENU_request.recentBoundingClientRectTop = finalTop;
 
-    MENU_state_do_Cursor(MENU_request.index);
-    MENU_render_do_Cursor();
+    MENU_listComponent.cursorIndex = MENU_request.index;
+    MENU_listComponent.initialize(menuElement);
 
-    menuElement.focus();
+    MENU_listComponent.rootElement.focus();
 }
 
 /**
@@ -240,6 +293,7 @@ function MENU_render_do_Hide() {
     if (!menu) return;
 
     menu.ticketId_drawn = 0;
+    MENU_listComponent.dispose();
     menu.remove();
 }
 
@@ -264,6 +318,9 @@ function MENU_completeForm(forceIsCancelled, changingFocusIsReasonable) {
     if (local_request === null) {
         return; // TODO: Since you remove the events in MENU_hide you shouldn't need this.
     }
+
+    local_request.index = MENU_listComponent.cursorIndex;
+
     MENU_hide();
     if (changingFocusIsReasonable && !local_request.disableFocusOnCompleted && local_request.elementToFocusOnCompleted) {
         local_request.elementToFocusOnCompleted.focus();
