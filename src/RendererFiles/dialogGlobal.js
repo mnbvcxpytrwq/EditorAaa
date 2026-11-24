@@ -31,14 +31,14 @@ class Dialog {
     }
 }
 
-export const OFFSET_DIALOG      = 0;  // Slots 0 to 31 // Define the unique byte offset where each UI's memory space begins
+const OFFSET_DIALOG = 0;  // Slots 0 to 31 // Define the unique byte offset where each UI's memory space begins
 
 export const dialog = new Dialog();
 
-export const CONST_DIALOG_minTop = 8;
-export const CONST_DIALOG_minLeft = 8;
-export const CONST_DIALOG_minHeight = 100;
-export const CONST_DIALOG_minWidth = 100;
+const CONST_DIALOG_minTop = 8;
+const CONST_DIALOG_minLeft = 8;
+const CONST_DIALOG_minHeight = 100;
+const CONST_DIALOG_minWidth = 100;
 
 // No onComplete because all of that logic goes in the respective case of 'switch (dialog.currentDialogKind)'/'switch (DIALOG_request.dialogKind)'.
 

@@ -5904,13 +5904,6 @@ function EDI_handleRingBufferNodesThatAreOffscreen_DuplicateOrPaste(final_ringBu
     }
 
     for (;;) {
-        //let depth = 0;
-        //if (displaced_itemIndex < EXPLORER_treeViewNodes.count_abstract) {
-        //    depth = EXPLORER_treeViewNodes.getDepth(displaced_itemIndex);
-        //}
-
-        //EXPLORER_ringBuffer[displaced_ringBufferIndex].style.transform = `translate(${CONST_EXPLORER_offsetPerDepth * depth}px, ${f.fEXPLORER_itemHeightNumber * displaced_itemIndex}px)`;
-
         if (displaced_ringBufferIndex === final_ringBufferIndex) {
             break;
         }
@@ -6982,13 +6975,6 @@ function EDI_handleRingBufferNodesThatAreOffscreen_RemoveSelection(final_ringBuf
     const displacedCount = availableRingBufferNodesVisuallyAfterCollapsedOne - recycleCount;
 
     for (let i = 0; i < displacedCount; i++) {
-        //let depth = 0;
-        //if (displaced_itemIndex < EXPLORER_treeViewNodes.count_abstract) {
-        //    depth = EXPLORER_treeViewNodes.getDepth(displaced_itemIndex);
-        //}
-
-        //EDI_lineStringCache[displaced_ringBufferIndex].style.transform = `translate(${CONST_EXPLORER_offsetPerDepth * depth}px, ${f.fEXPLORER_itemHeightNumber * displaced_itemIndex}px)`;
-
         displaced_itemIndex++;
 
         displaced_ringBufferIndex++;

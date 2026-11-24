@@ -1,7 +1,7 @@
 import {aaaApp} from "./applicationRendererRoot.js"
 import {explorer} from './explorerGlobal.js'
 
-export const CONST_AUTOCOMPLETE_topPadding = 4;
+const CONST_AUTOCOMPLETE_topPadding = 4;
 
 export const WIDTH_NODE_DRAWN_NUMBER_IN_CH_UNITS_NO_PADDING = 2;
 
@@ -69,7 +69,7 @@ class Autocomplete {
 
 export const autocomplete = new Autocomplete();
 
-export const OFFSET_AUTOCOMPLETE = 32; // Slots 32 to 63 // Define the unique byte offset where each UI's memory space begins
+const OFFSET_AUTOCOMPLETE = 32; // Slots 32 to 63 // Define the unique byte offset where each UI's memory space begins
 
 function AUTOCOMPLETE_render_request(renderKind) {
     if (autocomplete.queueHead !== autocomplete.queueTail) {

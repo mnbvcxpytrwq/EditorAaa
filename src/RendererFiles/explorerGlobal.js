@@ -79,13 +79,6 @@ class Explorer {
 
 export const explorer = new Explorer();
 
-/** Pixels */
-export const CONST_EXPLORER_offsetPerDepth = 8;
-
-// Google AI'd the bit logic
-// Configuration matching our table above
-export const CONST_EXPLORER_KEY_BITS = 12;
-
 /*
 When collapse maybe you reset the length of the longest line or something
 
