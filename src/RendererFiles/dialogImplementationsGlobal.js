@@ -62,7 +62,7 @@ function FindAll_setData_causes_state_reset(actualData) {
     const fileEntries = FindAll_actualData.fileEntries;
 
     for (let i = 0; i < fileEntries.length; i++) {
-        FindAll_treeViewComponent.insert(FindAll_treeViewComponent.countAbstract, TreeViewNodeKind.isExpandable_NOTisExpanded, i, 0);
+        FindAll_treeViewComponent.insert(FindAll_treeViewComponent.countAbstract, 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/, i, 0);
     }
     
     FindAll_treeViewComponent.drawScrollbarHeight();
@@ -157,15 +157,15 @@ function FindAll_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, de
                     const entry = FindAll_actualData.fileEntries[indexFile];
                     name = entry.filename;
                     LINE_CACHE[ringBufferIndex].count = entry.matches.length;
-                    LINE_CACHE[ringBufferIndex].iterateMatches = nodeKind === TreeViewNodeKind.isExpandable_isExpanded;
+                    LINE_CACHE[ringBufferIndex].iterateMatches = nodeKind === 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/;
                 }
 
                 let chevronRepresentation = '';
                 switch (nodeKind) {
-                    case TreeViewNodeKind.isExpandable_isExpanded:
+                    case 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/:
                         chevronRepresentation = '-';
                         break;
-                    case TreeViewNodeKind.isExpandable_NOTisExpanded:
+                    case 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/:
                         chevronRepresentation = '+';
                         break;
                     case TreeViewNodeKind.NOTisExpandable_isExpanded:
@@ -220,8 +220,8 @@ function FindAll_expandCollapseIconWasClicked(indexItem, ringBufferIndexItem) {
     const depth = treeViewComponent_staticRunner.fTreeView_poolret_pooledNode_depth;
     const nodeKind = treeViewComponent_staticRunner.byteTreeView_byteret_pooledNode_nodeKind;
 
-    if (nodeKind === TreeViewNodeKind.isExpandable_NOTisExpanded) {
-        FindAll_treeViewComponent.setNodeKind(indexItem, TreeViewNodeKind.isExpandable_isExpanded);
+    if (nodeKind === 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/) {
+        FindAll_treeViewComponent.setNodeKind(indexItem, 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/);
 
         const childFilesystemEntries = FindAll_actualData.fileEntries[key].matches;
         const insertionCount = childFilesystemEntries.length;
@@ -236,8 +236,8 @@ function FindAll_expandCollapseIconWasClicked(indexItem, ringBufferIndexItem) {
         FindAll_treeViewComponent.drawScrollbarHeight();
         FindAll_treeViewComponent.forceFullscreen_renderScroll();
     }
-    else if (nodeKind === TreeViewNodeKind.isExpandable_isExpanded) {
-        FindAll_treeViewComponent.setNodeKind(indexItem, TreeViewNodeKind.isExpandable_NOTisExpanded);
+    else if (nodeKind === 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/) {
+        FindAll_treeViewComponent.setNodeKind(indexItem, 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/);
 
         const startIndex = indexItem + 1;
 

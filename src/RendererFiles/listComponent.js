@@ -450,7 +450,7 @@ export class ListComponent {
         let depth = treeViewComponent_staticRunner.fTreeView_poolret_pooledNode_depth;
         let nodeKind = treeViewComponent_staticRunner.byteTreeView_byteret_pooledNode_nodeKind;
         
-        if (nodeKind === TreeViewNodeKind.isExpandable_isExpanded) {
+        if (nodeKind === 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/) {
             if (this.cursorIndex + 1 < this.count) {
                 if (this.getDepth(this.cursorIndex + 1) > depth) {
                     this.cursorIndex = this.state_cursor_validateIndex(this.cursorIndex + 1);
@@ -458,7 +458,7 @@ export class ListComponent {
                 }
             }
         }
-        else if (nodeKind === TreeViewNodeKind.isExpandable_NOTisExpanded) {
+        else if (nodeKind === 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/) {
             this.expandCollapseIconWasClicked(this.cursorIndex, ringBufferIndexItem);
         }
     }
@@ -476,7 +476,7 @@ export class ListComponent {
         let depth = treeViewComponent_staticRunner.fTreeView_poolret_pooledNode_depth;
         let nodeKind = treeViewComponent_staticRunner.byteTreeView_byteret_pooledNode_nodeKind;
         
-        if (nodeKind === TreeViewNodeKind.isExpandable_isExpanded) {
+        if (nodeKind === 1 /*TreeViewNodeKind.isExpandable_isExpanded: 1*/) {
             this.expandCollapseIconWasClicked(this.cursorIndex, ringBufferIndexItem);
         }
         else {
