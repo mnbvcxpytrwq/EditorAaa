@@ -157,7 +157,7 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
     const ctx = EXPLORER_treeViewComponent.canvasContext2d;
     ctx.clearRect(0, 0, EXPLORER_treeViewComponent.canvas.width, EXPLORER_treeViewComponent.canvas.height);
     
-    let vertical = 0;
+    let vertical = -(EXPLORER_treeViewComponent.scrollTop % EXPLORER_treeViewComponent.itemHeightNumber);
 
     // TODO: All of the below 'Optimization heuristic goal' suck. Cause you have no idea whether they're actually effective you're just hearing rumors and then throwing them all at a dart board and hoping everything works out.
     // ^ I'm specifically referencing my blind application of them en masse like a fool without ever having confirmed that they are improvements let alone meaningful ones.
@@ -179,7 +179,7 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
     ctx.fillStyle = '#3f7581'; // Solid cursor accent color
     const cursorLine = EXPLORER_treeViewComponent.cursorIndex;
     if (cursorLine >= lineIndexLower && cursorLine < lineIndexUpper) {
-        const cursorY = (cursorLine - lineIndexLower) * EXPLORER_treeViewComponent.itemHeightNumber;
+        const cursorY = (cursorLine - lineIndexLower) * EXPLORER_treeViewComponent.itemHeightNumber + vertical;
         ctx.fillRect(0, cursorY, EXPLORER_treeViewComponent.canvas.width, EXPLORER_treeViewComponent.itemHeightNumber);
     }
 
@@ -187,7 +187,7 @@ function EXPLORER_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, d
         if (EXPLORER_menuOptionPaste_object.indexItem !== null && EXPLORER_menuOptionPaste_object.indexItem !== undefined) {
             if (lineIndexLower <= EXPLORER_menuOptionPaste_object.indexItem && LINE_INDEX_UPPER > EXPLORER_menuOptionPaste_object.indexItem) {
                 ctx.fillStyle = '#845a17';
-                const y = (EXPLORER_menuOptionPaste_object.indexItem - lineIndexLower) * EXPLORER_treeViewComponent.itemHeightNumber;
+                const y = (EXPLORER_menuOptionPaste_object.indexItem - lineIndexLower) * EXPLORER_treeViewComponent.itemHeightNumber + vertical;
                 ctx.fillRect(0, y, EXPLORER_treeViewComponent.canvas.width, EXPLORER_treeViewComponent.itemHeightNumber);
             }
         }
