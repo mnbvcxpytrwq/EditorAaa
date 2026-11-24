@@ -123,12 +123,13 @@ export class ListComponent {
      * @param {number} initialCapacity 
      * @param {ListComponent_staticRunner} listComponent_staticRunner 
      */
-    constructor(initialCapacity, listComponent_staticRunner, renderLines, dblClick_or_space_or_enter, oncontextmenu, onMeasure) {
+    constructor(initialCapacity, listComponent_staticRunner, renderLines, dblClick_or_space_or_enter, oncontextmenu, onMeasure, onBlur) {
 
         this.renderLines = renderLines;
         this.dblClick_or_space_or_enter = dblClick_or_space_or_enter;
         this.oncontextmenu = oncontextmenu;
         this.onMeasure = onMeasure;
+        this.onBlur = onBlur;
 
         this.listComponent_staticRunner = listComponent_staticRunner;
         
@@ -189,6 +190,7 @@ export class ListComponent {
         this.eventDblClick = this.event_dblclick.bind(this);
         this.eventKeydown = this.event_keydown.bind(this);
         this.eventContextmenu = this.event_contextmenu.bind(this);
+        this.eventBlur = this.event_blur.bind(this);
         this.eventResize = this.event_windowResize.bind(this);
 
         this.data = new Uint32Array(initialCapacity);
@@ -215,6 +217,7 @@ export class ListComponent {
         this.rootElement.addEventListener('dblclick', this.eventDblClick);
         this.rootElement.addEventListener('keydown', this.eventKeydown);
         this.rootElement.addEventListener('contextmenu', this.eventContextmenu);
+        this.rootElement.addEventListener('blur', this.eventBlur);
 
         window.addEventListener('resize', this.eventResize);
 
@@ -231,6 +234,7 @@ export class ListComponent {
         this.rootElement.removeEventListener('dblclick', this.eventDblClick);
         this.rootElement.removeEventListener('keydown', this.eventKeydown);
         this.rootElement.removeEventListener('contextmenu', this.eventContextmenu);
+        this.rootElement.removeEventListener('blur', this.eventBlur);
 
         window.removeEventListener('resize', this.eventClick);
     }
@@ -384,6 +388,10 @@ export class ListComponent {
             // TODO: Handle context menu with keyboard when active node is out of view
             this.oncontextmenu(this.cursorIndex, event_button, event_clientX, event_clientY, ringBufferIndexItem);
         }
+    }
+
+    event_blur() {
+        this.onBlur();
     }
 
     event_keydown(event) {

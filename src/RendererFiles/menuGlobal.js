@@ -86,7 +86,7 @@ function MENU_listComponent_onMeasure() {
 }
 
 export const MENU_listComponent = new ListComponent(
-    16, listComponent_staticRunner, MENU_listComponent_renderLines, MENU_listComponent_dblClick_or_space_or_enter, MENU_listComponent_oncontextmenu, MENU_listComponent_onMeasure);
+    16, listComponent_staticRunner, MENU_listComponent_renderLines, MENU_listComponent_dblClick_or_space_or_enter, MENU_listComponent_oncontextmenu, MENU_listComponent_onMeasure, MENU_listComponent_onblur);
 
 function MENU_listComponent_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, decodingBoundLower, decodingBoundUpper) {
 
@@ -141,6 +141,10 @@ function MENU_listComponent_renderLines(lineIndexLower, lineIndexUpper, ringBuff
 }
 
 function MENU_listComponent_findCutTreeViewNodeAmongChildren(startIndex, insertionCount) {
+}
+
+function MENU_listComponent_onblur() {
+    MENU_onblur();
 }
 
 function MENU_listComponent_dblClick_or_space_or_enter(eventKey, indexItem, ringBufferIndexItem) {
@@ -209,6 +213,8 @@ function MENU_render_do_Set() {
     document.body.appendChild(menuElement);
 
     //MENU_addEvents();
+    MENU_listComponent.clear();
+
     for (var i = 0; i < MENU_request.optionList.length; i++) {
         MENU_listComponent.insert(MENU_listComponent.count, i);
     }
@@ -293,7 +299,7 @@ function MENU_render_do_Hide() {
     if (!menu) return;
 
     menu.ticketId_drawn = 0;
-    MENU_listComponent.dispose();
+    MENU_listComponent.softDispose();
     menu.remove();
 }
 
