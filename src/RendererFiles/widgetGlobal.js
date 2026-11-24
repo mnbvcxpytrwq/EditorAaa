@@ -1,11 +1,5 @@
 import * as f from "./fieldBuffer.js"
 
-const WIDGETrenderKind = Object.freeze({
-    None: 0,
-    Show: 1,
-    Hide: 2,
-});
-
 class Widget {
     constructor() {
         this.isRenderPending = false;
@@ -82,7 +76,7 @@ function WIDGET_render_request(renderKind) {
 
     const absoluteIndex = OFFSET_WIDGET + (widget.queueTail & f.UI_SLOT_MASK);
     f.MASTER_RENDER_BUFFER[absoluteIndex] = renderKind;
-    if (renderKind === WIDGETrenderKind.Show) widget.renderKind_Show_countOfPendingRequests++;
+    if (renderKind === 1 /*WIDGETrenderKind.Show: 1*/) widget.renderKind_Show_countOfPendingRequests++;
     widget.queueTail++;
     
     if (!widget.isRenderPending) {
@@ -99,11 +93,11 @@ function WIDGET_render_do() {
         widget.queueHead++; 
 
         switch (renderKind) {
-            case WIDGETrenderKind.Show:
+            case 1 /*WIDGETrenderKind.Show: 1*/:
                 if (widget.renderKind_Show_countOfPendingRequests-- > 1) break;
                 WIDGET_render_do_Show();
                 break;
-            case WIDGETrenderKind.Hide:
+            case 2 /*WIDGETrenderKind.Hide: 2*/:
                 WIDGET_render_do_Hide();
                 break;
         }
@@ -201,7 +195,7 @@ export async function WIDGET_show(widgetKind, left, top, placeholder, value, tar
         ticket: widget.ticketId_counter++
     };
 
-    WIDGET_render_request(WIDGETrenderKind.Show);
+    WIDGET_render_request(1 /*WIDGETrenderKind.Show: 1*/);
 }
 
 function WIDGET_render_do_Hide() {
@@ -227,7 +221,7 @@ function WIDGET_render_do_Hide() {
 function WIDGET_hide() {
     WIDGET_request = null; // In case someone skips a 'WIDGET_completeForm', this null setting is done here.
     // TODO: remove the events here?
-    WIDGET_render_request(WIDGETrenderKind.Hide);
+    WIDGET_render_request(2 /*WIDGETrenderKind.Hide: 2*/);
 }
 
 /**
@@ -371,5 +365,13 @@ export const WidgetKind = Object.freeze({
     None: 0,
     InputText: 1,
     YesCancel: 2,
+});
+*/
+
+/*
+const WIDGETrenderKind = Object.freeze({
+    None: 0,
+    Show: 1,
+    Hide: 2,
 });
 */
