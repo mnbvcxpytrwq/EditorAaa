@@ -8,7 +8,7 @@ import {
 } from './menuGlobal.js'
 import {set_shouldUseCSharpToSaveFileWhenPossible, sendTransaction_MessageKind_textDocument_didOpen} from './applicationRendererRoot.js'
 import {EDI_state_setText_byteArray, EDI_toExtensionKind, EDI_onResize} from './editorGlobal_edit.js'
-import {WidgetKind, WIDGET_show} from './widgetGlobal.js'
+import {WIDGET_show} from './widgetGlobal.js'
 import { APP_colors } from "./fieldBuffer.js"
 
 /**
