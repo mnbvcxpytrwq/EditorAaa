@@ -1,7 +1,6 @@
 import {TrackingUint32MaxHeap} from './editorMaxHeap.js'
 import {UInt32List} from './listTypes.js'
 import * as f from './fieldBuffer.js'
-import {CommandKind} from './menuGlobal.js'
 import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
 

@@ -1,5 +1,5 @@
 import {aaaApp} from "./applicationRendererRoot.js"
-import {TreeViewComponent, TreeViewNodeKind, treeViewComponent_staticRunner} from "./treeViewComponent.js"
+import {TreeViewComponent, treeViewComponent_staticRunner} from "./treeViewComponent.js"
 import {editor, CONST_EDI_ASCII_TAB, CONST_EDI_ASCII_SPACE, EDI_textSourceIdentifier, EDI_moveCursor_position} from './editorGlobal_edit.js'
 import {EXPLORER_openInEditor} from './explorerGlobal.js'
 import { APP_colors, set_colors_to_dark, set_colors_to_light } from "./fieldBuffer.js"

@@ -1,11 +1,9 @@
 import {
     TreeViewComponent,
     treeViewComponent_staticRunner,
-    TreeViewNodeKind,
 } from './treeViewComponent.js'
 import {
     MENU_MenuOption_factory,
-    CommandKind,
     menuSet,
 } from './menuGlobal.js'
 import {set_shouldUseCSharpToSaveFileWhenPossible, sendTransaction_MessageKind_textDocument_didOpen} from './applicationRendererRoot.js'
