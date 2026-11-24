@@ -1,7 +1,7 @@
 import {TrackingUint32MaxHeap} from './editorMaxHeap.js'
 import {UInt32List} from './listTypes.js'
 import * as f from './fieldBuffer.js'
-import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
+import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition, sendTransaction_MessageKind_custom_autocomplete} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
 import {autocomplete, AUTOCOMPLETE_show, AUTOCOMPLETE_hide} from './autocompleteGlobal.js'
 
@@ -3694,6 +3694,7 @@ function EDI_requestLspComplete() {
     //}
     //window.myAPI.editorCompletionRequest(editor.cursor_indexLine, editor.cursor_indexColumn);
     AUTOCOMPLETE_show();
+    sendTransaction_MessageKind_custom_autocomplete();
 }
 
 /**

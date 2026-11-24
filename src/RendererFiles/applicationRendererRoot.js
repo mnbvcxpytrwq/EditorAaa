@@ -320,6 +320,52 @@ export function sendTransaction_MessageKind_custom_edit_Remove(positionIndex, le
     socket.send(viewToSend); // Sends raw binary data
 }
 
+export function sendTransaction_MessageKind_custom_autocomplete() {
+    if (!socket || socket.readyState !== WebSocket.OPEN) { return; }
+
+    if (false && filePath.length > send_buffer.length) { throw new Exception('filePath.length > send_buffer.length'); }
+
+    mostRecent_kind = 8;
+
+    let index = 0;
+
+    send_buffer[0] = 56; // '8'
+    send_buffer[1] = 95; // '_'
+
+    index += 2;
+
+    //var positionIndexString = positionIndex + '';
+    //var lengthString = length + '';
+//
+    //// TODO: measure bytes that represent number digits without string
+    //const aaa = EDI_encoder.encode(positionIndexString);
+    //// TODO: byte length of the bytes without encoding.
+    //// TODO: send the bytes themselves 0 allocation either side for the message itself
+    //const bbb = EDI_encoder.encode(lengthString);
+    //const byteLengthString = (aaa.length + bbb.length + 1 /*the '_' intra message that separates position from length*/) + '';
+//
+    //const writtenAaa = EDI_encoder.encodeInto(byteLengthString, send_buffer.subarray(index, send_buffer.length));
+    //index += writtenAaa.written;
+//
+    //send_buffer[index] = 95; // '_'
+    //index += 1;
+//
+    //const writtenBbb = EDI_encoder.encodeInto(positionIndexString, send_buffer.subarray(index, send_buffer.length));
+    //index += writtenBbb.written;
+//
+    //send_buffer[index] = 95; // '_'
+    //index += 1;
+//
+    //const writtenCcc = EDI_encoder.encodeInto(length, send_buffer.subarray(index, send_buffer.length));
+    //index += writtenCcc.written;
+
+    // High Performance Slice: Create a zero-allocation window/view over just the written bytes
+    // .subarray() does NOT copy memory; it just shifts the byte pointer window
+    const viewToSend = send_buffer.subarray(0, index);
+
+    socket.send(viewToSend); // Sends raw binary data
+}
+
 // Goal is to use the same wording as LSP where possible for clarity of communication.
 //const MessageKind_string = 1;
 //const MessageKind_textDocument_didOpen = 2;
@@ -328,6 +374,7 @@ export function sendTransaction_MessageKind_custom_edit_Remove(positionIndex, le
 //const MessageKind_custom_saveFile = 5;
 //const MessageKind_custom_edit_InsertLtr = 6;
 //const MessageKind_custom_edit_Remove = 7;
+//const MessageKind_custom_autocomplete = 8;
 
 // The save can actually be done from the C# code.
 // (from whichever it is more sensible to do from I mean)
@@ -383,6 +430,10 @@ function APP_socket_onmessage(event) {
         }
         else if (mostRecent_kind === 4) {
             DIALOG_Debug_Refresh(JSON.parse(event.data));
+        }
+        else if (mostRecent_kind === 8) {
+            let nodes = JSON.parse(event.data);
+            let aaa = 2;
         }
         else {
             // If the server sent it as text, convert text to a Uint8Array
