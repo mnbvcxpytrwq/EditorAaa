@@ -3708,7 +3708,7 @@ function EDI_doEditorGoToDefinitionRequest(ctrlKey) {
         sendTransaction_MessageKind_textDocument_definition(EDI_getPositionIndex_cursor_raw());
     }
     else {
-        DIALOG_show(DialogKind.Debug, /*onResizeAction*/ null, /*elementToFocusOnDialogHideInitiated*/ null);
+        DIALOG_show(4 /*DialogKind.Debug: 4*/, /*onResizeAction*/ null, /*elementToFocusOnDialogHideInitiated*/ null);
     }
 }
 

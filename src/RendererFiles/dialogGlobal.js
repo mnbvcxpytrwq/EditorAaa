@@ -2,21 +2,6 @@ import * as f from "./fieldBuffer.js"
 import {editor} from './editorGlobal_edit.js'
 import {DIALOG_FindAll_Create, DIALOG_FindAll_Delete, DIALOG_Settings_Create, DIALOG_Settings_Delete, DIALOG_DocumentSymbol_Create, DIALOG_DocumentSymbol_Delete, DIALOG_Debug_Create, DIALOG_Debug_Delete} from './dialogImplementationsGlobal.js'
 
-export const DialogKind = Object.freeze({
-    None: 0,
-    FindAll: 1,
-    Settings: 2,
-    DocumentSymbol: 3,
-    Debug: 4,
-});
-
-const DIALOGrenderKind = Object.freeze({
-    None: 0,
-    Show: 1,
-    Hide: 2,
-    DimensionsChanged: 3,
-});
-
 class Dialog {
     constructor() {
         this.hasBeenMeasured = false;
@@ -97,13 +82,13 @@ function DIALOG_render_do() {
         dialog.queueHead++; 
 
         switch (renderKind) {
-            case DIALOGrenderKind.Show:
+            case 1 /*DIALOGrenderKind.Show: 1*/:
                 DIALOG_render_do_Show();
                 break;
-            case DIALOGrenderKind.Hide:
+            case 2 /*DIALOGrenderKind.Hide: 2*/:
                 DIALOG_render_do_Hide();
                 break;
-            case DIALOGrenderKind.DimensionsChanged:
+            case 3 /*DIALOGrenderKind.DimensionsChanged: 3*/:
                 DIALOG_render_do_DimensionsChanged();
                 break;
         }
@@ -135,7 +120,7 @@ function DIALOG_render_do_DimensionsChanged() {
 }
 
 function DIALOG_render_do_Show() {
-    if (dialog.currentDialogKind !== DialogKind.None) {
+    if (dialog.currentDialogKind !== 0 /*DialogKind.None: 0*/) {
         DIALOG_render_do_Hide();
     }
 
@@ -153,16 +138,16 @@ function DIALOG_render_do_Show() {
     DIALOG_createWindow();
 
     switch (DIALOG_request.dialogKind) {
-        case DialogKind.FindAll:
+        case 1 /*DialogKind.FindAll: 1*/:
             DIALOG_FindAll_Create();
             break;
-        case DialogKind.Settings:
+        case 2 /*DialogKind.Settings: 2*/:
             DIALOG_Settings_Create();
             break;
-        case DialogKind.DocumentSymbol:
+        case 3 /*DialogKind.DocumentSymbol: 3*/:
             DIALOG_DocumentSymbol_Create();
             break;
-        case DialogKind.Debug:
+        case 4 /*DialogKind.Debug: 4*/:
             DIALOG_Debug_Create();
             break;
     }
@@ -197,7 +182,7 @@ export function DIALOG_show(dialogKind, onResizeAction, elementToFocusOnDialogHi
         local_request.top_DRAWN = DIALOG_request.top_DRAWN;
     }
     DIALOG_request = local_request;
-    DIALOG_render_request(DIALOGrenderKind.Show);
+    DIALOG_render_request(1 /*DIALOGrenderKind.Show: 1*/);
 }
 
 function DIALOG_render_do_Hide() {
@@ -205,16 +190,16 @@ function DIALOG_render_do_Hide() {
     if (!DIALOG_element) return;
 
     switch (dialog.currentDialogKind) {
-        case DialogKind.FindAll:
+        case 1 /*DialogKind.FindAll: 1*/:
             DIALOG_FindAll_Delete();
             break;
-        case DialogKind.Settings:
+        case 2 /*DialogKind.Settings: 2*/:
             DIALOG_Settings_Delete();
             break;
-        case DialogKind.DocumentSymbol:
+        case 3 /*DialogKind.DocumentSymbol: 3*/:
             DIALOG_DocumentSymbol_Delete();
             break;
-        case DialogKind.Debug:
+        case 4 /*DialogKind.Debug: 4*/:
             DIALOG_Debug_Delete();
             break;
     }
@@ -222,7 +207,7 @@ function DIALOG_render_do_Hide() {
     DIALOG_deleteWindow();
 
     DIALOG_element.remove();
-    dialog.currentDialogKind = DialogKind.None;
+    dialog.currentDialogKind = 0 /*DialogKind.None: 0*/;
 }
 
 /**
@@ -235,13 +220,13 @@ function DIALOG_hide() {
     const local_request = DIALOG_request;
     if (local_request === null) {
         // TODO: Consider adding 'DIALOG_render_request(DIALOGrenderKind.Hide);' here for each respective UI to be safe (but don't end up with render_do_Hide throwing a null exception when the UI isn't there...)?
-        DIALOG_render_request(DIALOGrenderKind.Hide);
+        DIALOG_render_request(2 /*DIALOGrenderKind.Hide: 2*/);
         return; // TODO: Since you remove the events in DIALOG_hide you shouldn't need this.
     }
     if (!local_request.disableFocusOnDialogHideInitiated && local_request.elementToFocusOnDialogHideInitiated) {
         local_request.elementToFocusOnDialogHideInitiated.focus();
     }
-    DIALOG_render_request(DIALOGrenderKind.Hide);
+    DIALOG_render_request(2 /*DIALOGrenderKind.Hide: 2*/);
 }
 
 function DIALOG_closeButton_onclick() {
@@ -479,7 +464,7 @@ function DIALOG_resize_body_onmousemove(event) {
             return;
     }
 
-    DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+    DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
 }
 
 function DIALOG_resize_setCursor(clientX, clientY, dialogBoundingClientRect, resize) {
@@ -605,12 +590,12 @@ function DIALOG_toolbar_body_onmousemove(event) {
 
             DIALOG_request.left -= absdiff_X;
             DIALOG_request.before_X = clientX;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
         else {
             DIALOG_request.left -= absdiff_X;
             DIALOG_request.before_X = clientX;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
     }
     else if (diff_X > 0) {
@@ -625,12 +610,12 @@ function DIALOG_toolbar_body_onmousemove(event) {
 
             DIALOG_request.left += absdiff_X;
             DIALOG_request.before_X = clientX;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
         else {
             DIALOG_request.left += absdiff_X;
             DIALOG_request.before_X = clientX;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
     }
 
@@ -645,12 +630,12 @@ function DIALOG_toolbar_body_onmousemove(event) {
             
             DIALOG_request.top -= absdiff_Y;
             DIALOG_request.before_Y = clientY;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
         else {
             DIALOG_request.top -= absdiff_Y;
             DIALOG_request.before_Y = clientY;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
     }
     else if (diff_Y > 0) {
@@ -665,12 +650,12 @@ function DIALOG_toolbar_body_onmousemove(event) {
             
             DIALOG_request.top += absdiff_Y;
             DIALOG_request.before_Y = clientY;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
         else {
             DIALOG_request.top += absdiff_Y;
             DIALOG_request.before_Y = clientY;
-            DIALOG_render_request(DIALOGrenderKind.DimensionsChanged);
+            DIALOG_render_request(3 /*DIALOGrenderKind.DimensionsChanged: 3*/);
         }
     }
 }
@@ -790,3 +775,22 @@ function DIALOG_deleteWindow() {
     let closeButton = document.getElementById('DIALOG_closeButton');
     closeButton.removeEventListener('click', DIALOG_closeButton_onclick);
 }
+
+/*
+export const DialogKind = Object.freeze({
+    None: 0,
+    FindAll: 1,
+    Settings: 2,
+    DocumentSymbol: 3,
+    Debug: 4,
+});
+*/
+
+/*
+const DIALOGrenderKind = Object.freeze({
+    None: 0,
+    Show: 1,
+    Hide: 2,
+    DimensionsChanged: 3,
+});
+*/

@@ -1,5 +1,5 @@
 import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, set_EDI_styleBuffer, EDI_render_request, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
-import {DIALOG_show, DialogKind} from './dialogGlobal.js'
+import {DIALOG_show} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
 
 export let shouldUseCSharpToSaveFileWhenPossible = false;
@@ -456,7 +456,7 @@ function documentBody_onKeyDown(event) {
             return;
         case 'F':
             if (!event.ctrlKey) return;
-            DIALOG_show(DialogKind.FindAll, FindAll_dialog_was_resized_or_moved, null);
+            DIALOG_show(1 /*DialogKind.FindAll: 1*/, FindAll_dialog_was_resized_or_moved, null);
         case 'Escape':
             const editor = document.getElementById('EDITOR_inner_container');
             if (editor) {
@@ -501,7 +501,7 @@ function documentBody_onKeyDown(event) {
 }
 
 function HEADER_buttonSettings_onClick() {
-    DIALOG_show(DialogKind.Settings, null, null);
+    DIALOG_show(2 /*DialogKind.Settings: 2*/, null, null);
 }
 
 function DocumentSymbol_debug_onClick() {
