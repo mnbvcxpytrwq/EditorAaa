@@ -168,10 +168,10 @@ function FindAll_renderLines(lineIndexLower, lineIndexUpper, ringBufferIndex, de
                     case 2 /*TreeViewNodeKind.isExpandable_NOTisExpanded: 2*/:
                         chevronRepresentation = '+';
                         break;
-                    case TreeViewNodeKind.NOTisExpandable_isExpanded:
+                    case 3 /*TreeViewNodeKind.NOTisExpandable_isExpanded: 3*/:
                         chevronRepresentation = ' ';
                         break;
-                    case TreeViewNodeKind.NOTisExpandable_NOTisExpanded:
+                    case 4 /*TreeViewNodeKind.NOTisExpandable_NOTisExpanded: 4*/:
                         chevronRepresentation = ' ';
                         break;
                 }
@@ -230,7 +230,7 @@ function FindAll_expandCollapseIconWasClicked(indexItem, ringBufferIndexItem) {
         for (let i = 0; i < insertionCount; i++) {
             const entry = childFilesystemEntries[i];
             // TODO: Insert range, or at the least 'pre-emptively' resize the list so that it fits each insertion without resizing per insertion.
-            FindAll_treeViewComponent.insert(indexItem + 1 + i, TreeViewNodeKind.NOTisExpandable_NOTisExpanded, entry.id, depth + 1);
+            FindAll_treeViewComponent.insert(indexItem + 1 + i, 4 /*TreeViewNodeKind.NOTisExpandable_NOTisExpanded: 4*/, entry.id, depth + 1);
         }
 
         FindAll_treeViewComponent.drawScrollbarHeight();

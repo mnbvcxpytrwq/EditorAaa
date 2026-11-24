@@ -1,14 +1,6 @@
 export const fTreeView_poolret_pooledNode_key = 28;
 export const fTreeView_poolret_pooledNode_depth = 29;
 
-export const TreeViewNodeKind = Object.freeze({
-    None: 0,
-    isExpandable_isExpanded: 1,
-    isExpandable_NOTisExpanded: 2,
-    NOTisExpandable_isExpanded: 3,
-    NOTisExpandable_NOTisExpanded: 4,
-});
-
 class TreeViewComponent_staticRunner {
     constructor() {
         this.queueHead = 0;
@@ -891,5 +883,15 @@ const TREEVIEWrenderKind = Object.freeze({
     FullReset: 6,
     Scroll_PullDataDrawResult: 7,
     Resize: 8,
+});
+*/
+
+/*
+export const TreeViewNodeKind = Object.freeze({
+    None: 0,
+    isExpandable_isExpanded: 1,
+    isExpandable_NOTisExpanded: 2,
+    NOTisExpandable_isExpanded: 3,
+    NOTisExpandable_NOTisExpanded: 4,
 });
 */
