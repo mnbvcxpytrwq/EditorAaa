@@ -13,6 +13,8 @@ export function set_shouldUseCSharpToSaveFileWhenPossible(value) {
 /**
  * TODO: I'm worried that there will exist a variable named 'App' or 'app' etc... and that this class will overwrite it. That's why I prefixed this with 'Aaa'...
  * ...maybe with modules this isn't even possible. I'm not thinking about my own variable I'm thinking about someone elses.
+ * I don't actually think what I'm saying here even makes sense it sounds ridiculous (given this is a module)
+ * but anxiety runs my life. And I can only tussle with so many sources of anxiety at once so I need to quiet this source for the time being.
  */
 class AaaApp {
     constructor() {
