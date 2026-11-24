@@ -56,27 +56,6 @@ body {
   padding-bottom: 1px;
 }
 
-#MENU:focus #MENU_cursor {
-  background-color: var(--primary-active-with-focus-background-color);
-}
-
-#MENU_cursor {
-  background-color: var(--primary-active-no-focus-background-color);
-  position: absolute;
-  /* -8px is the sum of the padding left and padding right of the menu */
-  width: calc(100% - 8px);
-}
-
-#MENU_optionList {
-  cursor: default;
-  display: contents;
-}
-
-.menuOption {
-  white-space: nowrap;
-  position: relative;
-}
-
 #TOOLTIP {
   position: fixed;
   min-width: 25px;
@@ -122,24 +101,11 @@ body {
   contain: strict;
 }
 
-.LIST:focus .LIST_cursor {
-  background-color: var(--primary-active-with-focus-background-color);
-}
-
 .LIST_virtualization {
   position: absolute;
   left: 0;
   top: 0;
   width: 1px;
-}
-
-.LIST_cursor {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: var(--primary-active-no-focus-background-color);
-  position: absolute;
-  width: 100%;
 }
 
 .LIST_itemList {
@@ -255,17 +221,6 @@ TODO: maybe don't nearly-duplicate these classes.
 }
 
 /*
-  TODO: (this specific block of CSS is an ancillary reference to the original comment) 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
-  ...but the folder explorer is always on screen and I'm trying to get the
-  composite layers correct.
-
-  TODO: (this specific block of CSS is an ancillary reference to the original comment) maybe don't nearly-duplicate these classes.
-  */
-.TREEVIEWexplorer:focus > #EXPLORER_visual_canvas > #EXPLORER_text > .TREEVIEW_cursor {
-  background-color: var(--primary-active-with-focus-background-color);
-}
-
-/*
 TODO: 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
 ...but the folder explorer is always on screen and I'm trying to get the
 composite layers correct.
@@ -280,10 +235,6 @@ TODO: maybe don't nearly-duplicate these classes.
   width: 100%;
   height: 100%;
   contain: strict;
-}
-
-.TREEVIEW:focus>.TREEVIEW_cursor {
-  background-color: var(--primary-active-with-focus-background-color);
 }
 
 .TREEVIEW_scroll_viewport {
@@ -316,15 +267,6 @@ TODO: maybe don't nearly-duplicate these classes.
   left: 0;
   top: 0;
   width: 1px;
-}
-
-.TREEVIEW_cursor {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: var(--primary-active-no-focus-background-color);
-  position: absolute;
-  width: 100%;
 }
 
 .TREEVIEW_itemList {
@@ -500,48 +442,9 @@ TODO: maybe don't nearly-duplicate these classes.
   will-change: transform;
 }
 
-#EDI_text {
-  cursor: text;
-  height: 100%;
-  /* display: contents; */
-
-  /*will-change: transform; */
-  /* Layer 1: The Gutter GPU Layer */
-  /*background-color: #1e1e1e; */
-  /* Gives the GPU a solid texture target */
-  flex: 1;
-  will-change: transform;
-}
-
 #EDI_canvas {
   width: 100%;
   height: 100%;
-}
-
-#EDI_selection {
-  display: contents;
-}
-
-.EDI_caretRow {
-  width: 100%;
-  outline: 1px solid var(--light-border-color);
-  position: absolute;
-  left: 0;
-  top: 0;
-  contain: strict;
-  will-change: transform;
-}
-
-.EDI_cursor {
-  width: 2.5px;
-  background-color: var(--primary-foreground-color);
-  position: absolute;
-  left: 0;
-  top: 0;
-  will-change: transform/*, opacity*/;
-  contain: strict;
-  /* Use step-end to natively handle discrete on/off states */
-  /* animation: blink-animation 1s step-end infinite; */
 }
 
 /*@keyframes blink-animation {
@@ -632,27 +535,6 @@ TODO: maybe don't nearly-duplicate these classes.
   top: -8px;
   width: calc(100% + 16px);
   height: calc(100% + 16px);
-}
-
-.APP_MEASURE_ELEMENT {
-  width: fit-content;
-  white-space: pre; /* CRITICAL: Guarantees the 396 characters stay on 1 line */
-  position: absolute;
-  visibility: hidden;
-  padding: 0;
-  border: none;
-  left: 0;
-  top: 0;
-}
-
-.APP_MEASURE_ELEMENT_WRAPPER {
-  position: fixed; /* Removes it from the normal page layout flow */
-  top: '0';
-  left: '0';
-  width: '0';        /* Forces a tiny container footprint */
-  height: '0';       /* Forces a tiny container footprint */
-  overflow: 'hidden'; /* Prevents any layout leaking out or causing scrollbars */
-  visibility: 'hidden'; /* Keeps it completely invisible to the user */
 }
 
 button:focus {
