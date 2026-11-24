@@ -207,26 +207,6 @@ composite layers correct.
 
 TODO: maybe don't nearly-duplicate these classes.
 */
-.TREEVIEWexplorer {
-  position: relative;
-  outline: none;
-  font-family: monospace;
-  width: 200px;
-  height: 100%;
-  /* will-change: transform;
-  background-color: var(--primary-background-color); */
-
-  overflow: hidden;
-  contain: strict;
-}
-
-/*
-TODO: 'TREEVIEWexplorer' is nearly identical to 'TREEVIEW'...
-...but the folder explorer is always on screen and I'm trying to get the
-composite layers correct.
-
-TODO: maybe don't nearly-duplicate these classes.
-*/
 .TREEVIEW {
   position: relative;
   overflow: hidden;
@@ -250,44 +230,6 @@ TODO: maybe don't nearly-duplicate these classes.
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
-}
-
-.TREEVIEW_text {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  height: 100%;
-  left: 0px;
-  transform: translate3d(0px, 0px, 0px); /* TODO: If you're missing a default for this on anything probably add it? (scroll event yes but initially?) */
-  /* ... not that you add will: transform; I think it is --- I'm tired and just trying to type things a bit so I don't stagnate */
-}
-
-.TREEVIEW_virtualization {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1px;
-}
-
-.TREEVIEW_itemList {
-  display: contents;
-}
-
-/* .tvn => TreeViewNode...SEE 'tvnN' (this is super hacky I need to mark a node for change...) */
-.tvn {
-  white-space: pre;
-  position: absolute;
-  left: 0;
-  top: 0;
-  contain: strict;
-}
-
-/* .tvnN => TreeViewNode (but NOT "syntax highlighted") (this is super hacky I need to mark a node for change...)*/
-.tvnN {
-  white-space: nowrap;
-  position: absolute;
-  left: 0;
-  top: 0;
 }
 
 .unselectable {
@@ -360,11 +302,6 @@ TODO: maybe don't nearly-duplicate these classes.
   color: var(--editor-syntax-operatorAssignment-color);
 }
 
-#EDI_virtualization_horizontal {
-  height: 1px;
-  position: absolute;
-}
-
 #EDI_findOverlay {
   position: absolute;
   right: 20px;
@@ -379,65 +316,6 @@ TODO: maybe don't nearly-duplicate these classes.
   
 }
 
-#EDI_gutter_container {
-  position: sticky;
-  left: 0;
-  height: 100%;
-  /* Or let it naturally occupy the full height */
-  z-index: 2;
-  /* Keeps it layered above the text layers sliding beneath it */
-  background-color: var(--gutter-background-color);
-
-  text-align: end;
-
-  cursor: default;
-
-  /* will-change: transform; */
-  /* Layer 1: The Gutter GPU Layer */
-  /*background-color: #1e1e1e; */
-  /* Gives the GPU a solid texture target */
-}
-
-/* .EDI_gutterLine is being renamed to .eG (i.e.: Editor Gutter line) */
-.eG {
-  
-  position: absolute;
-
-  left: 0;
-  top: 0;
-
-  overflow: hidden;
-  contain: strict;
-}
-
-/* .EDI_line is being renamed to .eT (i.e.: Editor Text line) */
-.eT {
-  width: 100%;
-  position: absolute;
-
-  white-space: pre !important;
-
-  top: 0;
-  left: 0;
-
-  overflow: hidden;
-
-  /* Strictly forbids the browser from adjusting spacing between characters */
-  letter-spacing: 0px !important;
-  word-spacing: 0px !important;
-  font-kerning: none !important;
-  font-variant-ligatures: none !important;
-
-  /* Locks down standard font sizing characteristics */
-  font-weight: normal !important;
-  font-style: normal !important;
-
-  tab-size: 4;
-
-  contain: strict;
-  /* will-change: transform; */
-}
-
 #EDI_gutter_scroll_mover {
   will-change: transform;
 }
@@ -445,6 +323,19 @@ TODO: maybe don't nearly-duplicate these classes.
 #EDI_canvas {
   width: 100%;
   height: 100%;
+}
+
+#EDI_text {
+  cursor: text;
+  height: 100%;
+  /* display: contents; */
+
+  /*will-change: transform; */
+  /* Layer 1: The Gutter GPU Layer */
+  /*background-color: #1e1e1e; */
+  /* Gives the GPU a solid texture target */
+  flex: 1;
+  will-change: transform;
 }
 
 /*@keyframes blink-animation {
