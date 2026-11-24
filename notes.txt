@@ -455,7 +455,8 @@ instead of deleting it keeps every single byte and line number aligned for debug
 Are you planning to emit inline comments like 1 /*RenderKind.Scroll*/ across your entire codebase, or only in debug/dev transpilation builds?
 
 
-
+"did this guy really just ask google AI what happens to comments in source code"
+- relax buddy I'm just making sure
 
 
 
