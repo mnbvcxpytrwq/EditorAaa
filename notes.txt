@@ -334,6 +334,100 @@ or collapse removed lines cleanly?
 
 
 
+>
+So my transpiler can change
+
+```js
+// Here is the "enum"
+export const RenderKind = Object.freeze({
+  None: 0,
+  Scroll: 1,
+  Resize: 2,
+  // ...
+});
+
+// Here is the before-transpilation function defintion
+function EDI_render_do() {
+  // Process everything in the queue until head catches up to tail
+  while (editor.queueHead !== editor.queueTail) {
+    // Read the item at the head and advance the head pointer safely
+    const renderKind = EDI_renderKindBuffer[editor.queueHead & f.BUFFER_MASK];
+    editor.queueHead++;
+
+    switch (renderKind) {
+      case RenderKind.Scroll:
+        EDI_render_do_Scroll();
+        break;
+      case RenderKind.Resize:
+        EDI_render_do_Resize();
+        break;
+      // ...
+    }
+  }
+
+  editor.isRenderPending = false;
+}
+
+// Here is the after-transpilation function defintion
+function EDI_render_do() {
+  // Process everything in the queue until head catches up to tail
+  while (editor.queueHead !== editor.queueTail) {
+    // Read the item at the head and advance the head pointer safely
+    const renderKind = EDI_renderKindBuffer[editor.queueHead & f.BUFFER_MASK];
+    editor.queueHead++;
+
+    switch (renderKind) {
+      case 1 /*RenderKind.Scroll*/:
+        EDI_render_do_Scroll();
+        break;
+      case 2 /*RenderKind.Resize*/:
+        EDI_render_do_Resize();
+        break;
+      // ...
+    }
+  }
+
+  editor.isRenderPending = false;
+}
+```
+
+In order to have the source code not "lose" any information.
+
+=====
+
+<
+Here are top web results for exploring this topic:
+
+
+
+
+Womp womp
+I'll try to ask it a different way
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
