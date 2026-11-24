@@ -336,12 +336,6 @@ const MessageKind_custom_edit_Remove = 7;
 // (from whichever it is more sensible to do from I mean)
 // (cause I presume the UI would have the most overhead and that C# would recover from the GC overhead of a save much faster.)
 
-function MAIN_encodeMessageObject(messageKind, messageObject) {
-	let content = JSON.stringify(messageObject);
-	let spacing = '\r\n\r\n';
-	return `Content-Length: ${content.length}${spacing}${content}\n`;
-}
-
 function init() {
     document
         .getElementById('HEADER_buttonSettings')
