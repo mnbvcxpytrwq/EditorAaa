@@ -1,4 +1,4 @@
-import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, set_EDI_styleBuffer, EDI_render_request, RenderKind, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
+import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, set_EDI_styleBuffer, EDI_render_request, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
 import {DIALOG_show, DialogKind} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
 
@@ -391,7 +391,7 @@ function APP_socket_onmessage(event) {
             editor.styleBuffer_count = view.length;
             editor.styleBuffer_capacity = view.length;
             
-            EDI_render_request(RenderKind.SyntaxHighlighting);
+            EDI_render_request(15 /*RenderKind.SyntaxHighlighting: 15*/);
         }
     }
     else if (event.data instanceof ArrayBuffer) {
