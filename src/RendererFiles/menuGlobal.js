@@ -1,13 +1,6 @@
 import * as f from './fieldBuffer.js'
 import {listComponent_staticRunner, ListComponent} from './listComponent.js'
 
-const MENUrenderKind = Object.freeze({
-    None: 0,
-    Cursor: 1,
-    Set: 2,
-    Hide: 3,
-});
-
 class Menu {
     constructor() {
         this.isRenderPending = false;
@@ -146,7 +139,7 @@ function MENU_render_request(renderKind) {
 
     const absoluteIndex = OFFSET_MENU + (menu.queueTail & f.UI_SLOT_MASK);
     f.MASTER_RENDER_BUFFER[absoluteIndex] = renderKind;
-    if (renderKind === MENUrenderKind.Set) menu.renderKind_Set_countOfPendingRequests++;
+    if (renderKind === 2 /*MENUrenderKind.Set: 2*/) menu.renderKind_Set_countOfPendingRequests++;
     menu.queueTail++;
     
     if (!menu.isRenderPending) {
@@ -163,11 +156,11 @@ function MENU_render_do() {
         menu.queueHead++;
 
         switch (renderKind) {
-            case MENUrenderKind.Set:
+            case 2 /*MENUrenderKind.Set: 2*/:
                 if (menu.renderKind_Set_countOfPendingRequests-- > 1) break;
                 MENU_render_do_Set();
                 break;
-            case MENUrenderKind.Hide:
+            case 3 /*MENUrenderKind.Hide: 3*/:
                 MENU_render_do_Hide();
                 break;
         }
@@ -266,7 +259,7 @@ export function menuSet(optionList, left, top, onCompleteAction, target, element
         disableFocusOnCompleted: disableFocusOnCompleted
     };
 
-    MENU_render_request(MENUrenderKind.Set);
+    MENU_render_request(2 /*MENUrenderKind.Set: 2*/);
 }
 
 function MENU_render_do_Hide() {
@@ -285,7 +278,7 @@ function MENU_render_do_Hide() {
 function MENU_hide() {
     MENU_request = null;
     MENU_listComponent.draw_removeEvents(); // Ensure you cannot "double submit the form"
-    MENU_render_request(MENUrenderKind.Hide);
+    MENU_render_request(3 /*MENUrenderKind.Hide: 3*/);
 }
 
 /**
@@ -345,5 +338,14 @@ export const CommandKind = Object.freeze({
     Find: 12,
     SelectFolder: 13,
     SelectWorkspace: 14,
+});
+*/
+
+/*
+const MENUrenderKind = Object.freeze({
+    None: 0,
+    Cursor: 1,
+    Set: 2,
+    Hide: 3,
 });
 */
