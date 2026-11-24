@@ -182,9 +182,6 @@ function MENU_render_do() {
         menu.queueHead++;
 
         switch (renderKind) {
-            case MENUrenderKind.Cursor:
-                MENU_render_do_Cursor();
-                break;
             case MENUrenderKind.Set:
                 if (menu.renderKind_Set_countOfPendingRequests-- > 1) break;
                 MENU_render_do_Set();
@@ -349,34 +346,3 @@ export function MENU_MenuOption_factory(commandKind, text) {
         text: text
     };
 }
-
-/*
-TODO:
-- [ ] "If you lack classes you'll have a nightmare of a time creating instances and refactoring in the future"
-    - [ ] The solution is to have all functions that are intended for external interaction to never construct an instance.
-    - [ ] They just give data separately and internally the object is made for them
-    - [ ] can also make a factory function is needed but sometimes you only end up having the one allocation and no others.
-- [ ] Make sure you never absent mindedly modify the objects or you'll create hidden classes.
-    - [ ] If it is the correct thing to do that's one thing but don't mindlessly create hidden classes.
-- [ ] Remove the obsolete f.INTS entries that widgetGlobal.js no longer is using.
-- [ ] Remove the obsolete f.INTS entries that menuGlobal.js no longer is using.
-- [ ] If the initial state is '[]' in attempt to ...
-    - [ ] if the array kind is reference entries
-    - [ ] have them all share the initial version
-    - [ ] provided you can ensure they'll all overwrite themselves by the time they're actually used.
-    - [ ] i.e.: the ring buffers, I don't want the variables to ever be seen as something other than an array.
-    - [ ] TODO: confirm that this even does anything
-    - [ ] TODO: would you have to trigger the array to be marked as containing reference entries by adding at least one reference?
-- [ ] Move all the transpiled const to fieldBuffer.js
-    - [ ] so you know by just glancing at the `__COMPILEDbundle__.js` whether they've all been transpiled or not.
-    - [ ] i.e.: 'const CommandKind_None = 0;', 'const CommandKind_Submenu = 1;'
-- [ ] TODO: maybe the menu should always be empty, and just be some div that moves left top positions and you can put anything you want in it.
-    - [ ] ^This is probably a bad idea, at the least for now it is
-- [ ] TODO: submenus
-    - [ ] ^This is probably a bad idea, at the least for now it is
-    - [ ] when you add this if a submenu is clicked you don't 'onCancelAction'
-- [ ] TODO: single click events (not multiple possibility spam)
-- [ ] Check all the rAF code, nothing should be async unless there's a really good reason for it and even then could a good enough reason even exist?
-- [ ] TODO: menuGlobal.js blur events
-- [ ] TODO: widgetGlobal.js blur events
-*/
