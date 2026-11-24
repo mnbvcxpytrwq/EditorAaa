@@ -327,7 +327,6 @@ export class ListComponent {
      */
     event_click(event) {
         const event_clientY = event.clientY;
-        const event_clientX = event.clientX;
         event = null;
 
         let rY = event_clientY - this.boundingClientRect.top + this.scrollTop;
@@ -337,17 +336,8 @@ export class ListComponent {
         let ringBufferIndexItem = this.toRingBufferIndex(indexItem);
         if (ringBufferIndexItem < 0) return;
 
-        // TODO: 'event_dblclick' with this depth logic?
-        // TODO: this component throws an exception when scrolling it just straight up doesn't work (well it does until it crashes the app)
-        const depth = this.getDepth(indexItem);
-        const rX = (event_clientX - this.boundingClientRect.left + this.scrollLeft) - (depth * this.offsetPerDepthInPixels);
-        if (rX >= 0 && rX <= this.characterWidth) {
-            this.expandCollapseIconWasClicked(indexItem, ringBufferIndexItem);
-        }
-        else {
-            this.cursorIndex = indexItem;
-            this.renderCursor_ScrollIntoView_Or_RenderCursor();
-        }
+        this.cursorIndex = indexItem;
+        this.renderCursor_ScrollIntoView_Or_RenderCursor();
     }
 
     event_dblclick(event) {
