@@ -655,23 +655,23 @@ async function EXPLORER_MenuOnClick(isCancelled, menuOption, menuRequest) {
             await CommandKind_Paste_MenuOnClick_Paste(entry, menuRequest);
             break;
         case 6 /*CommandKind.NewFile_Directory: 6*/:
-            await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_Directory_WIDGET_InputText_callback);
+            await WIDGET_show(1 /*WidgetKind.InputText: 1*/, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_Directory_WIDGET_InputText_callback);
             break;
         case 7 /*CommandKind.NewFile_File: 7*/:
-            await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_File_WIDGET_InputText_callback);
+            await WIDGET_show(1 /*WidgetKind.InputText: 1*/, explorer.menuOptionX, explorer.menuOptionY, 'filename', entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, NewFile_File_WIDGET_InputText_callback);
             break;
         case 8 /*CommandKind.DeleteFile_Directory: 8*/:
-            await WIDGET_show(WidgetKind.YesCancel, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_Directory_YesCancel_callback);
+            await WIDGET_show(2 /*WidgetKind.YesCancel: 2*/, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_Directory_YesCancel_callback);
             break;
         case 9 /*CommandKind.DeleteFile_File: 9*/:
-            await WIDGET_show(WidgetKind.YesCancel, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_File_YesCancel_callback);
+            await WIDGET_show(2 /*WidgetKind.YesCancel: 2*/, explorer.menuOptionX, explorer.menuOptionY, 'delete ' + entry.basename, entry, menuRequest.target, menuRequest.elementToFocusOnCompleted, false, DeleteFile_File_YesCancel_callback);
             break;
         case 10 /*CommandKind.RenameFile_Directory: 10*/:
-            await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target:menuRequest.target, entry:entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_Directory_InputText_callback);
+            await WIDGET_show(1 /*WidgetKind.InputText: 1*/, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target:menuRequest.target, entry:entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_Directory_InputText_callback);
             break;
         case 11 /*CommandKind.RenameFile_File: 11*/:
             // TODO: Maybe the only difference between the _Directory and _File cases for each ..._... is the bool for isDirectory but I'm exhausted and I cannot reduce the code duplication here because my head doesn't function.
-            await WIDGET_show(WidgetKind.InputText, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target: menuRequest.target, entry: entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_File_InputText_callback);
+            await WIDGET_show(1 /*WidgetKind.InputText: 1*/, explorer.menuOptionX, explorer.menuOptionY, 'rename', entry.basename, {MENU_target: menuRequest.target, entry: entry}, menuRequest.elementToFocusOnCompleted, false, RenameFile_File_InputText_callback);
             break;
     }
 }

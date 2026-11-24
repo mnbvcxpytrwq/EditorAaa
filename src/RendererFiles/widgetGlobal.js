@@ -1,11 +1,5 @@
 import * as f from "./fieldBuffer.js"
 
-export const WidgetKind = Object.freeze({
-    None: 0,
-    InputText: 1,
-    YesCancel: 2,
-});
-
 const WIDGETrenderKind = Object.freeze({
     None: 0,
     Show: 1,
@@ -120,7 +114,7 @@ function WIDGET_render_do() {
 function WIDGET_render_do_Show() {
 
     let WIDGET_element = document.getElementById('WIDGET');
-    if (widget.widgetKind_drawn !== WidgetKind.None) {
+    if (widget.widgetKind_drawn !== 0 /*WidgetKind.None: 0*/) {
         WIDGET_element = null;
         WIDGET_render_do_Hide();
     }
@@ -141,10 +135,10 @@ function WIDGET_render_do_Show() {
     widget.ticketId_drawn = WIDGET_request.ticket;
 
     switch (widget.widgetKind_drawn) {
-        case WidgetKind.InputText:
+        case 1 /*WidgetKind.InputText: 1*/:
             WidgetKind_InputText_Create();
             break;
-        case WidgetKind.YesCancel:
+        case 2 /*WidgetKind.YesCancel: 2*/:
             WidgetKind_YesCancel_Create();
             break;
     }
@@ -214,14 +208,14 @@ function WIDGET_render_do_Hide() {
     const WIDGET_element = document.getElementById('WIDGET');
 
     switch (widget.widgetKind_drawn) {
-        case WidgetKind.InputText:
+        case 1 /*WidgetKind.InputText: 1*/:
             WidgetKind_InputText_Delete(WIDGET_element);
             break;
-        case WidgetKind.YesCancel:
+        case 2 /*WidgetKind.YesCancel: 2*/:
             WidgetKind_YesCancel_Delete(WIDGET_element);
             break;
     }
-    widget.widgetKind_drawn = WidgetKind.None;
+    widget.widgetKind_drawn = 0 /*WidgetKind.None: 0*/;
     widget.ticketId_drawn = 0;
     WIDGET_element.remove();
 }
@@ -266,10 +260,10 @@ function WIDGET_completeForm(forceIsCancelled, changingFocusIsReasonable, result
         }
         if (resultData === null) {
             switch (local_request.widgetKind) {
-                case WidgetKind.InputText:
+                case 1 /*WidgetKind.InputText: 1*/:
                     resultData = WidgetKind_InputText_GetResultData();
                     break;
-                case WidgetKind.YesCancel:
+                case 2 /*WidgetKind.YesCancel: 2*/:
                     resultData = WidgetKind_YesCancel_GetResultData();
                     break;
             }
@@ -371,3 +365,11 @@ async function WidgetKind_YesCancel_onclick_yes() {
 async function WidgetKind_YesCancel_onclick_cancel() {
     await WIDGET_completeForm(true, 'Cancel');
 }
+
+/*
+export const WidgetKind = Object.freeze({
+    None: 0,
+    InputText: 1,
+    YesCancel: 2,
+});
+*/
