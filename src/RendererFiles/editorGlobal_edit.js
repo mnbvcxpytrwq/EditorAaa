@@ -5,21 +5,22 @@ import {CommandKind} from './menuGlobal.js'
 import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
 
-/**
- * If you have an extension listed here, it is expected that the "function to invoke" exists.
- * As of right now any patterns to naming the function that gets invoked are tentative.
- * But I am not checking whether JS_full_lex or JS_line_lex exist, I'm just switching on ExtensionKind and presuming that function exists.
- */
+/*
+// If you have an extension listed here, it is expected that the "function to invoke" exists.
+// As of right now any patterns to naming the function that gets invoked are tentative.
+// But I am not checking whether JS_full_lex or JS_line_lex exist, I'm just switching on ExtensionKind and presuming that function exists.
+// 
 const ExtensionKind = Object.freeze({
     None: 0,
     JavaScript: 1,
 });
+*/
 
-/**
- * DeleteLtr and BackspaceRtl are both forms of removing text,
- * their edits are stored the same (i.e.: both in "the form of a delete" keypress)
- * The kind delete/backspace tells you how to restore the cursor when doing a ctrl+z and etc...?
- */
+/*
+// DeleteLtr and BackspaceRtl are both forms of removing text,
+// their edits are stored the same (i.e.: both in "the form of a delete" keypress)
+// The kind delete/backspace tells you how to restore the cursor when doing a ctrl+z and etc...?
+// 
 const EditKind = Object.freeze({
     None: 0,
     InsertLtr: 1,
@@ -33,6 +34,7 @@ const EditKind = Object.freeze({
     Paste: 9,
     Duplicate: 10,
 });
+*/
 
 /**
  * TODO: Long term this likely should be removed and all enter key logic reduced into an insertion but this will help in the time being.
@@ -914,7 +916,7 @@ function EDI_state_clear(trackingUint32MaxHeap_initialCapacity) {
     editor.recentBoundingClientRect_isNull = true;
     EDI_textSourceIdentifier = '';
     EDI_FORMATTED_textSourceIdentifier = '';
-    editor.extensionKind = ExtensionKind.None;
+    editor.extensionKind = 0 /*ExtensionKind.None: 0*/;
     editor.fileStartsWithBom = false;
     EDI_lineEndString = null;
     // TODO: Maybe re-use the 'TrackingUint32MaxHeap' rather than making a new one everytime
@@ -1353,7 +1355,7 @@ function EDI_EnterKey(ctrlKey, originalIndexLine, originalIndexColumn) {
  * @returns 
  */
 function EDI_removeSelection() {
-    if (editor.cursor_editKind != EditKind.None) {
+    if (editor.cursor_editKind != 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
 
@@ -1378,7 +1380,7 @@ function EDI_removeSelection() {
 
     let editLength = largePosition - smallPosition;
     // editLength is 0 in this ...startEdit invocation intentionally, you cannot set the editLength until the end (TODO: remember what the exact reason was and put it here... I think it was because 'EDI_readLineEndPositionList' function is used rather than reading directly)
-    EDI_startEdit(EditKind.RemoveTextNoBatching, smallPosition, /*editLength*/ 0);
+    EDI_startEdit(4 /*EditKind.RemoveTextNoBatching: 4*/, smallPosition, /*editLength*/ 0);
 
     EDI_ret_getLineAndColumnIndices_raw(smallPosition);
     let smallLineAndColumnIndices_indexLine = editor.ret_getLineAndColumnIndices_indexLine;
@@ -1674,8 +1676,8 @@ export function EDI_editEvent(editKind, event) {
 
         shouldFinalizeAllCursors = false;
 
-        if ((editKind === EditKind.Tab && editor.cursor_editKind === EditKind.IndentMore) ||
-            (editKind === EditKind.Tab && editor.cursor_editKind === EditKind.IndentLess && event.shiftKey)) {
+        if ((editKind === 5 /*EditKind.Tab: 5*/ && editor.cursor_editKind === 6 /*EditKind.IndentMore: 6*/) ||
+            (editKind === 5 /*EditKind.Tab: 5*/ && editor.cursor_editKind === 7 /*EditKind.IndentLess: 7*/ && event.shiftKey)) {
 
             // TODO: IndentLess when no selection however shiftTab then it does indentLess even still but I haven't gone out of the way to handle that hack...
             // ...maybe it'll be covered maybe it won't.
@@ -1689,7 +1691,7 @@ export function EDI_editEvent(editKind, event) {
 
     // If you have delete/backspace you need to ONLY remove the selection if it exists not remove selection then delete/backspace
     // but insert needs to remove selection AND insert.
-    if (editKind === EditKind.InsertLtr || editKind === EditKind.Enter || editKind === EditKind.Paste) {
+    if (editKind === 1 /*EditKind.InsertLtr: 1*/ || editKind === 8 /*EditKind.Enter: 8*/ || editKind === 9 /*EditKind.Paste: 9*/) {
         // check for EditKind.None => selection
         // if so then attempt to remove selection foreach cursor
         // then finalize all those newly made selection removal edits
@@ -1718,33 +1720,35 @@ export function EDI_editEvent(editKind, event) {
     //
     // "current editKind"/"pending editKind"/"previous_and_not_yet_finalized editKind"
     //
+    // TODO: this switch is missing RemoveTextNoBatching, I guess it makes sense cause 'NoBatching' but idk
+    //
     switch (editKind) {
-        case EditKind.InsertLtr:
+        case 1 /*EditKind.InsertLtr: 1*/:
             shouldFinalizeAllCursors = EDI_NOTcanBatch_insert();
             break;
-        case EditKind.DeleteLtr:
+        case 2 /*EditKind.DeleteLtr: 2*/:
             shouldFinalizeAllCursors = EDI_NOTcanBatch_delete();
             break;
-        case EditKind.BackspaceRtl:
+        case 3 /*EditKind.BackspaceRtl: 3*/:
             shouldFinalizeAllCursors = EDI_NOTcanBatch_backspace();
             break;
-        case EditKind.Tab:
+        case 5 /*EditKind.Tab: 5*/:
             // yeah "aaaa\t" all as one "edit" crashed the app
             shouldFinalizeAllCursors = EDI_editEvent_checkFor_NOTcanBatch_Tab(event);
             break;
-        case EditKind.IndentMore:
+        case 6 /*EditKind.IndentMore: 6*/:
             shouldFinalizeAllCursors = EDI_editEvent_checkFor_NOTcanBatch_IndentMore();
             break;
-        case EditKind.IndentLess:
+        case 7 /*EditKind.IndentLess: 7*/:
             shouldFinalizeAllCursors = EDI_editEvent_checkFor_NOTcanBatch_IndentLess();
             break;
-        case EditKind.Enter:
+        case 8 /*EditKind.Enter: 8*/:
             shouldFinalizeAllCursors = EDI_NOTcanBatch_enter();
             break;
-        case EditKind.Paste:
+        case 9 /*EditKind.Paste: 9*/:
             shouldFinalizeAllCursors = true;
             break;
-        case EditKind.Duplicate:
+        case 10 /*EditKind.Duplicate: 10*/:
             shouldFinalizeAllCursors = true;
             break;
         default:
@@ -1757,25 +1761,25 @@ export function EDI_editEvent(editKind, event) {
 
     // start/continue edit... I don't want the switch in the for loop
     switch (editKind) {
-        case EditKind.InsertLtr:
+        case 1 /*EditKind.InsertLtr: 1*/:
             EDI_editEvent_theEditIself_InsertLtr(event);
             break;
-        case EditKind.DeleteLtr:
+        case 2 /*EditKind.DeleteLtr: 2*/:
             EDI_editEvent_theEditIself_DeleteLtr(event);
             break;
-        case EditKind.BackspaceRtl:
+        case 3 /*EditKind.BackspaceRtl: 3*/:
             EDI_editEvent_theEditIself_BackspaceRtl(event);
             break;
-        case EditKind.Tab:
+        case 5 /*EditKind.Tab: 5*/:
             EDI_editEvent_theEditIself_Tab(event);
             break;
-        case EditKind.Enter:
+        case 8 /*EditKind.Enter: 8*/:
             EDI_editEvent_theEditIself_Enter(event);
             break;
-        case EditKind.Paste:
+        case 9 /*EditKind.Paste: 9*/:
             EDI_editEvent_theEditIself_Paste();
             break;
-        case EditKind.Duplicate:
+        case 10 /*EditKind.Duplicate: 10*/:
             EDI_editEvent_theEditIself_Duplicate();
             break;
         default:
@@ -1786,8 +1790,8 @@ export function EDI_editEvent(editKind, event) {
 function EDI_editEvent_theEditIself_InsertLtr(event) {
     // You can do this because the function 'EDI_NOTcanBatch_insert' was already checked for all the cursors, if it is possible to batch, the editKind will stay InsertLtr otherwise it is finalized and set to None.
     // TODO: Use if === EditKind.None for copy and paste safety / it might just even be more readable
-    if (editor.cursor_editKind !== EditKind.InsertLtr) {
-        EDI_startEdit(EditKind.InsertLtr, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+    if (editor.cursor_editKind !== 1 /*EditKind.InsertLtr: 1*/) {
+        EDI_startEdit(1 /*EditKind.InsertLtr: 1*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
     }
     EDI_insertDo(event.key);
     editor.cursor_STORED_visualWidth = editor.cursorVisualColumnIndex;
@@ -1800,8 +1804,8 @@ function EDI_editEvent_theEditIself_DeleteLtr(event) {
         EDI_removeSelection();
     }
     else {
-        if (editor.cursor_editKind !== EditKind.DeleteLtr) {
-            EDI_startEdit(EditKind.DeleteLtr, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+        if (editor.cursor_editKind !== 2 /*EditKind.DeleteLtr: 2*/) {
+            EDI_startEdit(2 /*EditKind.DeleteLtr: 2*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
         }
         EDI_deleteDo(event);
     }
@@ -1813,8 +1817,8 @@ function EDI_editEvent_theEditIself_BackspaceRtl(event) {
         EDI_removeSelection();
     }
     else {
-        if (editor.cursor_editKind !== EditKind.BackspaceRtl) {
-            EDI_startEdit(EditKind.BackspaceRtl, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+        if (editor.cursor_editKind !== 3 /*EditKind.BackspaceRtl: 3*/) {
+            EDI_startEdit(3 /*EditKind.BackspaceRtl: 3*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
         }
         EDI_backspaceDo(event);
         editor.cursor_STORED_visualWidth = editor.cursorVisualColumnIndex;
@@ -1825,14 +1829,14 @@ function EDI_editEvent_theEditIself_BackspaceRtl(event) {
 function EDI_editEvent_theEditIself_Tab(event) {
     if (EDI_cursor_hasSelection()) {
         if (event.shiftKey) {
-            if (editor.cursor_editKind !== EditKind.IndentLess) {
-                EDI_startEdit(EditKind.IndentLess, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+            if (editor.cursor_editKind !== 7 /*EditKind.IndentLess: 7*/) {
+                EDI_startEdit(7 /*EditKind.IndentLess: 7*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
             }
             EDI_indentLess();
         }
         else {
-            if (editor.cursor_editKind !== EditKind.IndentMore) {
-                EDI_startEdit(EditKind.IndentMore, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+            if (editor.cursor_editKind !== 6 /*EditKind.IndentMore: 6*/) {
+                EDI_startEdit(6 /*EditKind.IndentMore: 6*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
             }
             EDI_indentMore();
         }
@@ -1840,14 +1844,14 @@ function EDI_editEvent_theEditIself_Tab(event) {
     else {
         if (event.shiftKey) {
             EDI_onMouseDownDetailRankThree(0, false, editor.cursor_indexLine, editor.cursor_indexColumn);
-            if (editor.cursor_editKind !== EditKind.IndentLess) {
-                EDI_startEdit(EditKind.IndentLess, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+            if (editor.cursor_editKind !== 7 /*EditKind.IndentLess: 7*/) {
+                EDI_startEdit(7 /*EditKind.IndentLess: 7*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
             }
             EDI_indentLess();
         }
         else {
-            if (editor.cursor_editKind !== EditKind.Tab) {
-                EDI_startEdit(EditKind.Tab, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+            if (editor.cursor_editKind !== 5 /*EditKind.Tab: 5*/) {
+                EDI_startEdit(5 /*EditKind.Tab: 5*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
             }
             EDI_tabKey();
         }
@@ -1859,7 +1863,7 @@ function EDI_editEvent_theEditIself_Enter(event) {
     const originalIndexLine = editor.cursor_indexLine;
     const originalIndexColumn = editor.cursor_indexColumn;
 
-    if (editor.cursor_editKind !== EditKind.Enter) {
+    if (editor.cursor_editKind !== 8 /*EditKind.Enter: 8*/) {
         if (event.ctrlKey) {
             if (editor.cursor_indexColumn !== 0) {
                 editor.cursor_indexColumn = 0;
@@ -1871,7 +1875,7 @@ function EDI_editEvent_theEditIself_Enter(event) {
                 editor.cursor_indexColumn = lastValidIndexColumn;
             }
         }
-        EDI_startEdit(EditKind.Enter, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+        EDI_startEdit(8 /*EditKind.Enter: 8*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
     }
 
     EDI_EnterKey(event.ctrlKey, originalIndexLine, originalIndexColumn);
@@ -1880,8 +1884,8 @@ function EDI_editEvent_theEditIself_Enter(event) {
 }
 
 function EDI_editEvent_theEditIself_Paste() {
-    if (editor.cursor_editKind !== EditKind.Enter) {
-        EDI_startEdit(EditKind.Paste, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+    if (editor.cursor_editKind !== 8 /*EditKind.Enter: 8*/) {
+        EDI_startEdit(9 /*EditKind.Paste: 9*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
     }
     EDI_paste();
     editor.cursor_STORED_visualWidth = editor.cursorVisualColumnIndex;
@@ -1889,8 +1893,8 @@ function EDI_editEvent_theEditIself_Paste() {
 }
 
 function EDI_editEvent_theEditIself_Duplicate() {
-    if (editor.cursor_editKind !== EditKind.Duplicate) {
-        EDI_startEdit(EditKind.Duplicate, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
+    if (editor.cursor_editKind !== 10 /*EditKind.Duplicate: 10*/) {
+        EDI_startEdit(10 /*EditKind.Duplicate: 10*/, EDI_getPositionIndex_cursor_raw(), /*editLength*/ 0);
     }
     EDI_duplicateSelection();
     editor.cursor_STORED_visualWidth = editor.cursorVisualColumnIndex;
@@ -1901,7 +1905,7 @@ function EDI_editEvent_theEditIself_Duplicate() {
  * @returns 
  */
 function EDI_NOTcanBatch_insert() {
-    return editor.cursor_editKind != EditKind.InsertLtr ||
+    return editor.cursor_editKind != 1 /*EditKind.InsertLtr: 1*/ ||
         editor.cursor_indexLine !== editor.cursor_editIndexLine ||
         editor.cursor_indexColumn !== editor.cursor_editIndexColumn + editor.cursor_editLength_characters ||
         editor.cursor_editLength_characters >= CONST_EDI_cursor_GAP_BUFFER_CAPACITY ||
@@ -1913,7 +1917,7 @@ function EDI_NOTcanBatch_insert() {
  */
 function EDI_NOTcanBatch_enter() {
     return editor.cursor_enterKeyEventKind === EnterKeyEventKind.None ||
-        editor.cursor_editKind !== EditKind.Enter ||
+        editor.cursor_editKind !== 8 /*EditKind.Enter: 8*/ ||
         editor.cursor_indexLine !== editor.cursor_END_editIndexLine ||
         editor.cursor_indexColumn !== editor.cursor_END_editIndexColumn ||
         editor.cursor_editLength_characters >= CONST_EDI_cursor_GAP_BUFFER_CAPACITY ||
@@ -1925,7 +1929,7 @@ function EDI_NOTcanBatch_enter() {
  * @returns 
  */
 function EDI_NOTcanBatch_backspace() {
-    return editor.cursor_editKind != EditKind.BackspaceRtl ||
+    return editor.cursor_editKind != 3 /*EditKind.BackspaceRtl: 3*/ ||
         editor.cursor_indexLine !== editor.cursor_editIndexLine ||
         editor.cursor_indexColumn !== editor.cursor_editIndexColumn ||
         EDI_cursor_hasSelection();
@@ -1935,7 +1939,7 @@ function EDI_NOTcanBatch_backspace() {
  * @returns 
  */
 function EDI_NOTcanBatch_delete() {
-    return editor.cursor_editKind != EditKind.DeleteLtr ||
+    return editor.cursor_editKind != 2 /*EditKind.DeleteLtr: 2*/ ||
         editor.cursor_indexLine !== editor.cursor_editIndexLine ||
         editor.cursor_indexColumn !== editor.cursor_editIndexColumn ||
         EDI_cursor_hasSelection();
@@ -1955,7 +1959,7 @@ function EDI_editEvent_checkFor_NOTcanBatch_Tab(event) {
             return EDI_editEvent_checkFor_NOTcanBatch_IndentLess();
         }
         else {
-            if (editor.cursor_editKind === EditKind.Tab &&
+            if (editor.cursor_editKind === 5 /*EditKind.Tab: 5*/ &&
                 editor.cursor_editIndexLine === editor.cursor_indexLine &&
                 editor.cursor_editIndexColumn + editor.cursor_editLength_characters === editor.cursor_indexColumn &&
                 editor.cursor_editLength_characters < CONST_EDI_cursor_GAP_BUFFER_CAPACITY) {
@@ -1974,7 +1978,7 @@ function EDI_editEvent_checkFor_NOTcanBatch_Tab(event) {
  * 
  */
 function EDI_editEvent_checkFor_NOTcanBatch_IndentMore() {
-    if (editor.cursor_editKind !== EditKind.IndentMore) {
+    if (editor.cursor_editKind !== 6 /*EditKind.IndentMore: 6*/) {
         return true;
     }
 
@@ -2028,7 +2032,7 @@ function EDI_editEvent_checkFor_NOTcanBatch_IndentMore() {
  * 
  */
 function EDI_editEvent_checkFor_NOTcanBatch_IndentLess() {
-    if (editor.cursor_editKind !== EditKind.IndentLess) {
+    if (editor.cursor_editKind !== 7 /*EditKind.IndentLess: 7*/) {
         return true;
     }
 
@@ -2097,30 +2101,30 @@ function EDI_finalizeEdit() {
     let indexLine_editOccurredOn = -1;
 
     switch (editor.cursor_editKind) {
-        case EditKind.InsertLtr:
+        case 1 /*EditKind.InsertLtr: 1*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_InsertLtr(indexLine_editOccurredOn);
             break;
-        case EditKind.Enter:
+        case 8 /*EditKind.Enter: 8*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_Enter(indexLine_editOccurredOn);
             return;
-        case EditKind.Tab:
+        case 5 /*EditKind.Tab: 5*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_Tab(indexLine_editOccurredOn);
             return;
-        case EditKind.IndentMore:
+        case 6 /*EditKind.IndentMore: 6*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_IndentMore(indexLine_editOccurredOn);
             return;
-        case EditKind.IndentLess:
+        case 7 /*EditKind.IndentLess: 7*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_IndentLess(indexLine_editOccurredOn);
             break;
-        case EditKind.Paste:
+        case 9 /*EditKind.Paste: 9*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_Paste(indexLine_editOccurredOn);
             return;
-        case EditKind.Duplicate:
+        case 10 /*EditKind.Duplicate: 10*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_Duplicate(indexLine_editOccurredOn);
             return;
-        case EditKind.DeleteLtr:
-        case EditKind.BackspaceRtl:
-        case EditKind.RemoveTextNoBatching:
+        case 2 /*EditKind.DeleteLtr: 2*/:
+        case 3 /*EditKind.BackspaceRtl: 3*/:
+        case 4 /*EditKind.RemoveTextNoBatching: 4*/:
             indexLine_editOccurredOn = EDI_finalizeEdit_DeleteLtr_BackspaceRtl_RemoveTextNoBatching(indexLine_editOccurredOn);
             break;
     }
@@ -2727,13 +2731,13 @@ function EDI_finalizeEdit_Duplicate(indexLine_editOccurredOn) {
 
 function EDI_finalizeEdit_DeleteLtr_BackspaceRtl_RemoveTextNoBatching(indexLine_editOccurredOn) {
     if (editor.cursor_edit_eventCount_drawn < editor.cursor_edit_eventCount_occurred) {
-        if (editor.cursor_editKind === EditKind.RemoveTextNoBatching) {
+        if (editor.cursor_editKind === 4 /*EditKind.RemoveTextNoBatching: 4*/) {
             EDI_render_do_RemoveSelection();
         }
-        else if (editor.cursor_editKind === EditKind.DeleteLtr) {
+        else if (editor.cursor_editKind === 2 /*EditKind.DeleteLtr: 2*/) {
             EDI_render_do_Delete();
         }
-        else if (editor.cursor_editKind === EditKind.BackspaceRtl) {
+        else if (editor.cursor_editKind === 3 /*EditKind.BackspaceRtl: 3*/) {
             EDI_render_do_Backspace();
         }
     }
@@ -2741,7 +2745,7 @@ function EDI_finalizeEdit_DeleteLtr_BackspaceRtl_RemoveTextNoBatching(indexLine_
     // TODO: surely u'd get this before doing the edit?
     let startLineAndColumnIndices_indexLine;
     let startLineAndColumnIndices_indexColumn;
-    if (editor.cursor_editKind === EditKind.RemoveTextNoBatching) {
+    if (editor.cursor_editKind === 4 /*EditKind.RemoveTextNoBatching: 4*/) {
         startLineAndColumnIndices_indexLine = editor.cursor_editIndexLine;
         startLineAndColumnIndices_indexColumn = editor.cursor_editIndexColumn;
     }
@@ -2752,7 +2756,7 @@ function EDI_finalizeEdit_DeleteLtr_BackspaceRtl_RemoveTextNoBatching(indexLine_
     }
     let endLineAndColumnIndices_indexLine;
     let endLineAndColumnIndices_indexColumn;
-    if (editor.cursor_editKind === EditKind.RemoveTextNoBatching) {
+    if (editor.cursor_editKind === 4 /*EditKind.RemoveTextNoBatching: 4*/) {
         endLineAndColumnIndices_indexLine = editor.cursor_END_editIndexLine;
         endLineAndColumnIndices_indexColumn = editor.cursor_END_editIndexColumn;
     }
@@ -2822,7 +2826,7 @@ function EDI_finalizeEdit_DeleteLtr_BackspaceRtl_RemoveTextNoBatching(indexLine_
 /** This function needs the 'editor.cursor_editKind' that was finalized, and will set it to 'EditKind.None' internally, so don't do it yourself within a specific finalizeEdit function. */
 function EDI_finalizeEdit_ClearEditState() {
 
-    if (editor.cursor_editKind !== EditKind.Paste) {
+    if (editor.cursor_editKind !== 9 /*EditKind.Paste: 9*/) {
         // TODO: You can over time have this be a longer living cache but for now just get accuracy while still allowing me to paste, move cursor, paste, move cursor, etc...
         EDI_cursor_EDI_paste_clipboardContent_string = null;
         EDI_cursor_EDI_paste_clipboardContent_bytes = null;
@@ -2842,7 +2846,7 @@ function EDI_finalizeEdit_ClearEditState() {
         //EDI_cursor_EDI_duplicationORpaste_cacheEachLineSubstringDecodedArray = null;
     }
 
-    editor.cursor_editKind = EditKind.None;
+    editor.cursor_editKind = 0 /*EditKind.None: 0*/;
     editor.cursor_editLength_characters = 0;
     editor.cursor_editLengthVisual = 0;
     editor.cursor_editPosition = 0;
@@ -3310,7 +3314,7 @@ function EDI_ret_getIndexFromX_sameLine_newRxIsSmaller(goalRx, lineStart, startC
  * This clears the cursor's selection.
  */
 export function EDI_moveCursor_position(intValue) {
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         // TODO: Timing issue, someone typing while they scroll
         EDI_finalizeEdit();
     }
@@ -3324,7 +3328,7 @@ export function EDI_moveCursor_position(intValue) {
  * This clears the cursor's selection.
  */
 function EDI_moveCursor_indexLine_indexColumn(indexLine, indexColumn) {
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         // TODO: Timing issue, someone typing while they scroll
         EDI_finalizeEdit();
     }
@@ -3512,7 +3516,7 @@ function EDI_startEdit(editKind, editPosition, editLength) {
 
 function EDI_autocomplete_get_filter() {
     let wordToLeftOfCursor = '';
-    if (editor.cursor_editKind === EditKind.None || editor.cursor_editKind === EditKind.InsertLtr) {
+    if (editor.cursor_editKind === 0 /*EditKind.None: 0*/ || editor.cursor_editKind === 1 /*EditKind.InsertLtr: 1*/) {
         // TODO: this is just to say 'editor.cursor_editIndexColumn'? (in the case of 'EditKind.InsertLtr')
         let columnNoEdit = editor.cursor_indexColumn - editor.cursor_editLength_characters;
         if (columnNoEdit > 0) {
@@ -3592,7 +3596,7 @@ function EDI_cursor_clear() {
     editor.cursor_DRAWN_selection_virtualCount = 0;
     editor.cursor_selectionIndexAnchorColumnVISUAL_DRAWN = 0;
     editor.cursor_selectionIndexEndColumnVISUAL_DRAWN = 0;
-    editor.cursor_editKind = EditKind.None;
+    editor.cursor_editKind = 0 /*EditKind.None: 0*/;
     editor.cursor_editLength_characters = 0;
     editor.cursor_editPosition = 0;
     editor.cursor_editIndexLine = 0;
@@ -3761,7 +3765,7 @@ function EDI_read_duplication() {
 
 function EDI_requestLspComplete() {
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
     //window.myAPI.editorCompletionRequest(editor.cursor_indexLine, editor.cursor_indexColumn);
@@ -3774,7 +3778,7 @@ function EDI_requestLspComplete() {
 function EDI_doEditorGoToDefinitionRequest(ctrlKey) {
     if (!ctrlKey) {
         // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-        if (editor.cursor_editKind !== EditKind.None) {
+        if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
             EDI_finalizeEdit();
         }
         sendTransaction_MessageKind_textDocument_definition(EDI_getPositionIndex_cursor_raw());
@@ -3786,7 +3790,7 @@ function EDI_doEditorGoToDefinitionRequest(ctrlKey) {
 
 function EDI_requestLspHover() {
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
     let event_clientY = editor.EDI_mouseOver_event_clientY;
@@ -3877,9 +3881,9 @@ export function EDI_toExtensionKind(extensionWithPeriod) {
     switch (extensionWithPeriod) {
         case '.js':
         case '.cjs':
-            return ExtensionKind.JavaScript;
+            return 1 /*ExtensionKind.JavaScript: 1*/;
         default:
-            return ExtensionKind.None;
+            return 0 /*ExtensionKind.None: 0*/;
     }
 }
 
@@ -4892,7 +4896,7 @@ function EDI_render_do_Scroll() {
     const local_currVli = editor.virtualIndexLine;
     editor.ONSCROLLvirtualIndexLine = local_currVli;
 
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
 
@@ -5287,7 +5291,7 @@ function EDI_render_do_SetText() {
 
 function EDI_render_do_IndentMore() {
     
-    if (editor.cursor_editKind !== EditKind.IndentMore) {
+    if (editor.cursor_editKind !== 6 /*EditKind.IndentMore: 6*/) {
         return;
     }
 
@@ -5335,7 +5339,7 @@ function EDI_render_do_IndentLess() {
     let startingIndex = editor.indent_startingIndex;
     let SMALL_lineAndColumnIndices_indexLine = editor.indent_SMALL_lineAndColumnIndices_indexLine;
 
-    if (editor.cursor_editKind !== EditKind.IndentLess) {
+    if (editor.cursor_editKind !== 7 /*EditKind.IndentLess: 7*/) {
         return;
     }
 
@@ -5532,7 +5536,7 @@ function EDI_render_do_IndentLess() {
 
 function EDI_render_do_DuplicateOrPaste() {
 
-    if (editor.cursor_editKind !== EditKind.Duplicate && editor.cursor_editKind !== EditKind.Paste) {
+    if (editor.cursor_editKind !== 10 /*EditKind.Duplicate: 10*/ && editor.cursor_editKind !== 9 /*EditKind.Paste: 9*/) {
         return;
     }
 
@@ -5543,7 +5547,7 @@ function EDI_render_do_DuplicateOrPaste() {
         let insert_character_count = 0;
         let linesInsertedCount = 0;
 
-        if (editor.cursor_editKind === EditKind.Duplicate) {
+        if (editor.cursor_editKind === 10 /*EditKind.Duplicate: 10*/) {
             editor.cursor_edit_eventCount_drawn++;
             byteArray = EDI_cursor_EDI_duplication_bytes;
             insert_character_count = byteArray.length;
@@ -5551,7 +5555,7 @@ function EDI_render_do_DuplicateOrPaste() {
             // TODO: for duplicate: (this never would cache too cause finalize clear edit state is if (true) for duplicate to clear state.)
             // EDI_cursor_EDI_duplicationORpaste_cacheEachLineSubstringDecodedArray = new Array(EDI_cursor_EDI_paste_clipboardContent_arrayLinePositions_OFFSETS.length);
         }
-        else if (editor.cursor_editKind === EditKind.Paste) {
+        else if (editor.cursor_editKind === 9 /*EditKind.Paste: 9*/) {
             editor.cursor_edit_eventCount_drawn++;
             byteArray = EDI_cursor_EDI_paste_clipboardContent_bytes;
             insert_character_count = EDI_cursor_EDI_paste_clipboardContent_string.length;
@@ -5953,7 +5957,7 @@ function EDI_duplicate_and_paste_writeWord(word, functionState) {
 }
 
 function EDI_render_do_TabKey() {
-    if (editor.cursor_editKind !== EditKind.Tab) {
+    if (editor.cursor_editKind !== 5 /*EditKind.Tab: 5*/) {
         return;
     }
 
@@ -6039,7 +6043,7 @@ function EDI_render_do_EnterKey() {
     // TODO: This is wrong because you haven't inserted the lines yet so you just redraw the exact same height more or less (it does "work somewhat" cause you can miss and then at some point you'll probably hit enter again and see it fix something but that's still wrong.).
     update_verticalVirtualizationBoundary();
 
-    if (editor.cursor_editKind !== EditKind.Enter) {
+    if (editor.cursor_editKind !== 8 /*EditKind.Enter: 8*/) {
         return;
     }
 
@@ -6285,7 +6289,7 @@ function EDI_render_do_EnterKey() {
 }
 
 function EDI_render_do_RemoveSelection() {
-    if (editor.cursor_editKind !== EditKind.RemoveTextNoBatching) {
+    if (editor.cursor_editKind !== 4 /*EditKind.RemoveTextNoBatching: 4*/) {
         return;
     }
 
@@ -6986,7 +6990,7 @@ function EDI_handleRingBufferNodesThatAreOffscreen_RemoveSelection(final_ringBuf
 
 /** TODO: this is nearly identical to backspace, the difference is the check 'if (editor.cursor_editKind !== EditKind.DeleteLtr)', thus dedupe the logic or no? */
 function EDI_render_do_Delete() {
-    if (editor.cursor_editKind !== EditKind.DeleteLtr) {
+    if (editor.cursor_editKind !== 2 /*EditKind.DeleteLtr: 2*/) {
         return;
     }
 
@@ -7157,7 +7161,7 @@ function EDI_render_do_Delete() {
 }
 
 function EDI_render_do_Backspace() {
-    if (editor.cursor_editKind !== EditKind.BackspaceRtl) {
+    if (editor.cursor_editKind !== 3 /*EditKind.BackspaceRtl: 3*/) {
         return;
     }
 
@@ -7328,7 +7332,7 @@ function EDI_render_do_Backspace() {
 }
 
 function EDI_render_do_InsertLtr() {
-    if (editor.cursor_editKind !== EditKind.InsertLtr) {
+    if (editor.cursor_editKind !== 1 /*EditKind.InsertLtr: 1*/) {
         return;
     }
     if (editor.cursor_edit_eventCount_drawn < editor.cursor_edit_eventCount_occurred) {
@@ -8000,7 +8004,7 @@ function EDI_onResize_startThrottleTimeout_aaa() {
 
 export function EDI_onMouseDown(event) {
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
 
@@ -8714,10 +8718,10 @@ export function EDI_onKeyDown(event) {
             EDI_onKeyDown_PageUp(event);
             break;
         case 'Delete':
-            EDI_editEvent(EditKind.DeleteLtr, event);
+            EDI_editEvent(2 /*EditKind.DeleteLtr: 2*/, event);
             break;
         case 'Backspace':
-            EDI_editEvent(EditKind.BackspaceRtl, event);
+            EDI_editEvent(3 /*EditKind.BackspaceRtl: 3*/, event);
             break;
         case 'Escape':
             EDI_finalizeEdit();
@@ -8725,11 +8729,11 @@ export function EDI_onKeyDown(event) {
             break;
         case 'Tab':
             event.preventDefault();
-            EDI_editEvent(EditKind.Tab, event);
+            EDI_editEvent(5 /*EditKind.Tab: 5*/, event);
             break;
         case 'Enter':
             // Enter key relies on cached data that would be cleared, pattern doesn't match on purpose
-            EDI_editEvent(EditKind.Enter, event);
+            EDI_editEvent(8 /*EditKind.Enter: 8*/, event);
             break;
         case 'F12':
             EDI_doEditorGoToDefinitionRequest(event.ctrlKey);
@@ -8745,7 +8749,7 @@ export function EDI_onKeyDown(event) {
                 }
                 else {
                     event.preventDefault();
-                    EDI_editEvent(EditKind.InsertLtr, event);
+                    EDI_editEvent(1 /*EditKind.InsertLtr: 1*/, event);
                 }
             }
             break;
@@ -8757,7 +8761,7 @@ function EDI_onKeyDown_ArrowLeft(event) {
     event.stopPropagation();
 
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
 
@@ -8849,7 +8853,7 @@ function EDI_onKeyDown_ArrowDown(event) {
     }
     else {
         // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-        if (editor.cursor_editKind !== EditKind.None) {
+        if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
             EDI_finalizeEdit();
         }
         EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
@@ -8875,7 +8879,7 @@ function EDI_onKeyDown_ArrowUp(event) {
     }
     else {
         // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-        if (editor.cursor_editKind !== EditKind.None) {
+        if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
             EDI_finalizeEdit();
         }
         EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
@@ -8895,7 +8899,7 @@ function EDI_onKeyDown_ArrowRight(event) {
     event.stopPropagation();
 
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
 
@@ -8978,7 +8982,7 @@ function EDI_onKeyDown_Home(event) {
     event.stopPropagation();
 
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
     EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
@@ -9010,7 +9014,7 @@ function EDI_onKeyDown_End(event) {
     event.stopPropagation();
 
     // TODO: long term continue reducing the frequency of 'finalizeEdit' for now though you want things to work and not be confusing
-    if (editor.cursor_editKind !== EditKind.None) {
+    if (editor.cursor_editKind !== 0 /*EditKind.None: 0*/) {
         EDI_finalizeEdit();
     }
     EDI_preKeyboardMovementSelectionLogic(event.shiftKey);
@@ -9146,14 +9150,14 @@ async function EDI_onKeyDown_keyLengthEqualsOne_ctrlKey(event) {
             event.stopPropagation();
 
             await EDI_read_clipboard();
-            EDI_editEvent(EditKind.Paste, event);
+            EDI_editEvent(9 /*EditKind.Paste: 9*/, event);
             break;
         case 'd':
 
             event.preventDefault();
             event.stopPropagation();
 
-            EDI_editEvent(EditKind.Duplicate, event);
+            EDI_editEvent(10 /*EditKind.Duplicate: 10*/, event);
             break;
         case 'r':
 
