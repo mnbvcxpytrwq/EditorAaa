@@ -11,6 +11,8 @@ class Autocomplete {
         this.queueTail = 0;
 
         this.rootElement = null;
+
+        this.data = [];
     }
 }
 
@@ -161,6 +163,16 @@ function AUTOCOMPLETE_render_do_hide() {
 
 export function AUTOCOMPLETE_hide() {
     AUTOCOMPLETE_render_request(2 /*AUTOCOMPLETErenderKind.Hide: 2*/);
+}
+
+export function AUTOCOMPLETE_setData(data) {
+    autocomplete.data = data;
+    AUTOCOMPLETE_listComponent.clear();
+    for (let i = 0; i < autocomplete.data.length; i++) {
+        AUTOCOMPLETE_listComponent.insert(AUTOCOMPLETE_listComponent.count, autocomplete.data[i]);
+    }
+    AUTOCOMPLETE_listComponent.drawScrollbarHeight();
+    AUTOCOMPLETE_listComponent.forceFullscreen_renderScroll();
 }
 
 /*

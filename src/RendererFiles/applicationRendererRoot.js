@@ -1,6 +1,7 @@
 import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, set_EDI_styleBuffer, EDI_render_request, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
 import {DIALOG_show} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
+import {AUTOCOMPLETE_setData} from './autocompleteGlobal.js'
 
 export let shouldUseCSharpToSaveFileWhenPossible = false;
 export function set_shouldUseCSharpToSaveFileWhenPossible(value) {
@@ -434,6 +435,7 @@ function APP_socket_onmessage(event) {
         else if (mostRecent_kind === 8) {
             let nodes = JSON.parse(event.data);
             let aaa = 2;
+            AUTOCOMPLETE_setData(nodes);
         }
         else {
             // If the server sent it as text, convert text to a Uint8Array
