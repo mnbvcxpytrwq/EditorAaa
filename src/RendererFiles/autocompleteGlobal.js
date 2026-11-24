@@ -70,7 +70,7 @@ function AUTOCOMPLETE_listComponent_renderLines(lineIndexLower, lineIndexUpper, 
             if (i < COUNT) {
                 const key = AUTOCOMPLETE_listComponent.data[i];
                 if (key < autocomplete.data.length) {
-                    LINE_CACHE[ringBufferIndex] = autocomplete.data;
+                    LINE_CACHE[ringBufferIndex] = autocomplete.data[key];
                 }
                 else {
                     LINE_CACHE[ringBufferIndex] = '' + key;
