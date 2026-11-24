@@ -79,7 +79,6 @@ export const RenderKind = Object.freeze({
     Cursor_n: 18,
 });
 
-
 export const EDI_gutterPaddingLeft = 3;
 export const EDI_gutterPaddingRight = 6;
 
@@ -489,23 +488,18 @@ let EDI_lineEndString = null;
 /**
  * TODO: If you queue more than 32 renderKinds in a single frame you're gonna lose information. (remedy this?) see 'f.BUFFER_SIZE = 32'
  */
-export const EDI_renderKindBuffer = new Uint8Array(f.BUFFER_SIZE);
+const EDI_renderKindBuffer = new Uint8Array(f.BUFFER_SIZE);
 
-export let EDI_styleBuffer = new Uint8Array(0);
+let EDI_styleBuffer = new Uint8Array(0);
 export function set_EDI_styleBuffer(value) {
     EDI_styleBuffer = value;
 }
 
 /** decimal */
-export let EDI_lastReadNumber_scrollLeft = 0;
-export function set_EDI_lastReadNumber_scrollLeft(value) {
-    EDI_lastReadNumber_scrollLeft = value;
-}
+let EDI_lastReadNumber_scrollLeft = 0;
+
 /** decimal */
 export let EDI_lastReadNumber_scrollTop = 0;
-export function set_EDI_lastReadNumber_scrollTop(value) {
-    EDI_lastReadNumber_scrollTop = value;
-}
 
 export let EDI_characterWidth = 8;
 export function set_EDI_characterWidth(value) {
@@ -516,9 +510,6 @@ export function set_EDI_characterWidth(value) {
 //let EDI_verticalCenterPadding = 0;
 
 export let EDI_cursor_cursorTranslateXValue = 0;
-export function set_EDI_cursor_cursorTranslateXValue(value) {
-    EDI_cursor_cursorTranslateXValue = value;
-}
 
 /**
  * Depending on 'editor.cursor_enterKeyEventKind' this may either start OR end with '\n'.
@@ -4722,8 +4713,8 @@ function EDI_resizeCanvases() {
  * to reflect the edit.
  */
 export function EDI_scrollViewport_scroll() {
-    set_EDI_lastReadNumber_scrollLeft(EDI_scroll_viewport.scrollLeft);
-    set_EDI_lastReadNumber_scrollTop(EDI_scroll_viewport.scrollTop);
+    EDI_lastReadNumber_scrollLeft = EDI_scroll_viewport.scrollLeft;
+    EDI_lastReadNumber_scrollTop = EDI_scroll_viewport.scrollTop;
     EDI_render_request(RenderKind.Scroll);
 }
 
@@ -5102,7 +5093,7 @@ function EDI_render_do_Scroll() {
         const cursorX = (editor.cursorVisualColumnIndex * EDI_characterWidth) - EDI_lastReadNumber_scrollLeft;
         const cursorY = -(EDI_lastReadNumber_scrollTop % local_lineHeight) + ((cursorLine - view_startLineIndex) * local_lineHeight);
         
-        set_EDI_cursor_cursorTranslateXValue(cursorX);
+        EDI_cursor_cursorTranslateXValue = cursorX;
         ctx.fillRect(cursorX, cursorY, 2, local_lineHeight);
     }
 }
@@ -7593,7 +7584,7 @@ function EDI_render_SelectionAndCursor() {
         const cursorX = (editor.cursorVisualColumnIndex * EDI_characterWidth) - EDI_lastReadNumber_scrollLeft;
         const cursorY = -(EDI_lastReadNumber_scrollTop % local_lineHeight) + ((cursorLine - startLineIndex) * local_lineHeight);
         
-        set_EDI_cursor_cursorTranslateXValue(cursorX);
+        EDI_cursor_cursorTranslateXValue = cursorX;
         ctx.fillRect(cursorX, cursorY, 2, local_lineHeight);
     }
 }
