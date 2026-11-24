@@ -140,11 +140,8 @@ function MENU_listComponent_renderLines(lineIndexLower, lineIndexUpper, ringBuff
     }
 }
 
-function MENU_listComponent_findCutTreeViewNodeAmongChildren(startIndex, insertionCount) {
-}
-
 function MENU_listComponent_onblur() {
-    MENU_onblur();
+    MENU_completeForm(/*forceIsCancelled*/ true, /*changingFocusIsReasonable*/ false);
 }
 
 function MENU_listComponent_dblClick_or_space_or_enter(eventKey, indexItem, ringBufferIndexItem) {
@@ -309,7 +306,7 @@ function MENU_render_do_Hide() {
  */
 function MENU_hide() {
     MENU_request = null;
-    MENU_removeEvents();
+    MENU_listComponent.draw_removeEvents(); // Ensure you cannot "double submit the form"
     MENU_render_request(MENUrenderKind.Hide);
 }
 
@@ -339,131 +336,6 @@ function MENU_completeForm(forceIsCancelled, changingFocusIsReasonable) {
         menuOption = local_request.optionList[local_request.index];
     }
     local_request.onCompleteAction(forceIsCancelled, menuOption, local_request);
-}
-
-function MENU_onMouseMove(event) {
-    //if (!MENU_request.recentBoundingClientRectTop) {
-    //    MENU_ensure_boundingClientRect();
-    //}
-
-    let relativeY = event.clientY - (MENU_request.recentBoundingClientRectTop + 4 /*paddingTop*/);
-    let index = Math.floor(relativeY / aaaApp.lineHeight);
-    if (MENU_request.index === index) {
-        return;
-    }
-    
-    MENU_setCursorIndex(index);
-}
-
-/** mouse move handler has this explicit inlined (duplicated) due to the sheer frequency of its invocation */
-function menuGetRelativeMouseEventData(event_clientY) {
-    let paddingTop = 4;
-    let relativeY = event_clientY - (MENU_request.recentBoundingClientRectTop + paddingTop);
-    return Math.floor(relativeY / aaaApp.lineHeight);
-}
-
-function MENU_addEvents() {
-    let menu = document.getElementById('MENU');
-    if (!menu) return;
-    menu.addEventListener('blur', MENU_onblur); // TODO: should 'once' be used here?
-    menu.addEventListener('click', MENU_onclick);
-    menu.addEventListener('keydown', MENU_onKeyDown);
-    menu.addEventListener('mousemove', MENU_onMouseMove);
-}
-
-function MENU_removeEvents() {
-    let menu = document.getElementById('MENU');
-    if (!menu) return;
-    menu.removeEventListener('blur', MENU_onblur); // TODO: should 'once' be used when adding?
-    menu.removeEventListener('click', MENU_onclick);
-    menu.removeEventListener('keydown', MENU_onKeyDown);
-    menu.removeEventListener('mousemove', MENU_onMouseMove);
-}
-
-function MENU_onblur() {
-    MENU_completeForm(/*forceIsCancelled*/ true, /*changingFocusIsReasonable*/ false);
-}
-
-function MENU_onclick(event) {
-    //MENU_ensure_boundingClientRect();
-    let indexClicked = menuGetRelativeMouseEventData(event.clientY);
-    MENU_setCursorIndex(indexClicked);
-    //MENU_validateCursor();
-    MENU_completeForm(false, true);
-}
-
-function MENU_render_do_Cursor() {
-    const cursorElement = document.getElementById('MENU_cursor');
-    if (!cursorElement || MENU_request === null) return;
-    // The menu 'padding-top: 4px'
-    cursorElement.style.top = 4 + (aaaApp.lineHeight * MENU_request.index) + 'px';
-}
-
-function MENU_state_do_Cursor(index) {
-    if (index >= MENU_request.ArrayFrom_menuOptionList_children.length)
-        index = MENU_request.ArrayFrom_menuOptionList_children.length - 1;
-    
-    if (index < 0)
-        index = 0;
-
-    MENU_request.index = index;
-}
-
-function MENU_setCursorIndex(index) {
-    MENU_state_do_Cursor(index);
-    MENU_render_request(MENUrenderKind.Cursor);
-}
-
-/** TODO: This doesn't work the same way the other validate cursors do? */
-function MENU_validateCursor() {
-    if (MENU_request.index >= MENU_request.ArrayFrom_menuOptionList_children.length) {
-        if (MENU_request.ArrayFrom_menuOptionList_children.length > 0) {
-            MENU_setCursorIndex(MENU_request.ArrayFrom_menuOptionList_children.length - 1);
-        }
-        else {
-            MENU_setCursorIndex(0);
-        }
-        return;
-    }
-    else if (MENU_request.index < 0) {
-        MENU_request.index = 0;
-    }
-}
-
-function MENU_onKeyDown(event) {
-    MENU_validateCursor();
-    if (MENU_request.ArrayFrom_menuOptionList_children.length === 0) return;
-
-    switch (event.key) {
-        case 'ArrowDown':
-            event.stopPropagation(); // TODO: probably don't type this in every case
-            if (MENU_request.index < MENU_request.ArrayFrom_menuOptionList_children.length - 1) {
-                MENU_setCursorIndex(MENU_request.index + 1);
-            }
-            break;
-        case 'ArrowUp':
-            event.stopPropagation(); // TODO: probably don't type this in every case
-            if (MENU_request.index > 0) {
-                MENU_setCursorIndex(MENU_request.index - 1);
-            }
-            break;
-        case 'Escape':
-            event.stopPropagation(); // TODO: probably don't type this in every case
-            MENU_completeForm(/*forceIsCancelled*/ true, /*changingFocusIsReasonable*/ true);
-        case 'Enter':
-        case ' ':
-            event.stopPropagation(); // TODO: probably don't type this in every case
-            MENU_completeForm(false, true);
-    }
-}
-
-/** TODO: fix this and uncomment the invocations, 'if (!MENU_request.recentBoundingClientRectTop)' is non sensical (0 is a valid top etc...) */
-function MENU_ensure_boundingClientRect() {
-    if (!MENU_request.recentBoundingClientRectTop) {
-        const menuElement = document.getElementById('MENU');
-        if (!menuElement) return;
-        MENU_request.recentBoundingClientRectTop = menuElement.getBoundingClientRect().top;
-    }
 }
 
 /**
