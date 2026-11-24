@@ -66,6 +66,12 @@ body {
   padding-bottom: 1px;
 }
 
+.LIST {
+  overflow: hidden;
+  position: relative;
+  contain: strict;
+}
+
 .LIST_scroll_viewport {
   position: absolute;
   inset: 0;
@@ -79,12 +85,6 @@ body {
   overflow: hidden;
   pointer-events: none;
   z-index: 1;
-}
-
-.LIST {
-  overflow: hidden;
-  position: relative;
-  contain: strict;
 }
 
 #AUTOCOMPLETE {
@@ -101,29 +101,6 @@ body {
   padding-bottom: 1px;
   overflow: hidden;
   contain: strict;
-}
-
-#EXPLORER_scroll_viewport {
-  position: absolute;
-  inset: 0;
-  overflow: scroll;
-  z-index: 3;
-}
-
-#EXPLORER_visual_canvas {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 1;
-}
-
-#EXPLORER_text {
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  height: 100%;
-  left: 0px;
 }
 
 .TREEVIEW {
@@ -228,15 +205,6 @@ body {
 
 #EDI_gutter {
   
-}
-
-#EDI_gutter_scroll_mover {
-  will-change: transform;
-}
-
-#EDI_canvas {
-  width: 100%;
-  height: 100%;
 }
 
 #EDI_text {
