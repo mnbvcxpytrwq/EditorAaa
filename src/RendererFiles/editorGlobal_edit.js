@@ -5,8 +5,6 @@ import {CommandKind} from './menuGlobal.js'
 import {sendTransaction_MessageKind_custom_edit_InsertLtr, sendTransaction_MessageKind_custom_edit_Remove, sendTransaction_MessageKind_textDocument_definition} from './applicationRendererRoot.js'
 import {tooltip} from './tooltipGlobal.js'
 
-const EDI_tokenColors = f.EDI_tokenColors;
-
 /**
  * If you have an extension listed here, it is expected that the "function to invoke" exists.
  * As of right now any patterns to naming the function that gets invoked are tentative.
@@ -4742,7 +4740,7 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
 
     const local_bytes = EDI_textByteList_bytes;
     const local_styles = EDI_styleBuffer; // Your matching parallel array
-    const local_EDI_tokenColors = EDI_tokenColors;
+    const local_EDI_tokenColors = f.EDI_tokenColors;
 
     const local_EDI_decoder_CUSTOM = EDI_decoder_CUSTOM;
 
@@ -4832,7 +4830,7 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
 
     const local_bytes = EDI_textByteList_bytes;
     const local_styles = EDI_styleBuffer; // Your matching parallel array
-    const local_EDI_tokenColors = EDI_tokenColors;
+    const local_EDI_tokenColors = f.EDI_tokenColors;
 
     const local_EDI_decoder_CUSTOM = EDI_decoder_CUSTOM;
 
@@ -4959,7 +4957,7 @@ function EDI_render_do_Scroll() {
 
     const local_bytes = EDI_textByteList_bytes;
     const local_styles = EDI_styleBuffer; // Your matching parallel array
-    const local_EDI_tokenColors = EDI_tokenColors;
+    const local_EDI_tokenColors = f.EDI_tokenColors;
 
     const local_EDI_decoder_CUSTOM = EDI_decoder_CUSTOM;
 
@@ -5342,7 +5340,7 @@ function EDI_render_do_IndentMore() {
             else ringBufferIndex = (ringBufferIndex + editor.ringBuffer_indexZero) % editor.virtualCount;
 
             if (ringBufferIndex >= 0) {
-                EDI_lineStringCache[ringBufferIndex].unshift({ text: EDI_on_tab_string, color: EDI_tokenColors[0] });
+                EDI_lineStringCache[ringBufferIndex].unshift({ text: EDI_on_tab_string, color: f.EDI_tokenColors[0] });
             }
         }
 
@@ -6152,10 +6150,10 @@ function EDI_render_do_EnterKey() {
             if (currentLineSpans.length > 0) {
                 currentLineSpans.length = 1;
                 currentLineSpans[0].text = spanText;
-                currentLineSpans[0].color = EDI_tokenColors[0];
+                currentLineSpans[0].color = f.EDI_tokenColors[0];
             }
             else {
-                currentLineSpans.push({ text: spanText, color: EDI_tokenColors[0] });
+                currentLineSpans.push({ text: spanText, color: f.EDI_tokenColors[0] });
             }
             //EDI_lineWasInsertedValidateGutter(editor.lineEndPositionList_count + editor.cursor_editLineFeedCount);
         }
@@ -6189,10 +6187,10 @@ function EDI_render_do_EnterKey() {
                 if (nextLineSpans.length > 0) {
                     nextLineSpans.length = 1;
                     nextLineSpans[0].text = spanText;
-                    nextLineSpans[0].color = EDI_tokenColors[0];
+                    nextLineSpans[0].color = f.EDI_tokenColors[0];
                 }
                 else {
-                    nextLineSpans.push({ text: spanText, color: EDI_tokenColors[0] });
+                    nextLineSpans.push({ text: spanText, color: f.EDI_tokenColors[0] });
                 }
             }
             else { // among a line
@@ -6572,7 +6570,7 @@ function EDI_render_do_RemoveSelection() {
                     lineEnd,
                     lineSpans,
                     spanIndex,
-                    EDI_tokenColors,
+                    f.EDI_tokenColors,
                     EDI_textByteList_bytes,
                     EDI_styleBuffer
                 );
@@ -6582,12 +6580,12 @@ function EDI_render_do_RemoveSelection() {
                 if (spanIndex < lineSpans.length) {
                     const existingSpan = lineSpans[spanIndex++];
                     existingSpan.text = '';
-                    existingSpan.color = EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                    existingSpan.color = f.EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
                 }
                 else {
                     lineSpans.push({
                         text: '',
-                        color: EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
+                        color: f.EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                     });
                     spanIndex++;
                 }
@@ -6784,7 +6782,7 @@ function EDI_render_do_RemoveSelection() {
                         if (whenHandlingSmallAndLargeMerge_shouldSwapLineSpansIfApplicable) {
                             takeFromLineSpans.push({
                                 text: '',
-                                color: EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
+                                color: f.EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                             });
                         }
                     }

@@ -1,6 +1,5 @@
 import * as f from './fieldBuffer.js'
 import {listComponent_staticRunner, ListComponent} from './listComponent.js'
-const APP_colors = f.APP_colors;
 
 export const CommandKind = Object.freeze({
     None: 0,
@@ -117,7 +116,7 @@ function MENU_listComponent_renderLines(lineIndexLower, lineIndexUpper, ringBuff
         ctx.fillRect(0, cursorY, MENU_listComponent.canvas.width, MENU_listComponent.itemHeightNumber);
     }
 
-    ctx.fillStyle = APP_colors.standardText;
+    ctx.fillStyle = f.APP_colors.standardText;
 
     for (let i = lineIndexLower; i < LINE_INDEX_UPPER; i++) {
         ringBufferIndex++;
