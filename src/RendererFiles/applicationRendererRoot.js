@@ -1,7 +1,6 @@
 import {editor, EDI_init, EDI_encoder, EDI_decoder_CUSTOM, EDI_styleBuffer, set_EDI_styleBuffer, EDI_render_request, RenderKind, EDI_moveCursor_position, EDI_textSourceIdentifier, EDI_getFinalizedEditsAndRawSaveFileData} from './editorGlobal_edit.js'
 import {DIALOG_show, DialogKind} from './dialogGlobal.js'
 import {DIALOG_Debug_Refresh, FindAll_dialog_was_resized_or_moved} from './dialogImplementationsGlobal.js'
-import {listComponent_debug_dialog_resized_or_moved} from './listComponent.js'
 
 export let shouldUseCSharpToSaveFileWhenPossible = false;
 export function set_shouldUseCSharpToSaveFileWhenPossible(value) {
@@ -338,10 +337,6 @@ function init() {
     document
         .getElementById('HEADER_buttonSettings')
         .addEventListener('click', HEADER_buttonSettings_onClick);
-    
-    document
-        .getElementById('HEADER_buttonDocumentSymbol_debug')
-        .addEventListener('click', DocumentSymbol_debug_onClick);
 
     //window.myAPI.onMessage(window_myAPI_onMessage);
 
@@ -512,5 +507,4 @@ function HEADER_buttonSettings_onClick() {
 }
 
 function DocumentSymbol_debug_onClick() {
-    DIALOG_show(DialogKind.DocumentSymbol, listComponent_debug_dialog_resized_or_moved, null);
 }

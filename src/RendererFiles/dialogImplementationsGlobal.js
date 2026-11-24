@@ -2,7 +2,6 @@ import {aaaApp} from "./applicationRendererRoot.js"
 import {TreeViewComponent, TreeViewNodeKind, treeViewComponent_staticRunner} from "./treeViewComponent.js"
 import {editor, CONST_EDI_ASCII_TAB, CONST_EDI_ASCII_SPACE, EDI_textSourceIdentifier, EDI_moveCursor_position} from './editorGlobal_edit.js'
 import {EXPLORER_openInEditor} from './explorerGlobal.js'
-import {listComponent_debug_dialog} from "./listComponent.js"
 
 /**
  * @type {TreeViewComponent}
@@ -514,24 +513,9 @@ function DIALOG_checkboxEditorDebugShowAdjacentCharacters_onchange() {
 }
 
 export function DIALOG_DocumentSymbol_Create() {
-    let dialogBody = document.getElementById('DIALOG_body');
-    if (!dialogBody) return;
-
-    listComponent_debug_dialog.initialize(dialogBody, null);
-
-    //const beforeDiv = document.createElement('div');
-    //beforeDiv.id = 'DocumentSymbol_debug_div';
-    //beforeDiv.style.marginTop = aaaApp.lineHeightWithPx; // Dialog looks jank at the moment I'm gonna just do this so I can read the text
-    //beforeDiv.style.height = aaaApp.lineHeightWithPx;
-    //beforeDiv.appendChild(document.createTextNode('DocumentSymbol_debug_div'));
-//
-    //dialogBody.appendChild(beforeDiv);
 }
 
 export function DIALOG_DocumentSymbol_Delete() {
-    if (FindAll_treeViewComponent) {
-        FindAll_treeViewComponent.softDispose();
-    }
 }
 
 export function DIALOG_Debug_Create() {
