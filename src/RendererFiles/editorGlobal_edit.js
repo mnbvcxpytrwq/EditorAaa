@@ -79,19 +79,19 @@ export const RenderKind = Object.freeze({
     Cursor_n: 18,
 });
 
-export const EDI_gutterPaddingLeft = 3;
-export const EDI_gutterPaddingRight = 6;
+const EDI_gutterPaddingLeft = 3;
+const EDI_gutterPaddingRight = 6;
 
 export const CONST_EDI_ASCII_LINE_FEED = 10;
 export const CONST_EDI_ASCII_TAB = 9;
 export const CONST_EDI_ASCII_SPACE = 32;
 
-export const CONST_EDI_cursor_htmlId = "EDI_cursor-1";
+const CONST_EDI_cursor_htmlId = "EDI_cursor-1";
 
 /**
  * I'm not sure how large I want this, what matters is that I just have a size of anything for the time being, then can change this constant later.
  */
-export const CONST_EDI_cursor_GAP_BUFFER_CAPACITY = 32;
+const CONST_EDI_cursor_GAP_BUFFER_CAPACITY = 32;
 
 class TextEditor {
     constructor() {
@@ -441,19 +441,11 @@ let EDI_trackingUint32MaxHeap = new TrackingUint32MaxHeap();
  */
 let EDI_findOverlay_searchResultPositionList = null;
 
-export let EDI_textByteList_bytes = new Uint8Array(editor.textByteList_capacity);
+let EDI_textByteList_bytes = new Uint8Array(editor.textByteList_capacity);
 
-export let EDI_lineStringCache = [];
-export function set_EDI_lineStringCache(value) {
-    EDI_lineStringCache = value;
-}
+let EDI_lineStringCache = [];
 
-export let EDI_line_NUMBER_StringCache = [];
-export function set_EDI_line_NUMBER_StringCache(value) {
-    EDI_line_NUMBER_StringCache = value;
-}
-//let EDI_lineStringCache_capacity = [];
-//let EDI_lineStringCache_count = [];
+let EDI_line_NUMBER_StringCache = [];
 
 /**
  * When this is cleared the information is not removed, only 'gapBufferCount' is set to 0.
@@ -477,7 +469,7 @@ const EDI_lineEndPositionList_PENDING = new UInt32List(128);
 
 
 /** Be wary to the possibility of pending edits causing this to not be up to date. */
-export let EDI_lineEndPositionList_data = new Uint32Array(editor.lineEndPositionList_capacity);
+let EDI_lineEndPositionList_data = new Uint32Array(editor.lineEndPositionList_capacity);
 
 export let EDI_textSourceIdentifier = '';
 let EDI_FORMATTED_textSourceIdentifier = '';
@@ -499,17 +491,11 @@ export function set_EDI_styleBuffer(value) {
 let EDI_lastReadNumber_scrollLeft = 0;
 
 /** decimal */
-export let EDI_lastReadNumber_scrollTop = 0;
+let EDI_lastReadNumber_scrollTop = 0;
 
-export let EDI_characterWidth = 8;
-export function set_EDI_characterWidth(value) {
-    EDI_characterWidth = value;
-}
-//let EDI_character_count_that_fits_view = 100;
+let EDI_characterWidth = 8;
 
-//let EDI_verticalCenterPadding = 0;
-
-export let EDI_cursor_cursorTranslateXValue = 0;
+let EDI_cursor_cursorTranslateXValue = 0;
 
 /**
  * Depending on 'editor.cursor_enterKeyEventKind' this may either start OR end with '\n'.
@@ -4624,7 +4610,7 @@ function EDI_resizeCanvases() {
 
     // The exact pixel width of every single character in a monospace font
     const charWidth = ctxText.measureText('M').width;
-    set_EDI_characterWidth(charWidth);
+    EDI_characterWidth = charWidth;
 
     // Run once during setup / font configuration
     //ctx.font = '14px monospace';
@@ -4656,8 +4642,8 @@ function EDI_resizeCanvases() {
     // Set your editor's cursor color profile
     ctxCursor.fillStyle = '#528bff'; // A nice modern blue cursor, or white (#ffffff)
 
-    set_EDI_lineStringCache(new Array(editor.virtualCount));
-    set_EDI_line_NUMBER_StringCache(new Array(editor.virtualCount));
+    EDI_lineStringCache = new Array(editor.virtualCount);
+    EDI_line_NUMBER_StringCache = new Array(editor.virtualCount);
     editor.ArrayFrom_textElement_children_length = editor.virtualCount;
 
     const aaa = editor.virtualCount;
@@ -4712,7 +4698,7 @@ function EDI_resizeCanvases() {
  * you want the last thing that you drew to the screen whether the text being edited appears on screen if so edit the UI accordingly
  * to reflect the edit.
  */
-export function EDI_scrollViewport_scroll() {
+function EDI_scrollViewport_scroll() {
     EDI_lastReadNumber_scrollLeft = EDI_scroll_viewport.scrollLeft;
     EDI_lastReadNumber_scrollTop = EDI_scroll_viewport.scrollTop;
     EDI_render_request(RenderKind.Scroll);
