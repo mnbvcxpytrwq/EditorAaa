@@ -3,10 +3,10 @@
 - [ ] [i++] copy overhead in the custom text encoder/decoder
 
 The comments that indicate which enum member is being used increase the size of the javascript file,
-and nominally impact the ability for JS to parse a function.
+and nominally impact the ability for V8 to parse a function.
 |
 The idea is though: `increase the size of the javascript file` is negligible but the question can be revisited
-`nominally impact the ability for JS to parse a function.` it would only be when handling a function for the first time, once parsed it likely has 0 overhead from the comments.
+`nominally impact the ability for V8 to parse a function.` it would only be when handling a function for the first time, once parsed it likely has 0 overhead from the comments.
 |
 just an acknowledgement^
 
