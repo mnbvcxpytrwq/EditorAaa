@@ -321,7 +321,7 @@ export function sendTransaction_MessageKind_custom_edit_Remove(positionIndex, le
     socket.send(viewToSend); // Sends raw binary data
 }
 
-export function sendTransaction_MessageKind_custom_autocomplete() {
+export function sendTransaction_MessageKind_custom_autocomplete(positionIndex) {
     if (!socket || socket.readyState !== WebSocket.OPEN) { return; }
 
     if (false && filePath.length > send_buffer.length) { throw new Exception('filePath.length > send_buffer.length'); }
@@ -335,30 +335,22 @@ export function sendTransaction_MessageKind_custom_autocomplete() {
 
     index += 2;
 
-    //var positionIndexString = positionIndex + '';
-    //var lengthString = length + '';
-//
-    //// TODO: measure bytes that represent number digits without string
-    //const aaa = EDI_encoder.encode(positionIndexString);
-    //// TODO: byte length of the bytes without encoding.
-    //// TODO: send the bytes themselves 0 allocation either side for the message itself
-    //const bbb = EDI_encoder.encode(lengthString);
-    //const byteLengthString = (aaa.length + bbb.length + 1 /*the '_' intra message that separates position from length*/) + '';
-//
-    //const writtenAaa = EDI_encoder.encodeInto(byteLengthString, send_buffer.subarray(index, send_buffer.length));
-    //index += writtenAaa.written;
-//
-    //send_buffer[index] = 95; // '_'
-    //index += 1;
-//
-    //const writtenBbb = EDI_encoder.encodeInto(positionIndexString, send_buffer.subarray(index, send_buffer.length));
-    //index += writtenBbb.written;
-//
-    //send_buffer[index] = 95; // '_'
-    //index += 1;
-//
-    //const writtenCcc = EDI_encoder.encodeInto(length, send_buffer.subarray(index, send_buffer.length));
-    //index += writtenCcc.written;
+    var positionIndexString = positionIndex + '';
+
+    // TODO: measure bytes that represent number digits without string
+    const aaa = EDI_encoder.encode(positionIndexString);
+    const byteLengthString = aaa.length + '';
+
+    const writtenAaa = EDI_encoder.encodeInto(byteLengthString, send_buffer.subarray(index, send_buffer.length));
+
+    index += writtenAaa.written;
+
+    send_buffer[index] = 95; // '_'
+    index += 1;
+
+    const writtenBbb = EDI_encoder.encodeInto(positionIndexString, send_buffer.subarray(index, send_buffer.length));
+
+    index += writtenBbb.written;
 
     // High Performance Slice: Create a zero-allocation window/view over just the written bytes
     // .subarray() does NOT copy memory; it just shifts the byte pointer window

@@ -3694,7 +3694,7 @@ function EDI_requestLspComplete() {
     //}
     //window.myAPI.editorCompletionRequest(editor.cursor_indexLine, editor.cursor_indexColumn);
     AUTOCOMPLETE_show();
-    sendTransaction_MessageKind_custom_autocomplete();
+    sendTransaction_MessageKind_custom_autocomplete(EDI_getPositionIndex_cursor_raw());
 }
 
 /**
