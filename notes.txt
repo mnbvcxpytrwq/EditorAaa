@@ -1,1 +1,6 @@
 - [ ] dynamic gutter width
+- [ ] scroll the code and delete all the unused variables (after ensuring it is safe and reasonable to do so)
+- [ ] [i++] copy overhead in the custom text encoder/decoder
+
+
+

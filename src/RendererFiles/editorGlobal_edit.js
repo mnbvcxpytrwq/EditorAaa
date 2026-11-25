@@ -974,8 +974,6 @@ function countNewlines(sourceString) {
     return count;
 }
 
-
-
 function EDI_indentMore() {
     let SMALL_pos;
     let LARGE_pos;
