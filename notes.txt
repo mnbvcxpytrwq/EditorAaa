@@ -30,3 +30,7 @@ Well, even that 1 point of stress is something I cannot afford at the moment.
 
 So until I can regularly show up and complete my hours without feeling stressed/panic'd I'm gonna take a break.
 
+I just tried a goto definition that worked prior to today and it no longer take you to the correct position
+i.e.: I broke it sometime today.
+
+umm "Say la vie"
