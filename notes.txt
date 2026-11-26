@@ -1,0 +1,1 @@
+goto definition is something like this but I'm not looking further into it until I've rested.
