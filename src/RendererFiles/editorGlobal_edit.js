@@ -6681,12 +6681,12 @@ function EDI_render_do_RemoveSelection() {
                 if (lineSpans.length > 0) {
                     const existingSpan = lineSpans[0];
                     existingSpan.text = '';
-                    existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                    existingSpan.color = f.EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
                 }
                 else {
                     lineSpans.push({
                         text: '',
-                        color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
+                        color: f.EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                     });
                 }
                 lineSpans.length = 1;
