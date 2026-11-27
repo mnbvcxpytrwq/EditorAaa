@@ -534,12 +534,15 @@ class EDI_CustomDecoder {
      * @param {number} start - new_lineStart
      * @param {number} lineEnd - new_lineEnd
      * @param {Array} lineSpans - Cache array for this line's spans
-     * @param {number} spanIndex - The starting span index to write to
      * @param {Array} tokenColors - EDI_tokenColors array/map
      * @param {object} tokenResult - Persistent state holder (for .bytes and .styles references)
      * @returns {number} The updated spanIndex count for the line
      */
-    decodeLineTokens(start, lineEnd, lineSpans, spanIndex, tokenColors, bytesParam, stylesParam) {
+    decodeLineTokens(start, lineEnd, lineSpans, tokenColors, bytesParam, stylesParam) {
+
+        /** @type {number} spanIndex - The span index to write to */
+        let spanIndex = 0;
+
         const sharedBytes = bytesParam;
         const styles = stylesParam;
         const limit = this.chunkSize;
@@ -633,7 +636,7 @@ class EDI_CustomDecoder {
             }
         }
 
-        return spanIndex; // Return total parsed spans count for line cleanup
+        lineSpans.length = spanIndex;
     }
 
     /**
@@ -4903,17 +4906,14 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
             cacheNUMBERS[ringBufferIndex] = '~';
             new_lineEnd = new_lineStart;
         }
-
-        let spanIndex = 0;
             
         // IF THE LINE CONTAINS CHARACTERS
         if (new_lineStart !== new_lineEnd) {
             // Execute a single loop invocation for the entire line text data
-            spanIndex = local_EDI_decoder_CUSTOM.decodeLineTokens(
+            local_EDI_decoder_CUSTOM.decodeLineTokens(
                 new_lineStart,
                 new_lineEnd,
                 lineSpans,
-                spanIndex,
                 local_EDI_tokenColors,
                 local_bytes,
                 local_styles
@@ -4921,8 +4921,8 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
         }
         // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
         else {
-            if (spanIndex < lineSpans.length) {
-                const existingSpan = lineSpans[spanIndex++];
+            if (lineSpans.length > 0) {
+                const existingSpan = lineSpans[0];
                 existingSpan.text = '';
                 existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
             }
@@ -4931,11 +4931,9 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
                     text: '',
                     color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                 });
-                spanIndex++;
             }
+            lineSpans.length = 1;
         }
-
-        lineSpans.length = spanIndex;
     }
     EDI_render_do_Scroll();
 }
@@ -4993,17 +4991,14 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
             cacheNUMBERS[ringBufferIndex] = '~';
             new_lineEnd = new_lineStart;
         }
-
-        let spanIndex = 0;
             
         // IF THE LINE CONTAINS CHARACTERS
         if (new_lineStart !== new_lineEnd) {
             // Execute a single loop invocation for the entire line text data
-            spanIndex = local_EDI_decoder_CUSTOM.decodeLineTokens(
+            local_EDI_decoder_CUSTOM.decodeLineTokens(
                 new_lineStart,
                 new_lineEnd,
                 lineSpans,
-                spanIndex,
                 local_EDI_tokenColors,
                 local_bytes,
                 local_styles
@@ -5011,8 +5006,8 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
         }
         // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
         else {
-            if (spanIndex < lineSpans.length) {
-                const existingSpan = lineSpans[spanIndex++];
+            if (lineSpans.length > 0) {
+                const existingSpan = lineSpans[0];
                 existingSpan.text = '';
                 existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
             }
@@ -5021,11 +5016,9 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
                     text: '',
                     color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                 });
-                spanIndex++;
             }
+            lineSpans.length = 1;
         }
-
-        lineSpans.length = spanIndex;
     }
     EDI_render_do_Scroll();
 }
@@ -5143,16 +5136,13 @@ function EDI_render_do_Scroll() {
                     new_lineEnd = new_lineStart;
                 }
 
-                let spanIndex = 0;
-                    
                 // IF THE LINE CONTAINS CHARACTERS
                 if (new_lineStart !== new_lineEnd) {
                     // Execute a single loop invocation for the entire line text data
-                    spanIndex = local_EDI_decoder_CUSTOM.decodeLineTokens(
+                    local_EDI_decoder_CUSTOM.decodeLineTokens(
                         new_lineStart,
                         new_lineEnd,
                         lineSpans,
-                        spanIndex,
                         local_EDI_tokenColors,
                         local_bytes,
                         local_styles
@@ -5160,8 +5150,8 @@ function EDI_render_do_Scroll() {
                 }
                 // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
                 else {
-                    if (spanIndex < lineSpans.length) {
-                        const existingSpan = lineSpans[spanIndex++];
+                    if (lineSpans.length > 0) {
+                        const existingSpan = lineSpans[0];
                         existingSpan.text = '';
                         existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
                     }
@@ -5170,11 +5160,9 @@ function EDI_render_do_Scroll() {
                             text: '',
                             color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                         });
-                        spanIndex++;
                     }
+                    lineSpans.length = 1;
                 }
-
-            lineSpans.length = spanIndex;
         }
 
         ctxGutter.fillText(cacheNUMBERS[ringBufferIndex], rightEdgeX, vertical + topPadding);
@@ -6675,17 +6663,14 @@ function EDI_render_do_RemoveSelection() {
 
             lineSpans = [];
 
-            let spanIndex = 0;
-                
             // IF THE LINE CONTAINS CHARACTERS
             if (lineStart !== lineEnd) {
                 // 'aaaa' and then one 'Z' doesn't work you need to create the largeLineSpans so they can be edited by the earlier step
                 // Execute a single loop invocation for the entire line text data
-                spanIndex = EDI_decoder_CUSTOM.decodeLineTokens(
+                EDI_decoder_CUSTOM.decodeLineTokens(
                     lineStart,
                     lineEnd,
                     lineSpans,
-                    spanIndex,
                     f.EDI_tokenColors,
                     EDI_textByteList_bytes,
                     EDI_styleBuffer
@@ -6693,21 +6678,19 @@ function EDI_render_do_RemoveSelection() {
             }
             // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
             else {
-                if (spanIndex < lineSpans.length) {
-                    const existingSpan = lineSpans[spanIndex++];
+                if (lineSpans.length > 0) {
+                    const existingSpan = lineSpans[0];
                     existingSpan.text = '';
-                    existingSpan.color = f.EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                    existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
                 }
                 else {
                     lineSpans.push({
                         text: '',
-                        color: f.EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
+                        color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                     });
-                    spanIndex++;
                 }
+                lineSpans.length = 1;
             }
-
-            lineSpans.length = spanIndex;
 
             largeLineSpans = lineSpans;
             whenHandlingSmallAndLargeMerge_shouldSwapLineSpansIfApplicable = false;
