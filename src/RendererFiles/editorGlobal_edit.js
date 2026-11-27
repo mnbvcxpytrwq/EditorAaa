@@ -858,6 +858,10 @@ I want to track the total character width of every token that was generated.
 And then short circuit so that no further tokens are generated once it is found that:
 after generating the most recent token the total amount of text would visually clip offscreen.
 
+No wait that's jumping the gun there's better changes to make first.
+Luckily I didn't ask that lol
+
+
 
 
 
