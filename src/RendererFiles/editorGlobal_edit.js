@@ -872,9 +872,65 @@ But I could see it being vastly superior if it is about reducing the amount of t
 
 
 
+<
+Your intuition is spot on. String.fromCharCode.apply(null, this.charBuffer.subarray(0, bufIdx)) wins primarily because it collapses N individual
+C++ builtin transitions and heap allocations into a single, vectorized C++ operation.
+
+It looks "nasty" because .apply() is an older ES5 pattern designed to unpack an array onto the CPU call stack as individual arguments.
+Under the hood in V8, however, that pattern unlocks a fast path that a JavaScript for loop cannot match.
+
+1. Why the for Loop is Expensive
+When you run chunkStr += String.fromCharCode(this.charBuffer[j]) inside a loop, V8 has to do heavy lifting on every single character:
+• Repeated Builtin Dispatch: Calling String.fromCharCode bufIdx times means invoking the builtin handler repeatedly
+  (even when V8 inlines it via Torque/CSA, it still runs argument validation and range checks on every iteration).
+• Single-Character String Allocations: Each call produces a 1-character string object (or fetches it from V8's single-character string cache).
+• ConsString Tree Explosion: Every += allocates a ConsString node on the V8 heap—a 24-byte/32-byte object pointing to a first string and a second string.
+  A 100-character token creates 99 temporary ConsString wrapper objects that immediately become garbage once the string is flattened for DOM rendering.
+
+2. What V8 Actually Does with .apply() + .subarray()
+When you pass a TypedArray view to Function.prototype.apply, V8 executes a specialized sequence:
+• Zero-Copy View (.subarray()): Calling this.charBuffer.subarray(0, bufIdx) does not copy a single byte of character data.
+  It simply allocates a tiny JSTypedArray header object pointing to the exact same ArrayBuffer memory with a capped length of bufIdx.
+• Fast Argument Unpacking (Apply Builtin): V8's internal Apply stub sees that the argument list is a JSTypedArray (Uint16Array).
+  Instead of doing slow generic property lookups (obj[0], obj[1]), it reads the raw uint16_t* backing pointer directly in C++ and pushes those values onto the frame stack in a tight loop.
+• Single Allocation & memcpy (StringFromCharCode): String.fromCharCode receives all bufIdx arguments at once.
+  It checks whether all code units are <= 0xFF (Latin1/OneByte) or require TwoByte (UTF-16),
+  allocates one single contiguous SeqOneByteString or SeqTwoByteString of the exact final byte length on the V8 heap, and copies the characters in one pass.
+
+3. The Two Gotchas to Keep in Mind
+While this trick is a classic V8 optimization, it has two sharp edges you must respect:
+• Stack Overflow Limit (RangeError): Pushing arguments onto the execution stack consumes real stack space.
+  V8 caps the argument count around 65,536 (and slightly lower if the current call stack is already deep).
+  Because your chunkSize is 2048, you are completely safe—2,048 arguments take roughly 16 KB of stack space.
+• Tiny Strings (1–3 Characters): Creating the .subarray() wrapper object and running the .apply() stub has a tiny fixed setup cost.
+  For 1-character or 2-character tokens (like ;, {, =, or if), String.fromCharCode(buf[0]) is slightly faster than .apply(). For tokens of ~4+ characters,
+  .apply() pulls ahead decisively, and for 20+ characters it isn't even close.
+
+4. Cleaning Up the "Nasty" Syntax
+If you want to keep the exact same performance without repeating that ugly expression in multiple places inside decodeLineTokens,
+wrap it in a clean helper or fast-path the 1-character case right inside _flushBuffer:
+
+```js
+_flushBuffer(bufIdx) {
+  if (bufIdx === 1) {
+    return String.fromCharCode(this.charBuffer[0]);
+  }
+  return String.fromCharCode.apply(null, this.charBuffer.subarray(0, bufIdx));
+}
+```
+
+(Note: Because _flushBuffer is tiny, V8's TurboFan compiler will automatically inline it directly into decodeLineTokens after a few hundred calls,
+ meaning you pay zero function-call overhead for keeping the code clean.)
+
+Would you like to look into how V8's OneByte vs. TwoByte string representation affects memory and DOM text-node rendering when you pass these strings to your editor spans?
 
 
 
+
+>
+How does the `.apply()` avoid 'String.fromCharCode' being ran foreach character.
+If 'String.fromCharCode' is written in JavaScript to receive 1 character at a time, then it always is written that way.
+Unless the `.apply()` signals to V8 that it can interpret the function differently almost like an explicit overload that accepts a typed array.
 
 
 
