@@ -934,6 +934,45 @@ Unless the `.apply()` signals to V8 that it can interpret the function different
 
 
 
+
+<
+The answer lies in two facts: String.fromCharCode is actually variadic by specification (it accepts ...codes, not just 1 character),
+and it is implemented natively in V8's assembly/C++ layer, not in JavaScript.
+
+Here is how those two pieces fit together to eliminate the per-character JavaScript overhead.
+
+1. String.fromCharCode is Variadic by Design
+Per the ECMAScript specification, String.fromCharCode is defined as String.fromCharCode ( ...codeUnits ).
+You can legitimately call String.fromCharCode(65, 66, 67) directly in JavaScript and get "ABC".
+
+Because it accepts any number of arguments, .apply() isn't triggering a secret overload—it is simply bridging the gap between an array-like container
+(Uint16Array) and a variadic function signature (...codeUnits).
+
+2. It Is Not Written in JavaScript
+In V8, String.fromCharCode is not a JavaScript function containing a for loop.
+It is a Torque / CodeStubAssembler (CSA) builtin—meaning it is compiled directly into low-level machine instructions inside the V8 binary itself.
+
+When you call String.fromCharCode.apply(null, subarray):
+• No JavaScript Loop: There is no JS bytecode executing per character.
+• Native Stack Frame: V8's Apply builtin unpacks the Uint16Array's raw memory directly onto the native call stack in a tight assembly loop.
+• Single Native Execution: StringFromCharCode runs once, reads arguments.length directly from the stack frame, allocates one string object on the heap,
+  and copies all character codes into it using native machine instructions.
+
+
+3. Why .apply() Still Feels Like an "Overload"
+
+Your intuition about .apply() acting like a specialized fast path is actually very close to reality inside V8:
+• Normally, calling fn(...typedArray) or fn.apply(null, typedArray) would require iterating over the object in JavaScript via the iterator protocol (Symbol.iterator) or indexed property lookups.
+• V8's Apply builtin specifically checks the type of the second argument (argArray).
+  When it detects a fast JSTypedArray (like your Uint16Array), it skips the JavaScript iteration protocol entirely and jumps straight to a C++/assembly fast path that reads
+  the raw uint16_t backing store pointer.
+
+So while String.fromCharCode itself doesn't know it received a TypedArray (it just sees N arguments sitting on the call stack), .apply()
+acts as a zero-JS-overhead adapter that dumps your Uint16Array straight onto that stack in one shot.
+
+If you're curious about squeezing even more speed out of your EDI decoder, we can look at whether TextDecoder.decode() on raw Uint8Array slices beats Uint16Array + .apply()
+for your typical token lengths. Would you like to compare them?
+
 */
 
 }
