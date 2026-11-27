@@ -801,6 +801,58 @@ class EDI_CustomDecoder {
         }
         return offset;
     }
+
+/*
+<
+Does this javascript code snippet have postfix copy overhead?
+
+class EDI_CustomDecoder {
+  constructor() {} // full code of this method was provided to prompt
+
+  _flushBuffer(bufIdx) {} // full code of this method was provided to prompt
+
+  decodeLineTokens(start, lineEnd, lineSpans, spanIndex, tokenColors, bytesParam, stylesParam) {} // full code of this method was provided to prompt
+}
+
+
+
+
+>
+No, this code has zero postfix copy overhead. Every single ++ in your snippet (i++, bufIdx++, spanIndex++, j++, s++) operates strictly on small integer primitives,
+which V8 keeps directly in CPU registers with zero memory allocation or object copying.
+
+Here is a breakdown of why your postfix operations are completely free, plus a quick check on the TODO in your code and one genuine performance bottleneck to watch out for.
+
+1. Postfix Operations (i++, bufIdx++, spanIndex++)
+
+• Zero Copy Cost: In V8, local integer variables like i and bufIdx are stored as Smis (Small Integers) inside CPU registers.
+  When you execute sharedBytes[i++} or this.charBuffer[bufIdx++], V8 uses the register's current value as the array offset and executes a single CPU ADD instruction afterward.
+• No Difference from Prefix: Rewriting i++ to ++i and adjusting your indices manually would produce virtually identical machine code in TurboFan/Maglev.
+  Keep i++ and bufIdx++ as-is for readability.
+
+2. Validating Your TODO Comment on _flushBuffer
+
+Your TODO asks whether String.fromCharCode.apply(null, this.charBuffer.subarray(0, bufIdx)) is faster than chunkStr += String.fromCharCode(...) in a loop.
+That tip is valid and will give you a measurable speedup.
+
+• Why += in a loop is slower: In V8, concatenating strings in a loop creates a tree of ConsString objects on the heap that eventually has to be flattened into a single contiguous string.
+• Why .apply() with .subarray() wins: subarray(0, bufIdx) creates a lightweight view without copying the underlying buffer, and String.fromCharCode.apply() allocates the final flat string in C++
+  in a single pass. Since your chunkSize is 2048, you are nowhere near V8's argument stack limit (~65,536).
+
+3. Actual Bottlenecks to Watch in This Hot Path
+If you want to squeeze maximum speed out of decodeLineTokens, look at these two areas instead of postfix operators:
+• Cache this.charBuffer locally: Just like you cached const limit = this.chunkSize;, assign const charBuffer = this.charBuffer; at the top of decodeLineTokens.
+  Repeatedly reading this.charBuffer inside tight inner loops forces V8 to verify the object shape/property load unless TurboFan hoists it.
+• Fast-Path ASCII Strings: If your tokens are mostly standard ASCII (bytes < 0x80 and not \t), TextDecoder
+  (e.g., a persistent new TextDecoder('utf-8')) decoding slices directly from sharedBytes.subarray(tokenStart, tokenEnd) in native C++ can outperform byte-by-byte JS loops for longer tokens.
+  However, for very short tokens (1–15 characters, which are common in syntax-highlighted code), your Uint16Array + String.fromCharCode.apply
+  approach avoids TextDecoder call overhead and is often faster.
+
+Would you like me to rewrite _flushBuffer and decodeLineTokens with the String.fromCharCode.apply optimization and local buffer caching applied so you can benchmark it against your current version?
+
+
+*/
+
 }
 
 export const EDI_encoder = new TextEncoder();
