@@ -4925,6 +4925,7 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
                 const existingSpan = lineSpans[0];
                 existingSpan.text = '';
                 existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                lineSpans.length = 1;
             }
             else {
                 lineSpans.push({
@@ -4932,7 +4933,6 @@ function EDI_render_specific_recache_REMOVAL(recycled_itemIndex, linesRemovedCou
                     color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                 });
             }
-            lineSpans.length = 1;
         }
     }
     EDI_render_do_Scroll();
@@ -5010,6 +5010,7 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
                 const existingSpan = lineSpans[0];
                 existingSpan.text = '';
                 existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                lineSpans.length = 1;
             }
             else {
                 lineSpans.push({
@@ -5017,7 +5018,6 @@ function EDI_render_specific_recache_INSERTION(recycled_itemIndex, linesRemovedC
                     color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                 });
             }
-            lineSpans.length = 1;
         }
     }
     EDI_render_do_Scroll();
@@ -5154,6 +5154,7 @@ function EDI_render_do_Scroll() {
                         const existingSpan = lineSpans[0];
                         existingSpan.text = '';
                         existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                        lineSpans.length = 1;
                     }
                     else {
                         lineSpans.push({
@@ -5161,7 +5162,6 @@ function EDI_render_do_Scroll() {
                             color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                         });
                     }
-                    lineSpans.length = 1;
                 }
         }
 
@@ -6682,6 +6682,7 @@ function EDI_render_do_RemoveSelection() {
                     const existingSpan = lineSpans[0];
                     existingSpan.text = '';
                     existingSpan.color = f.EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                    lineSpans.length = 1;
                 }
                 else {
                     lineSpans.push({
@@ -6689,7 +6690,6 @@ function EDI_render_do_RemoveSelection() {
                         color: f.EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
                     });
                 }
-                lineSpans.length = 1;
             }
 
             largeLineSpans = lineSpans;
