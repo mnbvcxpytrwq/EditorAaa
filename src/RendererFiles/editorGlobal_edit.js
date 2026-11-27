@@ -851,6 +851,16 @@ If you want to squeeze maximum speed out of decodeLineTokens, look at these two 
 Would you like me to rewrite _flushBuffer and decodeLineTokens with the String.fromCharCode.apply optimization and local buffer caching applied so you can benchmark it against your current version?
 
 
+
+
+>
+I want to track the total character width of every token that was generated.
+And then short circuit so that no further tokens are generated once it is found that:
+after generating the most recent token the total amount of text would visually clip offscreen.
+
+
+
+
 */
 
 }
