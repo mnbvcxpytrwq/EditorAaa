@@ -864,6 +864,19 @@ Luckily I didn't ask that lol
 
 
 
+>
+Can you tell me more about `String.fromCharCode.apply(null, this.charBuffer.subarray(0, bufIdx))`.
+The code looks "nasty".
+But I could see it being vastly superior if it is about reducing the amount of times you cross the JavaScript to C++ boundary.
+
+
+
+
+
+
+
+
+
 
 */
 
