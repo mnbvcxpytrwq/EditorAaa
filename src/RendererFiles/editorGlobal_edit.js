@@ -6018,7 +6018,7 @@ function EDI_handleRingBufferNodesThatAreOffscreen_DuplicateOrPaste(final_ringBu
     // This repositions all 'displaced(s)' and 'recycle(s)' in O(N) operations total, discarding the nested loops
     const end_of_recycle_block = final_ringBufferIndex;
     
-    const endOfDisplacedBlock = inclusive_earliest_recycle_ringBufferIndex - 1;
+    let endOfDisplacedBlock = inclusive_earliest_recycle_ringBufferIndex - 1;
     if (endOfDisplacedBlock < 0) {
         endOfDisplacedBlock = editor.virtualCount - 1;
     }
@@ -7085,7 +7085,7 @@ function EDI_handleRingBufferNodesThatAreOffscreen_RemoveSelection(final_ringBuf
     
     const inclusive_earliest_recycle_ringBufferIndex = recycle_ringBufferIndex;
 
-    const end_of_recycle_block = displaced_ringBufferIndex - 1;
+    let end_of_recycle_block = displaced_ringBufferIndex - 1;
     if (end_of_recycle_block < 0) {
         end_of_recycle_block = editor.ArrayFrom_textElement_children_length - 1;
     }
