@@ -5135,7 +5135,7 @@ function EDI_render_do_Scroll() {
     // I suppose this function in and of itself is a "loop" cause of how hot it is but...
 
     // I can't figure out how to integrate this joke so I'll just drop a cutaway:
-    // "it insists upon itself"    
+    // "it insists upon itself"
     
     // Render pure line numbers
     for (let i = view_startLineIndex; i < view_upperLineIndexExclusive; i++) {
@@ -5151,43 +5151,43 @@ function EDI_render_do_Scroll() {
             // THIS WILL CALCULATE THE TEXT OF THE LINENUMBER AND THE LINE OF TEXT ITSELF
             // AND ONLY DO SO FOR THE NEWLY SCROLLED INTO VIEW LINES
                 
-                const indexLine = i;
-                new_lineStart = new_lineEnd + 1;
-                if (indexLine < local_EDI_lineEndPositionList_count) {
-                    cacheNUMBERS[ringBufferIndex] = String(indexLine + 1);
-                    new_lineEnd = local_EDI_lineEndPositionList_data[indexLine];
-                } else {
-                    cacheNUMBERS[ringBufferIndex] = '~';
-                    new_lineEnd = new_lineStart;
-                }
+            const indexLine = i;
+            new_lineStart = new_lineEnd + 1;
+            if (indexLine < local_EDI_lineEndPositionList_count) {
+                cacheNUMBERS[ringBufferIndex] = String(indexLine + 1);
+                new_lineEnd = local_EDI_lineEndPositionList_data[indexLine];
+            } else {
+                cacheNUMBERS[ringBufferIndex] = '~';
+                new_lineEnd = new_lineStart;
+            }
 
-                // IF THE LINE CONTAINS CHARACTERS
-                if (new_lineStart !== new_lineEnd) {
-                    // Execute a single loop invocation for the entire line text data
-                    local_EDI_decoder_CUSTOM.decodeLineTokens(
-                        new_lineStart,
-                        new_lineEnd,
-                        lineSpans,
-                        local_EDI_tokenColors,
-                        local_bytes,
-                        local_styles
-                    );
+            // IF THE LINE CONTAINS CHARACTERS
+            if (new_lineStart !== new_lineEnd) {
+                // Execute a single loop invocation for the entire line text data
+                local_EDI_decoder_CUSTOM.decodeLineTokens(
+                    new_lineStart,
+                    new_lineEnd,
+                    lineSpans,
+                    local_EDI_tokenColors,
+                    local_bytes,
+                    local_styles
+                );
+            }
+            // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
+            else {
+                if (lineSpans.length > 0) {
+                    const existingSpan = lineSpans[0];
+                    existingSpan.text = '';
+                    existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
+                    lineSpans.length = 1;
                 }
-                // FIXED BOUNDARY: IF THE LINE IS COMPLETELY EMPTY (0 Bytes)
                 else {
-                    if (lineSpans.length > 0) {
-                        const existingSpan = lineSpans[0];
-                        existingSpan.text = '';
-                        existingSpan.color = local_EDI_tokenColors[0] || '#ffffff'; // Fallback to standard color
-                        lineSpans.length = 1;
-                    }
-                    else {
-                        lineSpans.push({
-                            text: '',
-                            color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
-                        });
-                    }
+                    lineSpans.push({
+                        text: '',
+                        color: local_EDI_tokenColors[0] || '#ffffff' // Fallback to standard color
+                    });
                 }
+            }
         }
 
         ctxGutter.fillText(cacheNUMBERS[ringBufferIndex], rightEdgeX, vertical + topPadding);
@@ -5205,6 +5205,13 @@ function EDI_render_do_Scroll() {
             ctxText.fillText(span.text, currentX, yCoord);
             
             // Fast cell tracking: add characters multiplied by character width
+            //
+            // TODO: I wonder whether tracking an integer "cumulative amount of characters that have been written"...
+            // ...might be faster.
+            // because:
+            // 1: you're getting float precision inaccuracy build up with each time you sum.
+            // 2: you're now summing two floats AND multiplying vs just multiplying.
+            //
             currentX += span.text.length * EDI_characterWidth;
 
             if (currentX > editor.lastReadNumber_offsetWidth) {
