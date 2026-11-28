@@ -5133,6 +5133,9 @@ function EDI_render_do_Scroll() {
     // to be on editor.gutterCanvas2d or something.
     // But `getContext('2d');` should internally be cached in some way so you're just skipping references is the vibe it gives and you aren't even doing it in a loop
     // I suppose this function in and of itself is a "loop" cause of how hot it is but...
+
+    // I can't figure out how to integrate this joke so I'll just drop a cutaway:
+    // "it insists upon itself"    
     
     // Render pure line numbers
     for (let i = view_startLineIndex; i < view_upperLineIndexExclusive; i++) {
