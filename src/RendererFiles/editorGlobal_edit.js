@@ -5283,11 +5283,12 @@ for (let j = 0; j < lineSpans.length; j++) {
     }
 
     // --- STEP 2: RENDER ACTIVE SOLID CURSOR LINE ---
-    ctx.fillStyle = '#f2a72f'; // Solid cursor accent color
     const cursorLine = editor.cursor_indexLine;
     if (cursorLine >= view_startLineIndex && cursorLine < view_upperLineIndexExclusive) {
+        ctx.fillStyle = '#f2a72f'; // Solid cursor accent color
+        
         const cursorX = (editor.cursorVisualColumnIndex * EDI_characterWidth) - EDI_lastReadNumber_scrollLeft;
-        const cursorY = -(EDI_lastReadNumber_scrollTop % local_lineHeight) + ((cursorLine - view_startLineIndex) * local_lineHeight);
+        const cursorY = original_vertical + ((cursorLine - view_startLineIndex) * local_lineHeight);
         
         EDI_cursor_cursorTranslateXValue = cursorX;
         ctx.fillRect(cursorX, cursorY, 2, local_lineHeight);
