@@ -5140,6 +5140,7 @@ function EDI_render_do_Scroll() {
     // Queen Of The Damned purposefully referenced Aladdin right?
     // I just think it is hilarious I was watching the movie for the first time a few days ago and he goes "Do you trust me" before doing the Aladdin thing essentially.
     // Like, what if the entire world is just like connected, and our fabric of reality and I can see the threads of fate or something...
+    // To clarify I mentioned the exact Aladdin scene like a day before I watched Queen Of The Damned for the first time lol
 
     const editorLastReadNumberOffsetWidth = editor.lastReadNumber_offsetWidth;
     
