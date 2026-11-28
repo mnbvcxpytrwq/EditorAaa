@@ -5277,14 +5277,9 @@ for (let j = 0; j < lineSpans.length; j++) {
     const ctx = cursorCanvas.getContext('2d');
     ctx.clearRect(0, 0, cursorCanvas.width, cursorCanvas.height);
 
-    // --- STEP 1: RENDER SELECTION BOX BACKGROUND SPANS ---
-    // (Assuming you track a selection range from anchorLine/Col to focusLine/Col)
-    ctx.fillStyle = 'rgba(197, 198, 140, 0.25)'; // Highlight tint color
-
     if (EDI_cursor_hasSelection()) {
-        vertical = original_vertical;
         // (Note: Make sure your EDI_createStyleForSelection utility also takes horizontal scrolling into account when drawing selection backgrounds!)
-        EDI_createStyleForSelection(ctx, vertical, local_lineHeight, view_startLineIndex);
+        EDI_createStyleForSelection(ctx, original_vertical, local_lineHeight, view_startLineIndex);
     }
 
     // --- STEP 2: RENDER ACTIVE SOLID CURSOR LINE ---
@@ -7747,7 +7742,6 @@ function EDI_render_SelectionAndCursor() {
 
     // --- STEP 1: RENDER SELECTION BOX BACKGROUND SPANS ---
     // (Assuming you track a selection range from anchorLine/Col to focusLine/Col)
-    ctx.fillStyle = 'rgba(197, 198, 140, 0.25)'; // Highlight tint color
 
     const local_lineHeight = editor.lineHeight;
     let vertical = -(EDI_lastReadNumber_scrollTop % local_lineHeight);
@@ -7778,6 +7772,11 @@ function EDI_render_SelectionAndCursor() {
 }
 
 function EDI_createStyleForSelection(ctx, viewportY, local_lineHeight, firstVirtualIndexLine) {
+
+    // --- STEP 1: RENDER SELECTION BOX BACKGROUND SPANS ---
+    // (Assuming you track a selection range from anchorLine/Col to focusLine/Col)
+    ctx.fillStyle = 'rgba(197, 198, 140, 0.25)'; // Highlight tint color
+
     let start = editor.cursor_selectionAnchor;
     EDI_ret_getLineAndColumnIndices_raw(start);
     let startLineAndColumnIndices_indexLine = editor.ret_getLineAndColumnIndices_indexLine;
