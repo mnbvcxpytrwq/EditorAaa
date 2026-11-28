@@ -5106,11 +5106,11 @@ function EDI_render_do_Scroll() {
     let ringBufferIndex = editor.ringBuffer_indexZero - 1;
 
     // 2. Define your right margin (e.g., 8px or 12px away from the editor border)
-    const rightPadding = 10;
+    // const rightPadding = 10; // I wasn't concerned with this existing just to be used once yet. But since I'm gonna add `lineSpansLength` then I'll inline this is what I'm thinking. `lineSpansLength` is gonna get set within a loop so not quite 1 to 1 but...
 
     // Use logical CSS width if you scale your context by devicePixelRatio,
     // otherwise use gutterCanvas.width
-    const rightEdgeX = 60/*gutterLogicalWidth*/ - rightPadding;
+    const rightEdgeX = 60/*gutterLogicalWidth*/ - 10/*rightPadding*/;
 
     // TODO: This loop being combined may or may not be make or break in terms of each individual loop being able to be optimized.
     // ...
@@ -5199,7 +5199,9 @@ function EDI_render_do_Scroll() {
         let currentX = -EDI_lastReadNumber_scrollLeft; // Track the running horizontal offset for the line row
         const yCoord = vertical + topPadding;
 
-        for (let j = 0; j < lineSpans.length; j++) {
+        const lineSpansLength = lineSpans.length;
+
+        for (let j = 0; j < lineSpansLength; j++) {
             const span = lineSpans[j];
             ctxText.fillStyle = span.color;
             ctxText.fillText(span.text, currentX, yCoord);
@@ -5286,7 +5288,7 @@ for (let j = 0; j < lineSpans.length; j++) {
     const cursorLine = editor.cursor_indexLine;
     if (cursorLine >= view_startLineIndex && cursorLine < view_upperLineIndexExclusive) {
         ctx.fillStyle = '#f2a72f'; // Solid cursor accent color
-        
+
         const cursorX = (editor.cursorVisualColumnIndex * EDI_characterWidth) - EDI_lastReadNumber_scrollLeft;
         const cursorY = original_vertical + ((cursorLine - view_startLineIndex) * local_lineHeight);
         
