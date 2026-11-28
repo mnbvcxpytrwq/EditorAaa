@@ -5137,6 +5137,10 @@ function EDI_render_do_Scroll() {
     // I can't figure out how to integrate this joke so I'll just drop a cutaway:
     // "it insists upon itself"
 
+    // Queen Of The Damned purposefully referenced Aladdin right?
+    // I just think it is hilarious I was watching the movie for the first time a few days ago and he goes "Do you trust me" before doing the Aladdin thing essentially.
+    // Like, what if the entire world is just like connected, and our fabric of reality and I can see the threads of fate or something...
+
     const editorLastReadNumberOffsetWidth = editor.lastReadNumber_offsetWidth;
     
     // Render pure line numbers
@@ -5216,7 +5220,7 @@ function EDI_render_do_Scroll() {
             // TODO: How much "overhead" is setting 'ctxText.fillText' because you could change the cache to store the data grouped by color and include the x position on the token datatype.
             // ...TODO: This is possibly a massive improvement because even looking at this #vscode window that I'm typing in, everything naturally changes color constantly for the various syntax.
             //
-            // ... TODO: actually maybe it is the wrong fix the problem.
+            // ... TODO: actually maybe it is the wrong fix for the problem.
             // I don't know either which way but just consider that you are not yet:
             // shifting existing the canvas image by the difference in scroll position and then clearing ONLY the previous content that you just shifted offscreen (if you even would need to maybe it just clears cause it goes off screen).
             // And then you'd draw literally only what came into view even from the cache.
