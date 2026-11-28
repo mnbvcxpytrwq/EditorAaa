@@ -5116,9 +5116,23 @@ function EDI_render_do_Scroll() {
     // ...
     // The original reason was to re-use the check on `if (ringBufferIndex >= local_ArrayFrom_textElement_children_length)`
     // ...
-    // and this still re-use does exist... but just something to consider.
+    // and this re-use still does exist... but just something to consider.
     // If it means some degree of deoptimization or lack of optimization that would've otherwise occured then this is a possible massive performance gain.
     // but then if making the change doesn't trigger some kind of optimization then you're just paying for these ringBufferIndex checks "twice" in scenarios where the entire screen redraws / etc...
+
+    // TODO: I see the `editor.gutter_canvas.getContext('2d');`
+    // ...
+    // but I don't know if I care right now.
+    // Cause I'm:
+    // - [ ] still sitting on the `.apply()` optimization
+    //     - [ ] trying to think it if it is truly the correct answer in this scenario (out of caution)
+    // - [ ] and two: those aren't in this for loop
+    //
+    // That is to say: maybe you could cache 
+    // `editor.gutter_canvas.getContext('2d');`
+    // to be on editor.gutterCanvas2d or something.
+    // But `getContext('2d');` should internally be cached in some way so you're just skipping references is the vibe it gives and you aren't even doing it in a loop
+    // I suppose this function in and of itself is a "loop" cause of how hot it is but...
     
     // Render pure line numbers
     for (let i = view_startLineIndex; i < view_upperLineIndexExclusive; i++) {
