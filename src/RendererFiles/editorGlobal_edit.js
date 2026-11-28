@@ -5149,6 +5149,12 @@ function EDI_render_do_Scroll() {
 
         const lineSpans = cache[ringBufferIndex];
 
+        // TODO: This is always contiguous.
+        // So you really only need...
+        // ...I don't know. But I'm thinking you do a check once then while loop or something
+        // but everything is in a function
+        // or maybe you set a boolean and then shortCircuit on a boolean for 99% of the time rather than checking these comparisons...
+        // Something about this upsets me greatly.
         if (i >= new_lowerBound && i < new_loopLimit) {
             // THIS WILL CALCULATE THE TEXT OF THE LINENUMBER AND THE LINE OF TEXT ITSELF
             // AND ONLY DO SO FOR THE NEWLY SCROLLED INTO VIEW LINES
