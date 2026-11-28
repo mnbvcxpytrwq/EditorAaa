@@ -5215,6 +5215,11 @@ function EDI_render_do_Scroll() {
 
             // TODO: How much "overhead" is setting 'ctxText.fillText' because you could change the cache to store the data grouped by color and include the x position on the token datatype.
             // ...TODO: This is possibly a massive improvement because even looking at this #vscode window that I'm typing in, everything naturally changes color constantly for the various syntax.
+            //
+            // ... TODO: actually maybe it is the wrong fix the problem.
+            // I don't know either which way but just consider that you are not yet:
+            // shifting existing the canvas image by the difference in scroll position and then clearing ONLY the previous content that you just shifted offscreen (if you even would need to maybe it just clears cause it goes off screen).
+            // And then you'd draw literally only what came into view even from the cache.
             ctxText.fillStyle = span.color;
             ctxText.fillText(span.text, currentX, yCoord);
             
