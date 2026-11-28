@@ -5110,7 +5110,7 @@ function EDI_render_do_Scroll() {
 
     // Use logical CSS width if you scale your context by devicePixelRatio,
     // otherwise use gutterCanvas.width
-    const rightEdgeX = 60/*gutterLogicalWidth*/ - 10/*rightPadding*/;
+    const rightEdgeX = 60/*gutterLogicalWidth*/ - 10/*rightPadding*/; // You need a rightEdgeX variable long term because this shouldn't be hardcoded and cannot be hardcoded. You need variable width gutter. So no reason to inline this cause you can't long term.
 
     // TODO: This loop being combined may or may not be make or break in terms of each individual loop being able to be optimized.
     // ...
@@ -5136,6 +5136,8 @@ function EDI_render_do_Scroll() {
 
     // I can't figure out how to integrate this joke so I'll just drop a cutaway:
     // "it insists upon itself"
+
+    const editorLastReadNumberOffsetWidth = editor.lastReadNumber_offsetWidth;
     
     // Render pure line numbers
     for (let i = view_startLineIndex; i < view_upperLineIndexExclusive; i++) {
@@ -5190,14 +5192,15 @@ function EDI_render_do_Scroll() {
             }
         }
 
-        ctxGutter.fillText(cacheNUMBERS[ringBufferIndex], rightEdgeX, vertical + topPadding);
+        const yCoord = vertical + topPadding;
+
+        ctxGutter.fillText(cacheNUMBERS[ringBufferIndex], rightEdgeX, yCoord);
         
         // TODO: Horizontal virtualization
 
         // --- 2. DRAW SPANS CONSECUTIVELY USING THE MONOSPACE GRID ---
         // Subtract the horizontal scroll position from your starting x offset
         let currentX = -EDI_lastReadNumber_scrollLeft; // Track the running horizontal offset for the line row
-        const yCoord = vertical + topPadding;
 
         const lineSpansLength = lineSpans.length;
 
@@ -5265,7 +5268,7 @@ for (let j = 0; j < lineSpans.length; j++) {
 */
             currentX += span.text.length * EDI_characterWidth;
 
-            if (currentX > editor.lastReadNumber_offsetWidth) {
+            if (currentX > editorLastReadNumberOffsetWidth) {
                 break;
             }
         }
