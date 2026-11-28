@@ -5111,6 +5111,14 @@ function EDI_render_do_Scroll() {
     // Use logical CSS width if you scale your context by devicePixelRatio,
     // otherwise use gutterCanvas.width
     const rightEdgeX = 60/*gutterLogicalWidth*/ - rightPadding;
+
+    // TODO: This loop being combined may or may not be make or break in terms of each individual loop being able to be optimized.
+    // ...
+    // The original reason was to re-use the check on `if (ringBufferIndex >= local_ArrayFrom_textElement_children_length)`
+    // ...
+    // and this still re-use does exist... but just something to consider.
+    // If it means some degree of deoptimization or lack of optimization that would've otherwise occured then this is a possible massive performance gain.
+    // but then if making the change doesn't trigger some kind of optimization then you're just paying for these ringBufferIndex checks "twice" in scenarios where the entire screen redraws / etc...
     
     // Render pure line numbers
     for (let i = view_startLineIndex; i < view_upperLineIndexExclusive; i++) {
