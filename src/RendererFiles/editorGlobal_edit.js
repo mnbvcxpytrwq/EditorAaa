@@ -5212,6 +5212,55 @@ function EDI_render_do_Scroll() {
             // 1: you're getting float precision inaccuracy build up with each time you sum.
             // 2: you're now summing two floats AND multiplying vs just multiplying.
             //
+/*
+<
+Your first instinct about floating-point precision drift is spot-on and makes this change worth doing immediately.
+Your second point about raw arithmetic speed is essentially a wash, because both approaches execute nearly identical CPU instructions and are completely dwarfed by ctxText.fillText().
+
+1. Float Precision Drift (The Real Reason to Switch)
+• Cumulative Rounding Errors: ctx.measureText('M').width almost always returns a non-terminating binary float (such as 8.4013671875). Every time you execute currentX += span.text.length * EDI_characterWidth, IEEE 754 rounding introduces a tiny error.
+• Grid Misalignment on Long Lines: Syntax-highlighted code breaks lines into dozens of short tokens (punctuation, keywords, operators). Accumulating small rounding errors across 50+ spans causes characters to gradually drift away from your editor's true monospace column grid (col * EDI_characterWidth), which leads to cursor/selection misalignment and subpixel blurriness.
+• Exact Grid Alignment: Computing startX + (totalChars * EDI_characterWidth) anchors every span directly to the line's origin, eliminating cumulative drift.
+
+
+2. Instruction Count and Speed
+• Same Floating-Point Work: Your current code runs 1 float multiply and 1 float add per iteration. Tracking totalChars runs 1 integer add (totalChars += span.text.length), 1 float multiply, and 1 float add (startX + totalChars * EDI_characterWidth).
+• Hardware FMA: Modern CPUs execute integer addition in less than a single clock cycle and combine a + (b * c) into a single Fused Multiply-Add (FMA) instruction.
+• The Real Bottleneck: One ctxText.fillText() call costs thousands of CPU cycles in browser C++ rasterization. A single float or integer operation takes fractions of a nanosecond, so you will not see a measurable FPS difference from the math alone.
+
+
+3. Clean Implementation (Plus One Canvas Bonus)
+
+Here is how your loop looks with integer character tracking, plus a quick guard on ctxText.fillStyle (since assigning CSS color strings to a 2D context triggers string-parsing overhead in C++ when colors repeat):
+
+```js
+const startX = -EDI_lastReadNumber_scrollLeft;
+const maxWidth = editor.lastReadNumber_offsetWidth;
+const yCoord = vertical + topPadding;
+
+let totalChars = 0;
+let currentX = startX;
+let lastColor = '';
+
+for (let j = 0; j < lineSpans.length; j++) {
+  const span = lineSpans[j];
+
+  if (span.color !== lastColor) {
+    ctxText.fillStyle = span.color;
+    lastColor = span.color;
+  }
+
+  ctxText.fillText(span.text, currentX, yCoord);
+
+  totalChars += span.text.length;
+  currentX = startX + (totalChars * EDI_characterWidth);
+
+  if (currentX > maxWidth) {
+    break;
+  }
+}
+```
+*/
             currentX += span.text.length * EDI_characterWidth;
 
             if (currentX > editor.lastReadNumber_offsetWidth) {
