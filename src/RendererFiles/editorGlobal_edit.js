@@ -5214,6 +5214,7 @@ function EDI_render_do_Scroll() {
             const span = lineSpans[j];
 
             // TODO: How much "overhead" is setting 'ctxText.fillText' because you could change the cache to store the data grouped by color and include the x position on the token datatype.
+            // ...TODO: This is possibly a massive improvement because even looking at this #vscode window that I'm typing in, everything naturally changes color constantly for the various syntax.
             ctxText.fillStyle = span.color;
             ctxText.fillText(span.text, currentX, yCoord);
             
